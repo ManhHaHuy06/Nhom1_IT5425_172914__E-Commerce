@@ -1,0 +1,4 @@
+review_id,order_id,review_score,review_comment_title,review_comment_message,review_creation_date,review_answer_timestamp
+489a8467b45cc90249296efecd5cf6e6,2d7fab68acf33daf2ba5fc66a9435377,4,,,2018-08-29 00:00:00,2018-10-14 10:29:05
+bbe9c4ce095bc858fbb4c9898f89903b,0cbd2fb0c897c82c6b348a62de100f4e,5,Recomendo,,2018-06-30 00:00:00,2018-10-14 22:35:56
+93ddf83d76a76598a013348c9b7001d3,4ea7a0509e9dc440b977de71fe9128cb,5,recomendo,entregou no prazo ótimo produto,2018-08-25 00:00:00,2018-10-14 12:13:02

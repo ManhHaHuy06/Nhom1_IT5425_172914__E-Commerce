@@ -1,0 +1,32 @@
+{
+  "products": {
+    "version": 1,
+    "row_count": 32951,
+    "change_count": 0,
+    "last_changed": null
+  },
+  "sellers": {
+    "version": 1,
+    "row_count": 3095,
+    "change_count": 0,
+    "last_changed": null
+  },
+  "customers": {
+    "version": 1,
+    "row_count": 99441,
+    "change_count": 0,
+    "last_changed": null
+  },
+  "geolocation": {
+    "version": 1,
+    "row_count": 1000163,
+    "change_count": 0,
+    "last_changed": null
+  },
+  "categories": {
+    "version": 1,
+    "row_count": 71,
+    "change_count": 0,
+    "last_changed": null
+  }
+}

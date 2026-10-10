@@ -1,0 +1,4 @@
+review_id,order_id,review_score,review_comment_title,review_comment_message,review_creation_date,review_answer_timestamp
+461b19d5378a74a258279c8387ead4bb,59566b390f9e3f2182830b3a0b1022d0,5,Recomendo!,Chegou antes do previsto!,2018-08-24 00:00:00,2018-09-16 14:12:34
+54afe5c8186fb4b06c1bdded93a22c83,e98eaa3acbf55a63a501cec1baf45f9e,1,,,2018-08-31 00:00:00,2018-09-16 04:32:45
+2b64734b57322fa0e38c53a0d6cfc0ac,c57a1614ff14e7e6009f15b0d36d67da,5,bom,,2018-08-10 00:00:00,2018-09-16 13:36:14

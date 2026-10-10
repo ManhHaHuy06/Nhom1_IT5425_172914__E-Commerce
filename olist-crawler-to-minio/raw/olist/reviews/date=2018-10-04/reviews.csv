@@ -1,0 +1,5 @@
+review_id,order_id,review_score,review_comment_title,review_comment_message,review_creation_date,review_answer_timestamp
+ab1b3edaec7fa630e361b714387a8e45,3edfecc4a611653ebb70ad242db1aa56,4,,,2018-08-29 00:00:00,2018-10-04 22:41:32
+2a55e7b89d9e8829be916992135e4a2b,2f9476263ce8bf1f37045cff473fc886,1,Pedido 02-671663252 ,"Cancelei o pedido e o mesmo não foi estornado. 
+Obs: Já fazem 3 meses",2018-08-17 00:00:00,2018-10-04 01:33:11
+7517b32c9f177aa00bcc698fa55f41a6,7a6618d50657d925e88544b2e1c06372,5,,,2017-12-23 00:00:00,2018-10-04 00:16:26

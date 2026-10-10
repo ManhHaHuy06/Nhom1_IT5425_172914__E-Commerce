@@ -1,0 +1,4 @@
+review_id,order_id,review_score,review_comment_title,review_comment_message,review_creation_date,review_answer_timestamp
+53cdbc6f376335acb34fd5a4d2523399,7f88683c8e73da556d652a823d4050f4,5,super recomendo,recomendo,2018-08-28 00:00:00,2018-10-16 05:04:50
+1e1e0f31f8c19f4645439223c44f657c,0191b6a5a70bcbc6cdd39427f216602e,5,,,2018-08-28 00:00:00,2018-10-16 14:57:27
+3e2bc69baffe2c62bc34e48bbb53c908,90eaac01afdf4e531a70ad869e092c75,2,,,2018-08-08 00:00:00,2018-10-16 17:06:29

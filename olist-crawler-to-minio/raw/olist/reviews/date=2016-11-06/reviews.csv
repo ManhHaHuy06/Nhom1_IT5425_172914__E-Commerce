@@ -1,0 +1,3 @@
+review_id,order_id,review_score,review_comment_title,review_comment_message,review_creation_date,review_answer_timestamp
+b2a3bd080217f589d4ddfe533ec7fb31,893dc49276696129a9bf6f2a9fe23e57,5,,,2016-11-04 00:00:00,2016-11-06 23:04:33
+ee2a725b65382d6ba40b74c2142dcc89,bb9fd560a08ca7403789dedaca85da14,5,,,2016-11-06 00:00:00,2016-11-06 19:50:04

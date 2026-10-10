@@ -1,0 +1,7 @@
+order_id,payment_sequential,payment_type,payment_installments,payment_value
+588454faf6ae4ce8b0f387e19b7115a2,1,boleto,1,88.29
+ad818323f40e1a353eb3a3874d138c51,1,credit_card,2,191.4
+51b79a492b5e53504ce70340ce111374,1,boleto,1,64.46
+0ed46f17da8a1c3bd0ed5fdfc50decc4,1,credit_card,8,82.19
+08d7ec7381dc51d41a0e4d86314b7a98,1,credit_card,10,719.76
+bbcec25aefec973dfa1b9499147fdf76,1,credit_card,2,425.07

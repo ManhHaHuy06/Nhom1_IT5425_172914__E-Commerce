@@ -1,0 +1,5 @@
+order_id,payment_sequential,payment_type,payment_installments,payment_value
+cfdfd7862e532c4ec1ed1c6a1b56d320,1,voucher,1,197.55
+0d3adebce4bebc1f80a7f36e9833f497,1,voucher,1,94.63
+4637ca194b6387e2d538dc89b124b0ee,1,not_defined,1,0.0
+54282e97f61c23b78330c15b154c867d,1,voucher,1,166.46

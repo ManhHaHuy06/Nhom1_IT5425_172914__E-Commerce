@@ -1,0 +1,51 @@
+review_id,order_id,review_score,review_comment_title,review_comment_message,review_creation_date,review_answer_timestamp
+31a4fa1533464da7ff479ffeca09b767,27b673f5eff49d9211439ef799bc49b0,5,,Entrega muito rápida,2018-05-15 00:00:00,2018-05-18 16:31:13
+be7e094dcfb16adbdb5d17ff95290c94,e26598114d061f9c0f384b028f666c53,5,,,2018-05-16 00:00:00,2018-05-18 00:41:00
+a773df5369a81d1169ee8c056aa4f783,cc6b4b00ee3769433a23d8d24ccdec3d,1,zero,"BOM DIA, JÁ É A QUARTA VEZ QUE SOLICITO A DEVOLUÇÃO DO PRODUTO E ATÉ O MOMENTO NÃO TIVE RETORNO, POIS A MEDIDAS DA BOLSA NÃO SÃO AS MESMAS DECLARADAS NO ATO DA COMPRA. 
+GT. KEYLA",2018-05-15 00:00:00,2018-05-18 12:20:41
+a9522a235450be38c60e7e975c819b5b,e687e938b814980b1e99e9e8413f9cac,5,,,2018-04-10 00:00:00,2018-05-18 16:05:24
+c3d03d375a3169a02f2e54f0433d4e1b,eca71337cf21604694b68488edfa6d86,2,Preciso devolver,O produto veio errado preciso devolver já entrei em contato mas até agora obtive nenhum retorno,2018-05-16 00:00:00,2018-05-18 23:53:13
+6264d86d307eb4e7fe9a430d9f4b5c21,bc549579fe8b9728bac120abd8c20174,5,,,2018-05-16 00:00:00,2018-05-18 18:36:04
+ba762539281c499a60d2f633cef724b3,37b9002ba4b83202d6a604f34e8bbb5d,5,,,2018-05-15 00:00:00,2018-05-18 21:27:34
+3bf395c6a6ecf2d50de4cb2bd04a934a,b154ff1c2ada796573437001346a322b,5,,,2018-05-13 00:00:00,2018-05-18 10:57:28
+e75af3f90a439cf776df52f293437b33,e73da43c03f39b4077ad8fc326cf6f4b,5,,,2018-05-16 00:00:00,2018-05-18 12:45:14
+8d50515985fe57df8f6769ea28c6fe34,3b919fbc512d96f81330d2aae3ed0cf6,1,,,2018-05-17 00:00:00,2018-05-18 21:08:45
+df026ad030bc1be6db733a50a1e44598,2c1440ef98f5dc82a9936f1e55acecd9,1,PRODUTO ENTREGUE,ESSE PRODUTO VEIO QUEBRADO QUERO OUTRO,2018-05-16 00:00:00,2018-05-18 22:06:36
+f4e75984185ea0bb9abfc18af71ceb4d,d778bedecb77b234aeb18dc79ff59194,1,pedido,"No meu pedido aparece que ja foi entregue, mas não recebi nada ainda",2018-05-16 00:00:00,2018-05-18 13:20:59
+cc79f9048fcc271643166b8db448db5f,bfd664f7724709fb7bfbb33308a64ccd,5,ÓTIMO,ÓTIMO,2018-01-16 00:00:00,2018-05-18 17:09:43
+415a11f00b1780da06df8843945cc64f,61651d1abd8f95433a1c2d5ecb675aec,5,,,2018-05-16 00:00:00,2018-05-18 00:31:52
+c92b0f021ec1e5bb5d894195ab8ed1ce,2d070e3a721ccc7ea881f090802680ea,1,,A caixa transporte não foi entregue e o pedido aparece baixado,2018-05-16 00:00:00,2018-05-18 02:28:59
+ac2c1dea2912ad460a3df5fbed1917bc,4978579248016c3a09d6dc043bbc4ae0,5,mini gela,ok,2018-05-12 00:00:00,2018-05-18 15:12:34
+6a98082b21de9c670503dd62d12a64ea,56d01e37808556640e75a40c8202b0a8,4,,,2018-05-15 00:00:00,2018-05-18 12:20:22
+7fe247819936d52b5b5ffc8ceae39566,149527456e31a9346b43cf61e5910f2b,5,maravilhosa,"Rápido e muito bom, estou muito satisfeita.",2018-05-08 00:00:00,2018-05-18 02:23:07
+fcaa8f61360e859f90af660fe11acc0c,6d3f1062aecd285e079e5cb1464cf31c,5,,,2018-05-16 00:00:00,2018-05-18 15:39:38
+2c14b4e62436fed17bc1e8fa5a90df44,152e3e1d1cd5a952b1f4049ff29ab695,5,,,2018-05-05 00:00:00,2018-05-18 16:13:03
+6f112dbce323fb891889b5ed1d1df783,71dc9d3a6d378bbde8b7629eaae7c3a0,2,Produto fraco,"A entrega foi um pouco demorada. Nada a reclamar das lannister. O produto, no entanto, é fraco, metal muito leve, não dando firmeza como porta-toalha.",2018-05-16 00:00:00,2018-05-18 01:48:07
+51a31d39c8d9fdc21ab5e680d5f1e9fa,4b17e1c5883e048067f7ea46b74fe222,5,,,2018-05-15 00:00:00,2018-05-18 17:43:45
+3d549409fa7d4c6d295779c099a4b85a,860690bc540ac01e91faa26cf28cdd5e,4,,,2018-05-16 00:00:00,2018-05-18 11:18:40
+8706f84435f362c8a2556ed81374cf5a,d4148052141383039b68bbb6bd525f3b,1,Produto incorreto,Preciso da devolução imediata do valor da compra,2018-04-28 00:00:00,2018-05-18 13:31:26
+bcc1a766a3eeb36d5053acf45e14d7ea,36307ab4d5c4b59fbc4034d2adb2cb77,5,,,2018-05-16 00:00:00,2018-05-18 19:42:37
+77d30d95ffe09c3214d076818a25a8bb,33c2430c9d2f05d9d244895aa53b4a82,5,Recomendo,Entregou antes do prazo. Tudo certo.,2018-05-16 00:00:00,2018-05-18 14:36:38
+39f49ddbbfa1f3b390eb9276f9b4cd09,b03614607ed7a36258b150150b1e898b,1,,Comprei os dois relógios: um Prata da euro e um Rose da euro e só foi entregue o Prata!! Eu esperando achando que iriam entregar depois e agora vi que o cód de rastreio era o mesmo como entregue!,2018-05-08 00:00:00,2018-05-18 16:13:33
+a230137a5e336226c9f8b596c75721ab,5eb4342599aecd639d77940ef0cac6d7,4,,,2018-05-09 00:00:00,2018-05-18 13:18:52
+53e8219710cd3651829d3fedc480864e,1a44130317893c48ad015ed3ce2017e0,5,Bom.,Foi entregue antes do prazo.😊,2018-05-12 00:00:00,2018-05-18 12:46:45
+1f1f1b961127e917a7325e527dd74e4c,a865adb8bec2475e30e835eaf1b9e7d6,5,,,2018-05-15 00:00:00,2018-05-18 01:31:29
+603b312d0ba6291ff8c7a0c68371e1a6,0553f54e437f2d7fddccf81ae9a646c6,5,Recomendo,Todas as minhas expectativas foram atendidas,2018-05-16 00:00:00,2018-05-18 00:14:33
+73f8bd539df506203f60e9e575075704,15ad076013b4586c67a8eaa4c0fa4370,4,Qualidade do produto,O produto apresenta a qualidade muito baixa e defeito de fabricação do mosquiteiro.,2018-05-15 00:00:00,2018-05-18 14:48:39
+4d48894b5af2a68fe8f5b96ab4a537c9,e74d9198ddaddfc8e8090f5028697eaa,5,Super recomendo,entrega no prazo,2018-05-11 00:00:00,2018-05-18 13:14:34
+16aff94066cc8a12b385638de5d32536,9369e6a8348c5db62ce50008dfc39244,5,,,2018-05-15 00:00:00,2018-05-18 18:19:29
+e3cb2ae5e72e892ea10024af02a8779c,b4dc25e49f1f3eee3262f45a26a91c27,3,,,2018-05-15 00:00:00,2018-05-18 01:38:44
+25ac1a18a83479d82609fa3b51051e35,6d86a700fbdfec909998eefa9110f3e9,2,,"Ainda não chegou , vou esperar até o dia 26, prazo que me foi dado. Duas estrelas, só por enquanto.",2018-05-16 00:00:00,2018-05-18 16:44:57
+cf49cc3363d222643c0f1652be04620d,d6433f92f95904f2d4a77beb2769e8b2,5,,,2018-05-12 00:00:00,2018-05-18 23:35:18
+7ecf92731beb0fd007e2bfec6c432501,72e5f9d054298a6554b1d7e7e4115c5a,5,Super recomendo,"Bom preço. Entrega dentro do prazo. Enfim, tudo de bom. ",2018-05-13 00:00:00,2018-05-18 11:20:32
+43517437171215c6e661a3f210c00f0b,49f70b872d93bbd22ed87d7fe40f4d17,5,muito rápido e bom,Fiquei satisfeita,2018-05-16 00:00:00,2018-05-18 17:18:05
+cf736252790e85b33406a01edeea3356,7fa75bfce88c324530041cb08a3ea734,3,,Comprei dois produtos e só foi entregue um !!!!! Esperei até o final do prazo de entrega e o mesmo n chegou !!!,2018-05-09 00:00:00,2018-05-18 15:21:18
+aff5f54df81d2ca900b6bc577d6bd350,518a89db9918a8553dbc760454cc7634,4,,,2018-05-15 00:00:00,2018-05-18 13:21:46
+99eb2deb34f616834a7ba618dba7ac10,ca4c67dee2a87da5369fcce4f80598de,5,,,2018-05-08 00:00:00,2018-05-18 19:11:12
+a3ff9cf564d283dfe439767ae4608a37,18fc9f8587ebe1c7f604cb74c9364dfa,1,NÃO RECOMENDO,"O espelho tem uma qualidade péssima. Não é compatível com os espelhos já adquiridos por mim do mesmo modelo (10X).
+Solicito a devolução e a restituição do meu pagamento.",2018-05-16 00:00:00,2018-05-18 14:26:14
+b142a373901472c05940a5be68fa406f,404b2949c065b6dbade2af97cfa93527,5,,"Comprei tapete para carro, solicitei para modelo Polo Sedan 2013, mas veio tapete universal que não encaixou corretamente.",2018-05-16 00:00:00,2018-05-18 09:12:09
+9f17dd2ecd203767ee8396940cbd6ebc,d329bd974553f5e57a2f672cc82dab69,1,,"estou aguardando o estorno desta compra, gostaria de saber porque estar demorando tanto para isso ser feito .",2018-05-17 00:00:00,2018-05-18 15:44:30
+fdc2ee0da2fafb0d0b54fba02d3e7ac9,669d4be1c2a2cab7e5ec040bf54c5d91,1,Não recomendo,Comprei 3 produtos dessa loja e só recebi um. Sendo que não tenho nem como rastrear onde foi parar meus 2 produtos porque colocaram que eu recebi. Vou ter que entrar na justiça por danos,2018-04-27 00:00:00,2018-05-18 15:30:15
+ce7419a4806537498bd4bf87b5f053a1,472ef9d922172a83923731547a53978f,5,recomendo,Foi uma ótima compra,2018-05-15 00:00:00,2018-05-18 01:02:03
+70a2ba97adb4440ac268fba6b8d340d5,5f93c15063313abf1a114e682d6b6d71,5,,,2018-05-16 00:00:00,2018-05-18 07:48:00

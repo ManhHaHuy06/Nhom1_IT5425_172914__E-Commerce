@@ -1,0 +1,5 @@
+boto3==1.40.45
+pandas==2.2.3
+pyarrow==21.0.0
+SQLAlchemy==2.0.43
+PyMySQL==1.1.2

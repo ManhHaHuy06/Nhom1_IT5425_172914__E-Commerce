@@ -1,0 +1,63 @@
+review_id,order_id,review_score,review_comment_title,review_comment_message,review_creation_date,review_answer_timestamp
+08fc0e1e103f6465356822200390b4b0,70807adf40446c39c3504cd513bcf3aa,4,,,2017-03-02 00:00:00,2017-03-04 00:57:57
+f3bde40ebd9d0c6b35ea17301315fd10,138ccf0b37b60dfe366b895534e55bca,5,,Produto ce qualidade,2017-03-03 00:00:00,2017-03-04 02:53:28
+fa1d4e592e77fc2d58b86d299961f1f4,c6fe97ef4a94879e61bd71568ead79b0,5,,,2017-03-03 00:00:00,2017-03-04 11:06:00
+d5cb00d607a9fcb1049e249e3622f5d9,19512a70f62306416782f963d55c8b26,4,,Gostei do atendimento,2017-03-04 00:00:00,2017-03-04 10:25:17
+a30622dee68b75e7be69ed954a166277,5e22038cfe14c065388be1dd0a85ba77,5,,Boa compra,2017-03-03 00:00:00,2017-03-04 00:19:13
+bf22d4de761586bc179a51b588be9a2b,6f748695717d537b882406da58acefec,5,,,2017-03-04 00:00:00,2017-03-04 19:23:13
+7d9dee4737977fdeda74b832fbd00918,55849603f5bc2a49b6fbd19620c59400,5,,,2017-03-03 00:00:00,2017-03-04 14:17:02
+fea0c44e1764fd767e849ffc4838a6c8,059b6e617cb9675ad8bc74b7aa750e7d,4,,,2017-02-22 00:00:00,2017-03-04 22:57:13
+43ef05535c6c77b75c46067f559d07f1,31db9cf54c43e0190666ce0c1a3d0e9a,5,,,2017-02-23 00:00:00,2017-03-04 04:01:42
+ceacd98e3e378eeef6f553c3056b401e,78cd965d0bc0388d390404eee6490c5b,5,,"esta faltando o outro cor dourado, quando chegara?",2017-03-03 00:00:00,2017-03-04 03:21:46
+b8e44af3ab79cf792eb316e8ae88232e,ac9e4245e041d3da53604ad5c2e352ef,5,,Ótimo produto e qualidade. Chegou no prazo estipulado.,2017-03-02 00:00:00,2017-03-04 14:59:47
+f63dd21532bd5d9df67878600411a6ef,b549db79344ec0935332f80fda6b63e0,5,,Sou cliente de muito tempo da lannister.,2017-03-03 00:00:00,2017-03-04 13:00:37
+211b5045188b0254c3c7cbab1d7839a6,18ca340d8c5cef7fba3c9c18efce43e9,5,,o produto veio com defeito. ja mandei email reclamando,2017-03-03 00:00:00,2017-03-04 13:31:40
+2a305413ffd6d55b13e9b6880a149cfe,ef8ee5371febd49cde65b62e068a9019,5,,,2017-03-02 00:00:00,2017-03-04 14:23:34
+6be2fc4a51eb460a9bdd549727617bb3,da755d3951cfe68afca1b5aeddac7d81,5,,"Recomendo, produto chegou tudo nos conformes e prazo. ",2017-03-04 00:00:00,2017-03-04 11:13:47
+6540ad5bc5a8bfc9ede2d495bfb940dd,d69e5d356402adc8cf17e08b5033acfb,5,,Excelente produto,2017-03-03 00:00:00,2017-03-04 21:06:06
+a013f4c72554fff0555fc21428ec84de,dc17c17282032d56b1ca7dfbb291cf07,4,,,2017-03-02 00:00:00,2017-03-04 14:13:32
+4e44dd381f3c4f7afddacf8b9aa0c47a,12a95a3c06dbaec84bcfb0e2da5d228a,5,,,2017-03-03 00:00:00,2017-03-04 00:06:38
+d9149c744874a658481cbbede49319b3,d3b59b9a0767514f777439a668f564b8,4,,,2017-02-25 00:00:00,2017-03-04 22:34:14
+4621bafe7564f22421e54866fde89ffd,eb188a175542057d90b3ca5628b7b5a0,4,,"Boa noite recebi a mercadoria em parte pois uma cuba esta quebrada, como devo fazer? fico no prejuízo ou quem e que ira me repor esta quebrada",2017-02-24 00:00:00,2017-03-04 00:45:28
+5019d7917a42dffada45a7ec6ae22b62,e2e85885a15f712ba00eb35cf5be7cfd,1,,"O PRODUTO VEIO ERRADO E JÁ TOMARAM AS PROVIDÊNCIAS PARA A TROCA, ESTOU AGUARDANDO O VENTILADOR CERTO... VAMOS VER...",2017-02-25 00:00:00,2017-03-04 08:45:16
+126dba0769720a05295360be53b92669,3dba30e64d1c1097a281254b499f25fe,4,,Entregue rapido ,2017-03-03 00:00:00,2017-03-04 12:19:16
+71fe0ded5eeb615aac1d300304e864a1,496e779d0a36724d70beaf6ea94d7d9d,4,,,2017-03-02 00:00:00,2017-03-04 23:31:24
+b0941fe255e0add847ca05c6a035df41,5e7254b606481fc2af9d54c0e86f8995,5,,Produto foi entregue no dia 03.03. e estarei testando a eficiencia do mesmo. Espero que realmente produza o efeito esperado.,2017-03-03 00:00:00,2017-03-04 19:05:32
+e2fbd9f0ef7b724c7ecb351601a857e7,0812eb902a67711a1cb742b3cdaa65ae,5,,"Mesmo a máquina ter vindo errada, já se prontificaram e estão me dando assistência para vim a máquina correta.",2017-03-04 00:00:00,2017-03-04 21:40:41
+a2f476daadcb4b1f28542a6eabf99612,8a9adc69528e1001fc68dd0aaebbb54a,5,,,2017-03-03 00:00:00,2017-03-04 23:25:49
+aaa0ab34d6d6451a1d70482e862429aa,cfcb1e7c684257721d28ca81c394714c,5,,tudo joia,2017-03-03 00:00:00,2017-03-04 12:14:55
+1f0f439a874df1e913142d470d6fdc75,ef71061bdf8dc442c060d4f0d8266a2d,4,,,2017-03-03 00:00:00,2017-03-04 23:13:48
+b8922105038ccbe412f429ca7802631f,b9091887b2df90201bd6ba74c3187934,4,,,2017-03-03 00:00:00,2017-03-04 11:23:44
+f72d3e52c7d2fc8bac0e39716425aa70,d6322bbb41a10c3fe6721b45537106c8,2,,Varias vezes ja comprei e todas tenho que ir buscar nos correios eles não tentao fazer as entregas das lannister obs (so lannister) outra qualquer ou mercado livre chega mais com as lannister não ,2017-03-03 00:00:00,2017-03-04 01:42:34
+cb09c23d304a39010ca03b2a43673462,6505566db69a6882dfdde71d55151eff,5,,,2017-03-03 00:00:00,2017-03-04 14:22:54
+0352795999e3e020761ccb6cf5d5ba35,ae9991942f891857b982c018af448696,4,,produto entregue antes do prazo. eu recomendo,2017-03-03 00:00:00,2017-03-04 02:04:45
+d10c5f0e60868ac9f491f8ff0f2cf2bb,010ab3b1993057e91f825c672375a66d,5,,Tudo como esperado. Excelente.,2017-03-03 00:00:00,2017-03-04 10:02:11
+245f8fbfd09d9d2263353db032f53e9e,c9a54f6ed83e951ec2cbec315d2333cd,3,,"Puf veio com os parafusos soltos , da tampa do bau.",2017-03-03 00:00:00,2017-03-04 15:34:27
+0b929352c3e66ed0a6e9cd1ba1b1b346,fcf3478bc90a1b2e214d529d0455dc1e,1,,Pois a tela do encosto da cadeira estava rasgada.,2017-03-03 00:00:00,2017-03-04 00:02:09
+dc0a8627ae4d70ddb46f09f60fa3fa5e,d7adae346e57bdec9293128a1130a183,5,,Muito bom,2017-03-03 00:00:00,2017-03-04 12:47:53
+cda6a0a2f635a67209d95e11007c1d87,a26e7f9e837757064a8149ad2b918f92,5,,,2017-03-03 00:00:00,2017-03-04 16:33:49
+60a1928866d63f15ac3f418f4cafa030,da291372a3562b947e6b2b57bbfa5b74,5,,,2017-03-03 00:00:00,2017-03-04 13:52:59
+35b76396f85ed46e2ef9bd9e41114f4b,0e5120f3452260c976eae23edd2d5a0a,5,,"Agilidade na entrega...e o produto chegou em perfeito estado.
+Estao de parabéns...super recomendo",2017-03-03 00:00:00,2017-03-04 00:33:43
+331c2fea3f2c1512a9ca1889436a6904,88083e8f64d95b932164187484d90212,4,,"O serviço do site dessa vez foi otimo. 
+Em relação ao produto + o frete = não tem uma boa relação custo benefício, pelo preço poderia ser melhor acabado, sporte tem apenas dois níveis de inclinação.",2017-03-03 00:00:00,2017-03-04 03:45:57
+5ab76baf66d7800de8b887f67b23397d,ad4c4ee12613fc3dc5d506e4e6455498,5,,,2017-03-04 00:00:00,2017-03-04 23:23:19
+ceacd98e3e378eeef6f553c3056b401e,329aacec1c0231ed21bb1e2f8f4dc1e0,5,,"esta faltando o outro cor dourado, quando chegara?",2017-03-03 00:00:00,2017-03-04 03:21:46
+15f531911d87a86cc97ffd1f8f94a8e5,ab78c0e74f7486a3c47185c0f5cfbb89,4,,,2017-03-02 00:00:00,2017-03-04 18:03:26
+a4610c07bf86ba638cbf85b73f128041,ba22a1fb553e3c6597c8c25d6478df2e,5,,Pedido entregue rápido antes do prazo.,2017-03-03 00:00:00,2017-03-04 11:30:34
+76a05a18309209104d2ce7e4ef05e362,b78d95a93c70ace32ceafee76789a2f1,1,,"O produto veio repleto de avarias e as peças não se encaixam devidamente, o que foi constatado por montador profissional. A qualidade também não é a indicada. Lastimável!",2017-03-04 00:00:00,2017-03-04 19:21:56
+ec03f5454213b12cbcff9390fab6c42e,98a9e68b90e2913946a91acde7014d69,4,,Gostei do produto.,2017-03-03 00:00:00,2017-03-04 15:13:31
+f6b6c285955f5ec9f307c5205fcbeaca,fad93ddceb5b210f71589b1e9258a110,1,,,2017-03-03 00:00:00,2017-03-04 03:29:52
+9e139e4938b03f35f89a01ee31da91bc,4e8ccb7e52d788ba5787160a8bf84b60,5,,,2017-02-25 00:00:00,2017-03-04 12:34:08
+e3f358e7379be4f66f5073bbbfb4f5aa,6f6665c1d76e55561978ccb45bdcafc6,3,,"Produto extremamente pequeno e leve, mas que teve um frete muito caro e cada unidade foi enviada em uma pacote separado (para justificar o frete, talvez)",2017-03-03 00:00:00,2017-03-04 01:38:44
+51582549dcefa1ad0ccf5f4d3bf75215,3ed6a9a1b212121d7c0fde10bc8a65f2,1,,A cadeira veio suja com a borracha da lateral soltando é muito frágil comprei pra minha filha de 8 anos usar pra adulto não serve. Arrependida pela compra queria meu dinheiro de volta.,2017-03-03 00:00:00,2017-03-04 04:00:47
+1747b2640e626aeaf7928e802bf3bb54,7c933084ae34df732cfb3b47968b1666,1,,,2017-02-24 00:00:00,2017-03-04 09:26:30
+e9e09c311d83918a20bd3676a9fec753,2867faaa7a912bbc2bf8d8e40d7a0354,1,,,2017-03-04 00:00:00,2017-03-04 07:53:23
+e3dd3c7c7bc965262ea063b96db0efc5,0dc9297ae7a839d499730fd9acdd00f3,4,,,2017-03-04 00:00:00,2017-03-04 21:26:42
+1306e77f7d1ed94987d6aa29ed2af17b,3917a4e61779a9c43bb9a923ff6ec663,5,,"Compro no stark, há vários anos. Ótima loja virtual. Nunca tive problemas.",2017-02-22 00:00:00,2017-03-04 15:02:02
+778c1c88259213fca022b83911cfba27,03ee28c413aaef04d718e00ed85eb678,2,,Precisa ter esta avaliação em todos os produtos q se compra pq ainda tenho compras a receber,2017-03-04 00:00:00,2017-03-04 22:35:54
+59c2de3c8e1dad5bacbc54b297fd8b6a,cacbadb716f3aaaf88b7271395671483,5,,,2017-02-24 00:00:00,2017-03-04 16:29:39
+234c40c3552569764f42c55f34f90f27,30945faa37e8264ea2815f7bf799adf0,1,,Já fiz outras compras e foi tudo certo . porém esta nada ,2017-03-04 00:00:00,2017-03-04 13:40:28
+e669f8ad19af78d7d525481ac700b5f5,544317d6ff28d37495220e2bf024a1ae,4,,"Eu sempre compro no baratheon e sempre me entregam bem rápido,só acho que teria que tomar mas cuidado com as transportadoras porquê comprei um produto e veio todo manchado,mas vieram fazer a troca fica",2017-03-03 00:00:00,2017-03-04 12:29:29
+d0e09ca53584cfd160543f2cd7d78f4f,54a6430e873dab60295a0a83b82464d2,5,,,2017-03-02 00:00:00,2017-03-04 23:25:51
+bfb83fc405e9e52bb5332f8b703e0511,fa22247626749c6b54ee3b6a97cb8018,4,,,2017-03-02 00:00:00,2017-03-04 15:19:19

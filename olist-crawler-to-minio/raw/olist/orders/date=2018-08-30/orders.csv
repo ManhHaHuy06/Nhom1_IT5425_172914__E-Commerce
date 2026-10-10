@@ -1,0 +1,5 @@
+order_id,customer_id,order_status,order_purchase_timestamp,order_approved_at,order_delivered_carrier_date,order_delivered_customer_date,order_estimated_delivery_date
+0a472c47d928bf4cd8b6a7a30345eeb7,8762d94c493b70216cd453ea2320234e,canceled,2018-08-30 10:14:00,,,,2018-10-02 00:00:00
+bb8edfe0742a6a0279b7dff848289568,c2a1740e781cc978dbab71735cf3ce84,canceled,2018-08-30 10:24:34,,,,2018-09-18 00:00:00
+2663ce3526465b7ee9809428adabdc45,032a544bbe984490f6ff7450e3c8b0bc,canceled,2018-08-30 13:07:46,,,,2018-09-12 00:00:00
+572c4bbf0f5f85a9b4a2c4fe0c7f04d5,93ccdc49f22d1b0e3664b2bc328cf23d,canceled,2018-08-30 15:11:58,,,,2018-09-14 00:00:00

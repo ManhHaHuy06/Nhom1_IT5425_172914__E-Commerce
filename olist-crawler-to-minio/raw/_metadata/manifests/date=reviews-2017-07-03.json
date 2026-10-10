@@ -1,0 +1,13 @@
+{
+  "type": "transactional",
+  "date": "2017-07-03",
+  "source": "http://host.docker.internal:8000",
+  "datasets": {
+    "reviews": {
+      "rows": 113,
+      "sha256": "63afdd4f08c71a2b2773da20014242241c75303c557afa4957a32710e206e3e6",
+      "path": "raw/olist/reviews/date=2017-07-03/reviews.csv",
+      "date_semantics": "DATE(review_answer_timestamp)"
+    }
+  }
+}

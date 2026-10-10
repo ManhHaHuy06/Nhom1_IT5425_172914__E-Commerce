@@ -1,0 +1,47 @@
+services:
+  mysql-dw:
+    image: mysql:8.0
+    container_name: olist-mysql-dw
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: olist_dw
+      MYSQL_USER: olist
+      MYSQL_PASSWORD: olist123
+    ports:
+      - "3307:3306"
+    volumes:
+      - mysql-dw-data:/var/lib/mysql
+      - ./mysql/schema.sql:/docker-entrypoint-initdb.d/01-schema.sql:ro
+    healthcheck:
+      test: ["CMD-SHELL", "mysqladmin ping -h 127.0.0.1 -uolist -polist123 --silent"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+    restart: unless-stopped
+
+  dw-loader:
+    build: ./loader
+    container_name: olist-dw-loader
+    depends_on:
+      mysql-dw:
+        condition: service_healthy
+    environment:
+      MINIO_ENDPOINT: "host.docker.internal:9000"
+      MINIO_ACCESS_KEY: "admin"
+      MINIO_SECRET_KEY: "minioadmin"
+      MINIO_BUCKET: "olist"
+      MINIO_SECURE: "false"
+
+      MYSQL_HOST: "mysql-dw"
+      MYSQL_PORT: "3306"
+      MYSQL_DATABASE: "olist_dw"
+      MYSQL_USER: "olist"
+      MYSQL_PASSWORD: "olist123"
+
+      CURATED_PREFIX: "curated"
+      LOAD_MODE: "replace"
+    command: ["python", "/app/loader.py"]
+    restart: "no"
+
+volumes:
+  mysql-dw-data:

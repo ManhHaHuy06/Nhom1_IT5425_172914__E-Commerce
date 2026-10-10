@@ -1,0 +1,13 @@
+services:
+  olist-data-source:
+    build: .
+    container_name: olist-data-source
+    ports:
+      - "8000:8000"
+    environment:
+      DATA_DIR: /app/data
+      SIMULATION_DIR: /app/simulation
+    volumes:
+      # Keep simulated versions/change logs after container recreation.
+      - ./simulation:/app/simulation
+    restart: unless-stopped

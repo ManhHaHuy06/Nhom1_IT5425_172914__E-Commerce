@@ -1,0 +1,4 @@
+review_id,order_id,review_score,review_comment_title,review_comment_message,review_creation_date,review_answer_timestamp
+0e78e53b34bbdb054bc13e8c1a4bfc77,dbbbc904081f8e928028432e2e3d7686,1,,"Comprei o produto e depois de 45 dias, a loja americana enviou e-mail dizendo: Devido a uma divergência no sistema de controle de estoque do parceiro , não será possível efetuar a entrega do produto",2016-12-16 00:00:00,2016-12-16 10:41:22
+50c851bd79dc0b19f3d9c523ca747df8,54bb06e1ca86bd99ee2a8d6288bf4ede,1,,"Produto não entregue, demoraram mais de um mês para me comunicar que não havia mais em estoque e que fariam o estorno no cartão de crédito. Frete muito caro.",2016-12-14 00:00:00,2016-12-16 09:34:47
+022b209ce091ff053289d95aa42735ce,59f26737bbeea8142a7e982cfce13e7a,5,,"Excelente eficácia na venda. O produto chegou em segurança, bem protegido e muito antes do prazo de entrega.",2016-12-16 00:00:00,2016-12-16 11:07:22

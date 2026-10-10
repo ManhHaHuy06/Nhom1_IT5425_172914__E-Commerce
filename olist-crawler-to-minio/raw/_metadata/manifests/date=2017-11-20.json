@@ -1,0 +1,23 @@
+{
+  "type": "transactional",
+  "date": "2017-11-20",
+  "source": "http://host.docker.internal:8000",
+  "datasets": {
+    "orders": {
+      "rows": 230,
+      "sha256": "cb54ec3d7b9955192081e323683839dc111c6356dcc6a10cb84c3eca276f9ff9",
+      "path": "raw/olist/orders/date=2017-11-20/orders.csv"
+    },
+    "order_items": {
+      "rows": 262,
+      "sha256": "a59c451d383a45779272b5c3742f7ac162bc554d9be1738f08b9bfeea90f8771",
+      "path": "raw/olist/order_items/date=2017-11-20/order_items.csv"
+    },
+    "payments": {
+      "rows": 236,
+      "sha256": "b3bb395360a5f778f12099c74d6d419e166c0c65c29b34c68738b48958191900",
+      "path": "raw/olist/payments/date=2017-11-20/payments.csv"
+    }
+  },
+  "order_count_api": 230
+}
