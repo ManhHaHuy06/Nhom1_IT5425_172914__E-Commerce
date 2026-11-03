@@ -6,7 +6,7 @@ COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
 COPY app.py .
-COPY data ./data
+COPY olist_augmented_data ./olist_augmented_data
 RUN mkdir -p /app/simulation
 
 EXPOSE 8000

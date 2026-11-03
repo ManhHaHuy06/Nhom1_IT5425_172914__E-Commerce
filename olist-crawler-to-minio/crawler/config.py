@@ -4,9 +4,11 @@ from dataclasses import dataclass
 @dataclass(frozen=True)
 class Settings:
     source_url: str = os.getenv("DATA_SOURCE_URL", "http://host.docker.internal:8000").rstrip("/")
-    raw_dir: str = os.getenv("RAW_DIR", "raw/olist")
-    state_file: str = os.getenv("STATE_FILE", "raw/_metadata/crawler_state.json")
-    manifest_dir: str = os.getenv("MANIFEST_DIR", "raw/_metadata/manifests")
+    # Landing under MinIO bucket handoff (CSV zone; Iceberg lives in lakehouse).
+    landing_prefix: str = os.getenv("LANDING_PREFIX", "bronze")
+    raw_dir: str = os.getenv("RAW_DIR", "bronze/olist")
+    state_file: str = os.getenv("STATE_FILE", "bronze/_metadata/crawler_state.json")
+    manifest_dir: str = os.getenv("MANIFEST_DIR", "bronze/_metadata/manifests")
     start_date: str = os.getenv("START_DATE", "2016-09-04")
     end_date: str = os.getenv("END_DATE", "2018-10-17")
     review_start_date: str = os.getenv("REVIEW_START_DATE", "2016-09-04")

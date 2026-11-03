@@ -5,9 +5,11 @@ services:
     ports:
       - "8000:8000"
     environment:
-      DATA_DIR: /app/data
+      DATA_DIR: /app/olist_augmented_data
       SIMULATION_DIR: /app/simulation
     volumes:
       # Keep simulated versions/change logs after container recreation.
       - ./simulation:/app/simulation
+      # Serve augmented CSVs (hot-reload without image rebuild).
+      - ./olist_augmented_data:/app/olist_augmented_data:ro
     restart: unless-stopped

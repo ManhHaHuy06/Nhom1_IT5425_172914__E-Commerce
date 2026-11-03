@@ -24,7 +24,7 @@ app = FastAPI(
     version="2.0.0",
 )
 
-DATA_DIR = Path(os.getenv("DATA_DIR", "data"))
+DATA_DIR = Path(os.getenv("DATA_DIR", "olist_augmented_data"))
 SIM_DIR = Path(os.getenv("SIMULATION_DIR", "simulation"))
 STATE_FILE = SIM_DIR / "master_state.json"
 

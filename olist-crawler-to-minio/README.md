@@ -33,9 +33,15 @@ Các lần chạy sau: gọi `/master/manifest`, so sánh `version` + `etag`, v�
 
 ## 2. Chạy Docker
 
-Data Source Server chạy trên Docker host ở port 8000:
+Crawler **không** chạy MinIO riêng — ghi vào MinIO của `olist-lakehouse` (network `olist-lakehouse-network`, bucket `handoff`, user `admin` / `admin123`).
 
 ```powershell
+# 1. Bật lakehouse trước (tạo MinIO + bucket handoff/lakehouse)
+cd ..\olist-lakehouse\infrastructure
+docker compose up -d
+
+# 2. Crawl (Data Source Server ở host:8000)
+cd ..\..\olist-crawler-to-minio
 docker compose up --build
 ```
 
@@ -46,15 +52,15 @@ Nếu Data Source Server đã chạy bằng Docker Desktop trên Windows, `host.
 Crawler idempotent theo ngày và theo master version. State nằm ở:
 
 ```text
-raw/_metadata/crawler_state.json
+bronze/_metadata/crawler_state.json
 ```
 
-Không xóa `raw/` nếu muốn crawler tiếp tục từ state cũ.
+Không xóa `bronze/` nếu muốn crawler tiếp tục từ state cũ. Đây là handoff thẳng vào Bronze (không còn zone `raw/`).
 
-## 4. Raw layout
+## 4. Bronze landing layout (MinIO bucket `handoff`)
 
 ```text
-raw/olist/
+bronze/
 ├── orders/date=YYYY-MM-DD/orders.csv
 ├── order_items/date=YYYY-MM-DD/order_items.csv
 ├── payments/date=YYYY-MM-DD/payments.csv

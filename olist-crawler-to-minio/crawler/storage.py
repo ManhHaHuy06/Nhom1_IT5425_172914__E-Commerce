@@ -44,11 +44,16 @@ class Storage:
         )
         self.minio_secret_key = os.getenv(
             "MINIO_SECRET_KEY",
-            "minioadmin",
+            "admin123",
         )
         self.minio_bucket = os.getenv(
             "MINIO_BUCKET",
-            "olist",
+            "handoff",
+        )
+        # Landing prefix on the handoff bucket (CSV zone separate from Iceberg lakehouse).
+        # Spark reads these CSV objects and commits iceberg.bronze.*.
+        self.landing_prefix = (
+            os.getenv("LANDING_PREFIX", "bronze").strip().strip("/") or "bronze"
         )
         self.minio_secure = (
             os.getenv("MINIO_SECURE", "false").lower() == "true"
@@ -124,10 +129,14 @@ class Storage:
 
         becomes:
 
-            raw/orders/date=2017-09-13/orders.csv
+            bronze/orders/date=2017-09-13/orders.csv
         """
         relative = self._normalize_path(relative)
-        return f"raw/{relative}"
+        return f"{self.landing_prefix}/{relative}"
+
+    def _meta_object_name(self, relative: str) -> str:
+        relative = self._normalize_path(relative)
+        return f"{self.landing_prefix}/_metadata/{relative}"
 
     # ----------------------------------------------------------------------
     # MinIO write
@@ -159,7 +168,7 @@ class Storage:
         No local state file is created.
         """
 
-        object_name = "raw/_metadata/crawler_state.json"
+        object_name = self._meta_object_name("crawler_state.json")
 
         try:
             response = self.minio.get_object(
@@ -198,7 +207,7 @@ class Storage:
         ).encode("utf-8")
 
         self._upload_bytes(
-            "raw/_metadata/crawler_state.json",
+            self._meta_object_name("crawler_state.json"),
             data,
             "application/json",
         )
@@ -272,7 +281,7 @@ class Storage:
         Store master-data changes directly in MinIO.
 
         Example:
-            raw/products/version=5/changes.jsonl
+            bronze/products/version=5/changes.jsonl
         """
 
         rel = (
@@ -310,7 +319,7 @@ class Storage:
         Store one snapshot page directly in MinIO.
 
         Example:
-            raw/products/version=3/pages/part-0000000000.csv
+            bronze/products/version=3/pages/part-0000000000.csv
         """
 
         relative = (
@@ -339,7 +348,7 @@ class Storage:
         Store daily transaction data directly in MinIO.
 
         Example:
-            raw/orders/date=2017-09-13/orders.csv
+            bronze/orders/date=2017-09-13/orders.csv
         """
 
         relative = (
@@ -366,7 +375,7 @@ class Storage:
         Store manifest directly in MinIO.
 
         Example:
-            raw/_metadata/manifests/date=2017-09-13.json
+            bronze/_metadata/manifests/date=2017-09-13.json
         """
 
         data = json.dumps(
@@ -376,7 +385,7 @@ class Storage:
         ).encode("utf-8")
 
         self._upload_bytes(
-            f"raw/_metadata/manifests/date={day}.json",
+            self._meta_object_name(f"manifests/date={day}.json"),
             data,
             "application/json",
         )

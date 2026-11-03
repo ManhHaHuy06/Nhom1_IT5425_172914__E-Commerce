@@ -1,27 +1,11 @@
+# Dùng chung MinIO của olist-lakehouse (container hostname: minio).
+# Bật lakehouse trước: cd ../olist-lakehouse/infrastructure && docker compose up -d
 services:
-  minio:
-    image: soldevelo/minio:2026.7.17
-    container_name: olist-minio
-    user: "0:0"
-    environment:
-      MINIO_ROOT_USER: admin
-      MINIO_ROOT_PASSWORD: minioadmin
-    ports:
-      - "9000:9000"
-      - "9001:9001"
-    volumes:
-      - ./minio-data:/data
-    command:
-      - server
-      - /data
-      - --console-address
-      - ":9001"
-
   olist-crawler:
     build: .
     container_name: olist-crawler
-    depends_on:
-      - minio
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
     environment:
       DATA_SOURCE_URL: ${DATA_SOURCE_URL:-http://host.docker.internal:8000}
 
@@ -43,14 +27,16 @@ services:
       HTTP_TIMEOUT: ${HTTP_TIMEOUT:-120}
       RETRY_BACKOFF: ${RETRY_BACKOFF:-2}
 
-      RAW_DIR: ${RAW_DIR:-raw/olist}
-      STATE_FILE: ${STATE_FILE:-raw/_metadata/crawler_state.json}
-      MANIFEST_DIR: ${MANIFEST_DIR:-raw/_metadata/manifests}
+      LANDING_PREFIX: ${LANDING_PREFIX:-bronze}
+      RAW_DIR: ${RAW_DIR:-bronze/olist}
+      STATE_FILE: ${STATE_FILE:-bronze/_metadata/crawler_state.json}
+      MANIFEST_DIR: ${MANIFEST_DIR:-bronze/_metadata/manifests}
 
+      # Credentials khớp olist-lakehouse/infrastructure/.env
       MINIO_ENDPOINT: ${MINIO_ENDPOINT:-minio:9000}
       MINIO_ACCESS_KEY: ${MINIO_ACCESS_KEY:-admin}
-      MINIO_SECRET_KEY: ${MINIO_SECRET_KEY:-minioadmin}
-      MINIO_BUCKET: ${MINIO_BUCKET:-olist}
+      MINIO_SECRET_KEY: ${MINIO_SECRET_KEY:-admin123}
+      MINIO_BUCKET: ${MINIO_BUCKET:-handoff}
       MINIO_SECURE: ${MINIO_SECURE:-false}
       MINIO_CONNECT_RETRIES: ${MINIO_CONNECT_RETRIES:-30}
       MINIO_CONNECT_DELAY: ${MINIO_CONNECT_DELAY:-2}
@@ -58,6 +44,10 @@ services:
     volumes:
       - ./raw:/app/raw
       - ./logs:/app/logs
+    networks:
+      - olist-network
 
-volumes:
-  minio_data:
+networks:
+  olist-network:
+    name: olist-lakehouse-network
+    external: true

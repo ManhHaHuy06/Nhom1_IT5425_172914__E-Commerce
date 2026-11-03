@@ -2,6 +2,8 @@
 
 Dockerized FastAPI source simulator for the 9-file Olist Brazilian E-Commerce dataset.
 
+CSV source directory: `olist_augmented_data/` (via `DATA_DIR`). The crawler (`olist-crawler-to-minio`) still calls this API at `http://localhost:8000`.
+
 ## Architecture
 
 ### Group A — Transactional/event data

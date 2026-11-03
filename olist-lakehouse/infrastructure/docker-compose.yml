@@ -1,0 +1,267 @@
+# Kien truc Data Lakehouse cho bo du lieu Olist E-Commerce:
+# - MinIO         : Object Storage (bucket handoff = CSV crawler, lakehouse = Iceberg)
+# - PostgreSQL    : Backend luu metadata Iceberg Catalog
+# - Iceberg REST  : REST Catalog cho Iceberg
+# - Spark         : Engine xu ly ETL batch (CSV bronze handoff -> Iceberg Bronze -> Silver -> Gold)
+# - Trino         : Query Engine - truy van SQL truc tiep tren Iceberg tables
+# - ClickHouse    : Serving OLAP cho dashboard / BI
+#
+# Web UIs:
+#   MinIO Console : http://localhost:9001  (admin / admin123)
+#   Spark UI      : http://localhost:8084
+#   Trino UI      : http://localhost:8085
+#   Iceberg REST  : http://localhost:8181
+#   ClickHouse    : http://localhost:8123
+#
+# Pipeline batch: crawler ghi s3://handoff/bronze truoc, roi run_lakehouse.ps1
+
+
+services:
+
+  catalog-postgres:
+    image: postgres:15-alpine
+    container_name: olist-catalog-postgres
+    hostname: catalog-postgres
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: iceberg_catalog
+    ports:
+      - "${EXTERNAL_POSTGRES_PORT}:5432"
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+      - ./postgres/init.sql:/docker-entrypoint-initdb.d/init.sql:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d iceberg_catalog"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 20s
+    networks:
+      - olist-network
+
+  # Official minio/minio + minio/mc were removed from Docker Hub (2025/2026).
+  # soldevelo/minio ships server + mc client compatible with this stack.
+  minio:
+    image: soldevelo/minio:2026.7.17
+    container_name: olist-minio
+    hostname: minio
+    user: "0:0"
+    ports:
+      - "${EXTERNAL_MINIO_API_PORT}:9000"
+      - "${EXTERNAL_MINIO_CONSOLE_PORT}:9001"
+    environment:
+      MINIO_ROOT_USER: ${MINIO_ROOT_USER}
+      MINIO_ROOT_PASSWORD: ${MINIO_ROOT_PASSWORD}
+      MINIO_PROMETHEUS_AUTH_TYPE: public
+    command: server /data --console-address ":9001"
+    volumes:
+      - minio-data:/data
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:9000/minio/health/live"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+    networks:
+      - olist-network
+
+  minio-init:
+    image: soldevelo/minio:2026.7.17
+    container_name: olist-minio-init
+    user: "0:0"
+    depends_on:
+      minio:
+        condition: service_healthy
+    environment:
+      MINIO_ENDPOINT: http://minio:9000
+      MINIO_ROOT_USER: ${MINIO_ROOT_USER}
+      MINIO_ROOT_PASSWORD: ${MINIO_ROOT_PASSWORD}
+      PATH: /opt/bitnami/minio-client/bin:/usr/bin:/bin
+    volumes:
+      - ./minio/init-buckets.sh:/init-buckets.sh:ro
+    entrypoint: ["/bin/sh", "/init-buckets.sh"]
+    networks:
+      - olist-network
+
+
+  iceberg-rest:
+    build:
+      context: ./iceberg-rest
+      dockerfile: Dockerfile
+    container_name: olist-iceberg-rest
+    hostname: iceberg-rest
+    ports:
+      - "${EXTERNAL_ICEBERG_REST_PORT}:8181"
+    environment:
+      AWS_ACCESS_KEY_ID: ${MINIO_ROOT_USER}
+      AWS_SECRET_ACCESS_KEY: ${MINIO_ROOT_PASSWORD}
+      AWS_REGION: us-east-1
+      CATALOG_WAREHOUSE: s3a://lakehouse/
+      CATALOG_IO__IMPL: org.apache.iceberg.aws.s3.S3FileIO
+      CATALOG_S3_ENDPOINT: http://minio:9000
+      CATALOG_S3_PATH__STYLE__ACCESS: "true"
+      CATALOG_CATALOG__IMPL: org.apache.iceberg.jdbc.JdbcCatalog
+      CATALOG_URI: jdbc:postgresql://catalog-postgres:5432/iceberg_catalog
+      CATALOG_JDBC_USER: ${POSTGRES_USER}
+      CATALOG_JDBC_PASSWORD: ${POSTGRES_PASSWORD}
+    depends_on:
+      minio-init:
+        condition: service_completed_successfully
+      catalog-postgres:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD-SHELL", "bash -c 'echo > /dev/tcp/localhost/8181'"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 20s
+    networks:
+      - olist-network
+
+  spark-master:
+    build:
+      context: ./spark
+      dockerfile: Dockerfile
+    container_name: olist-spark-master
+    hostname: spark-master
+    ports:
+      - "${EXTERNAL_SPARK_UI_PORT}:8080"
+      - "7077:7077"
+    environment:
+      SPARK_MASTER_HOST: spark-master
+      SPARK_MASTER_PORT: 7077
+      SPARK_MASTER_WEBUI_PORT: 8080
+      AWS_ACCESS_KEY_ID: ${MINIO_ROOT_USER}
+      AWS_SECRET_ACCESS_KEY: ${MINIO_ROOT_PASSWORD}
+      AWS_REGION: us-east-1
+      PYTHONPATH: /opt/spark
+    command: /opt/spark/bin/spark-class org.apache.spark.deploy.master.Master
+    volumes:
+      - ../olist_pipeline.py:/opt/spark/olist_pipeline.py:ro
+      - ../common:/opt/spark/common:ro
+      - ../layers:/opt/spark/layers:ro
+    depends_on:
+      minio-init:
+        condition: service_completed_successfully
+      iceberg-rest:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080"]
+      interval: 15s
+      timeout: 10s
+      retries: 5
+      start_period: 30s
+    networks:
+      - olist-network
+
+  spark-worker:
+    build:
+      context: ./spark
+      dockerfile: Dockerfile
+    container_name: olist-spark-worker
+    hostname: spark-worker
+    environment:
+      SPARK_WORKER_CORES: ${SPARK_WORKER_CORES}
+      SPARK_WORKER_MEMORY: ${SPARK_WORKER_MEMORY}
+      AWS_ACCESS_KEY_ID: ${MINIO_ROOT_USER}
+      AWS_SECRET_ACCESS_KEY: ${MINIO_ROOT_PASSWORD}
+      AWS_REGION: us-east-1
+      PYTHONPATH: /opt/spark
+    command: /opt/spark/bin/spark-class org.apache.spark.deploy.worker.Worker spark://spark-master:7077
+    volumes:
+      - ../olist_pipeline.py:/opt/spark/olist_pipeline.py:ro
+      - ../common:/opt/spark/common:ro
+      - ../layers:/opt/spark/layers:ro
+    depends_on:
+      spark-master:
+        condition: service_healthy
+    networks:
+      - olist-network
+
+  trino:
+    image: trinodb/trino:440
+    container_name: olist-trino
+    hostname: trino
+    ports:
+      - "${EXTERNAL_TRINO_PORT}:8080"
+    environment:
+      AWS_ACCESS_KEY_ID: ${MINIO_ROOT_USER}
+      AWS_SECRET_ACCESS_KEY: ${MINIO_ROOT_PASSWORD}
+      AWS_REGION: us-east-1
+    volumes:
+      - ./trino/config.properties:/etc/trino/config.properties:ro
+      - ./trino/jvm.config:/etc/trino/jvm.config:ro
+      - ./trino/node.properties:/etc/trino/node.properties:ro
+      - ./trino/catalog:/etc/trino/catalog:ro
+    depends_on:
+      minio-init:
+        condition: service_completed_successfully
+      iceberg-rest:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/v1/info"]
+      interval: 15s
+      timeout: 10s
+      retries: 5
+      start_period: 30s
+    networks:
+      - olist-network
+
+  clickhouse:
+    image: clickhouse/clickhouse-server:24.3
+    container_name: olist-clickhouse
+    hostname: clickhouse
+    ports:
+      - "${EXTERNAL_CLICKHOUSE_HTTP_PORT}:8123"
+      - "${EXTERNAL_CLICKHOUSE_NATIVE_PORT}:9000"
+    environment:
+      CLICKHOUSE_PASSWORD: ${CLICKHOUSE_PASSWORD}
+      MINIO_ROOT_USER: ${MINIO_ROOT_USER}
+      MINIO_ROOT_PASSWORD: ${MINIO_ROOT_PASSWORD}
+    volumes:
+      - clickhouse-data:/var/lib/clickhouse
+      - ./clickhouse/config.xml:/etc/clickhouse-server/config.d/custom.xml:ro
+      - ../layers/clickhouse/load_gold.sql:/opt/olist/load_gold.sql:ro
+    depends_on:
+      minio-init:
+        condition: service_completed_successfully
+    healthcheck:
+      test: ["CMD", "wget", "--spider", "-q", "http://localhost:8123/ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 20s
+    networks:
+      - olist-network
+
+  clickhouse-init:
+    image: clickhouse/clickhouse-server:24.3
+    container_name: olist-clickhouse-init
+    depends_on:
+      clickhouse:
+        condition: service_healthy
+    environment:
+      CLICKHOUSE_PASSWORD: ${CLICKHOUSE_PASSWORD}
+    volumes:
+      - ../layers/clickhouse/init_gold.sql:/init_gold.sql:ro
+    entrypoint: ["/bin/bash", "-c"]
+    command:
+      - |
+        clickhouse-client --host clickhouse --password "$$CLICKHOUSE_PASSWORD" --multiquery < /init_gold.sql
+        echo "ClickHouse gold schema ready"
+    networks:
+      - olist-network
+
+networks:
+  olist-network:
+    name: olist-lakehouse-network
+    driver: bridge
+
+volumes:
+  postgres-data:
+    name: olist-lakehouse-postgres-data
+  minio-data:
+    name: olist-lakehouse-minio-data
+  clickhouse-data:
+    name: olist-lakehouse-clickhouse-data
