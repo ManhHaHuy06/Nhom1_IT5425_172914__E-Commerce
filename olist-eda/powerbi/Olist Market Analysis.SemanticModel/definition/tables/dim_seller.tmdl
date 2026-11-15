@@ -1,0 +1,193 @@
+table dim_seller
+	lineageTag: 9999fc69-656c-426e-b818-1dbc991d6794
+
+	measure 'Seller GMV Median' = MEDIAN ( dim_seller[gmv] )
+		formatString: #,0
+		displayFolder: Người bán
+		lineageTag: d4fa98fc-8df3-4cf5-a4ed-3b997e34251a
+
+	measure 'Seller Share in Category Band' =
+			DIVIDE ( COUNTROWS ( dim_seller ),
+			    CALCULATE ( COUNTROWS ( dim_seller ), REMOVEFILTERS ( dim_seller[category_band], dim_seller[category_band_order] ) ) )
+		formatString: 0%
+		displayFolder: Người bán
+		lineageTag: 4e41d4cc-0c55-4c64-b956-99e58cbef6fb
+
+	measure 'GMV Share in Category Band' =
+			DIVIDE ( SUM ( dim_seller[gmv] ),
+			    CALCULATE ( SUM ( dim_seller[gmv] ), REMOVEFILTERS ( dim_seller[category_band], dim_seller[category_band_order] ) ) )
+		formatString: 0%
+		displayFolder: Người bán
+		lineageTag: e6857b5e-7ad1-430e-abc9-b93398ffa446
+
+	measure 'Category Band Label' =
+			FORMAT ( [Seller Share in Category Band], "0%" ) & " / "
+			    & FORMAT ( [GMV Share in Category Band], "0%" )
+		displayFolder: Người bán
+		lineageTag: 8a2cff74-52e8-426d-b1d5-df74475e7bb3
+
+	column seller_id
+		dataType: string
+		isKey
+		lineageTag: 8595ee30-a333-45bb-8ee2-d5abff976193
+		summarizeBy: none
+		sourceColumn: seller_id
+
+	column seller_state
+		dataType: string
+		lineageTag: 97268996-eef9-4293-9e71-bd8a799fecef
+		summarizeBy: none
+		sourceColumn: seller_state
+
+	column seller_region
+		dataType: string
+		lineageTag: 63dbed9f-6c82-4029-b904-39fb01ed8710
+		summarizeBy: none
+		sourceColumn: seller_region
+		sortByColumn: seller_region_order
+
+	column seller_region_order
+		dataType: int64
+		isHidden
+		lineageTag: 0b7558bf-8ea0-4fbe-91ba-057c80ad3c66
+		summarizeBy: none
+		sourceColumn: seller_region_order
+
+	column gmv
+		dataType: double
+		formatString: \R\$ #,0
+		lineageTag: 298b43c7-6f04-4494-901f-c10eaef89565
+		summarizeBy: none
+		sourceColumn: gmv
+
+	column orders
+		dataType: int64
+		formatString: #,0
+		lineageTag: 259b3f1d-8996-4fdb-a3a5-52ecfe77ffe4
+		summarizeBy: none
+		sourceColumn: orders
+
+	column gmv_rank
+		dataType: int64
+		lineageTag: d1ec86eb-0498-4288-b6de-3813d0d43fa2
+		summarizeBy: none
+		sourceColumn: gmv_rank
+
+	column seller_tier
+		dataType: string
+		lineageTag: a27aec5f-e3f8-4f04-befb-bdb3d13de981
+		summarizeBy: none
+		sourceColumn: seller_tier
+		sortByColumn: seller_tier_order
+
+	column seller_tier_order
+		dataType: int64
+		isHidden
+		lineageTag: 104e64c9-d9de-49f0-b8e9-e0d6b756dee7
+		summarizeBy: none
+		sourceColumn: seller_tier_order
+
+	column first_month
+		dataType: dateTime
+		formatString: mm/yyyy
+		lineageTag: 06bb4469-3b75-4dba-b815-f1feee03787b
+		summarizeBy: none
+		sourceColumn: first_month
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	column first_year
+		dataType: int64
+		lineageTag: 4b84f13b-44ba-46c3-a448-cf8c5b4ea994
+		summarizeBy: none
+		sourceColumn: first_year
+
+	column seller_cohort
+		dataType: string
+		lineageTag: 70646335-42b1-463c-8632-5405708ed323
+		summarizeBy: none
+		sourceColumn: seller_cohort
+		sortByColumn: seller_cohort_order
+
+	column seller_cohort_order
+		dataType: int64
+		isHidden
+		lineageTag: 0e74e6a6-8fed-4fb0-9adf-2ae24bcb1c04
+		summarizeBy: none
+		sourceColumn: seller_cohort_order
+
+	column retention_observable
+		dataType: string
+		lineageTag: de66c0b0-419e-4669-ae36-16fd0bc00de7
+		summarizeBy: none
+		sourceColumn: retention_observable
+
+	column active_m6_8
+		dataType: int64
+		lineageTag: 984b2285-57cb-4630-8511-a6d59c7aa212
+		summarizeBy: none
+		sourceColumn: active_m6_8
+
+	column avg_review
+		dataType: double
+		formatString: 0.00
+		lineageTag: 65d07a76-5810-4b81-819a-33e56f46c779
+		summarizeBy: none
+		sourceColumn: avg_review
+
+	column negative_rate
+		dataType: double
+		formatString: 0.0%
+		lineageTag: 92fbcb24-24bb-4bfb-acc6-cabb06b6d01e
+		summarizeBy: none
+		sourceColumn: negative_rate
+
+	column late_rate
+		dataType: double
+		formatString: 0.0%
+		lineageTag: 60e43618-d638-40bc-9bc4-679b1db7e90a
+		summarizeBy: none
+		sourceColumn: late_rate
+
+	column review_band
+		dataType: string
+		lineageTag: 40ea7536-9c5e-4d19-be17-107c6b0a766e
+		summarizeBy: none
+		sourceColumn: review_band
+		sortByColumn: review_band_order
+
+	column review_band_order
+		dataType: int64
+		isHidden
+		lineageTag: 67a9cd15-fa4b-4008-9028-5ac5b7e063b1
+		summarizeBy: none
+		sourceColumn: review_band_order
+
+	column n_categories = CALCULATE ( DISTINCTCOUNTNOBLANK ( item_sales[category] ) ) + 0
+		dataType: int64
+		formatString: 0
+		lineageTag: b9b3f618-4994-48c9-857a-3832eda54a71
+		summarizeBy: none
+
+	column category_band_order = SWITCH ( TRUE (), dim_seller[n_categories] <= 1, 1, dim_seller[n_categories] = 2, 2, dim_seller[n_categories] <= 4, 3, 4 )
+		dataType: int64
+		isHidden
+		formatString: 0
+		lineageTag: fc42f6a4-802c-400a-9e23-076f46ca79bf
+		summarizeBy: none
+
+	column category_band = SWITCH ( dim_seller[category_band_order], 1, "1 ngành", 2, "2 ngành", 3, "3–4 ngành", "≥ 5 ngành" )
+		dataType: string
+		lineageTag: 0e5cb997-fa7a-4bf8-9dff-1cf0d3d585aa
+		summarizeBy: none
+		sortByColumn: category_band_order
+
+	partition dim_seller = m
+		mode: import
+		source =
+				let
+					Source = GoldTable("v_dim_seller"),
+					Typed = Table.TransformColumnTypes(Source, {{"seller_id", type text}, {"seller_state", type text}, {"seller_region", type text}, {"seller_region_order", Int64.Type}, {"gmv", type number}, {"orders", Int64.Type}, {"gmv_rank", Int64.Type}, {"seller_tier", type text}, {"seller_tier_order", Int64.Type}, {"first_month", type date}, {"first_year", Int64.Type}, {"seller_cohort", type text}, {"seller_cohort_order", Int64.Type}, {"retention_observable", type text}, {"active_m6_8", Int64.Type}, {"avg_review", type number}, {"negative_rate", type number}, {"late_rate", type number}, {"review_band", type text}, {"review_band_order", Int64.Type}}, "en-US")
+				in
+					Typed
+

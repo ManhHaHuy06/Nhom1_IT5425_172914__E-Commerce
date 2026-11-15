@@ -1,0 +1,72 @@
+table item_flow
+	lineageTag: 550482b9-77a3-4722-9cdb-e877a9486d02
+
+	column order_id
+		dataType: string
+		isHidden
+		lineageTag: 14f5f55a-eb4f-4a43-b04b-542f59950c8c
+		summarizeBy: none
+		sourceColumn: order_id
+
+	column seller_state
+		dataType: string
+		lineageTag: 586aeee9-45e2-47bd-a7ac-07a2a73e458c
+		dataCategory: StateOrProvince
+		summarizeBy: none
+		sourceColumn: seller_state
+
+	column seller_region
+		dataType: string
+		lineageTag: 8cd3a4d0-e9e2-4915-88e3-bc32674ce545
+		summarizeBy: none
+		sourceColumn: seller_region
+		sortByColumn: seller_region_order
+
+	column seller_region_order
+		dataType: int64
+		isHidden
+		lineageTag: 8f60c347-82a3-4f5e-bc6b-3791055c753b
+		summarizeBy: sum
+		sourceColumn: seller_region_order
+
+		annotation SummarizationSetBy = Automatic
+
+	column category
+		dataType: string
+		lineageTag: 948b818e-a085-4d34-9089-6405123af142
+		summarizeBy: none
+		sourceColumn: category
+
+	column item_gmv
+		dataType: double
+		formatString: \R\$ #,0.00
+		lineageTag: 12e0cf26-2de0-423b-9a3f-26dbcf950bed
+		summarizeBy: sum
+		sourceColumn: item_gmv
+
+		annotation SummarizationSetBy = Automatic
+
+	column is_local_seller
+		dataType: int64
+		isHidden
+		lineageTag: ab5a89ba-0429-43c2-9da2-3195f0dcea52
+		summarizeBy: sum
+		sourceColumn: is_local_seller
+
+		annotation SummarizationSetBy = Automatic
+
+	column is_top12_category
+		dataType: string
+		lineageTag: ecc5fc54-cbe6-475e-bcd5-cb6c952c073a
+		summarizeBy: none
+		sourceColumn: is_top12_category
+
+	partition item_flow = m
+		mode: import
+		source =
+				let
+					Source = GoldTable("item_flow"),
+					Typed = Table.TransformColumnTypes(Source, {{"order_id", type text}, {"seller_state", type text}, {"seller_region", type text}, {"seller_region_order", Int64.Type}, {"category", type text}, {"item_gmv", type number}, {"is_local_seller", Int64.Type}, {"is_top12_category", type text}}, "en-US")
+				in
+					Typed
+

@@ -1,0 +1,34 @@
+relationship rel_order_date
+	fromColumn: order_summary.purchase_date
+	toColumn: dim_date.date
+
+relationship rel_order_state
+	fromColumn: order_summary.state
+	toColumn: dim_state.state
+
+relationship rel_item_order
+	fromColumn: item_flow.order_id
+	toColumn: order_summary.order_id
+
+relationship AutoDetected_abfbc285-141b-42fa-b465-a66b92f0b741
+	crossFilteringBehavior: bothDirections
+	fromCardinality: one
+	fromColumn: geo_customer.order_id
+	toColumn: order_summary.order_id
+
+relationship AutoDetected_97d3b226-9b14-4c25-8a6a-63b74c5eb06f
+	fromColumn: geo_seller.order_id
+	toColumn: order_summary.order_id
+
+relationship rel_item_sales_order
+	fromColumn: item_sales.order_id
+	toColumn: order_summary.order_id
+
+relationship rel_item_sales_seller
+	fromColumn: item_sales.seller_id
+	toColumn: dim_seller.seller_id
+
+relationship rel_item_sales_category
+	fromColumn: item_sales.category
+	toColumn: dim_category.category
+

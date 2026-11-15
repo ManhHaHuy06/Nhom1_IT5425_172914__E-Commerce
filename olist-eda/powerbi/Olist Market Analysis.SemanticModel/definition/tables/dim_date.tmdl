@@ -1,0 +1,118 @@
+table dim_date
+	lineageTag: 62d40a87-cbb4-4f15-a6a0-9820e1ba77d5
+	dataCategory: Time
+
+	column date
+		dataType: dateTime
+		isKey
+		formatString: Long Date
+		lineageTag: e1151359-ef1d-4b9a-98f9-1c06f1e7cad9
+		summarizeBy: none
+		sourceColumn: date
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	column year
+		dataType: int64
+		lineageTag: d2b1c1d2-f137-4789-81fe-3deaa3f8364e
+		summarizeBy: none
+		sourceColumn: year
+
+	column month
+		dataType: int64
+		lineageTag: 3eeeffb1-169e-469a-8c3f-bca022270332
+		summarizeBy: none
+		sourceColumn: month
+
+	column year_month
+		dataType: string
+		lineageTag: 1de06fa1-ae4b-466b-8a01-c4da20fa163f
+		summarizeBy: none
+		sourceColumn: year_month
+		sortByColumn: year_month_order
+
+	column year_month_order
+		dataType: int64
+		isHidden
+		lineageTag: dfcce9bb-90ff-4223-adbd-efbd9d86a7ee
+		summarizeBy: none
+		sourceColumn: year_month_order
+
+	column dow
+		dataType: int64
+		isHidden
+		lineageTag: 0d9ff07b-f7c8-47a0-85ec-2373e2798237
+		summarizeBy: none
+		sourceColumn: dow
+
+	column weekday
+		dataType: string
+		lineageTag: 9c69f1ad-3111-4c49-893f-0659b3ec094f
+		summarizeBy: none
+		sourceColumn: weekday
+		sortByColumn: dow
+
+	column 'Month Label' = FORMAT ( dim_date[Date], "MM/YY" )
+		lineageTag: d78114bb-ef5b-4813-88c3-e1612f333a90
+		summarizeBy: none
+		sortByColumn: 'Month Key'
+
+		changedProperty = SortByColumn
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Month Key' = YEAR ( dim_date[Date] ) * 100 + MONTH ( dim_date[Date] )
+		formatString: 0
+		lineageTag: e31fdeb1-dbff-4898-b4e6-dd25786aa56f
+		summarizeBy: none
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Report Key' =
+			// tháng báo cáo mặc định = tháng mới nhất có số đơn hợp lệ >= 10% tháng cao nhất (bỏ tháng dữ liệu còn dở dang)
+			VAR src = SELECTCOLUMNS ( FILTER ( ALL ( order_summary ), order_summary[is_valid] = 1 ), "k", YEAR ( order_summary[purchase_date] ) * 100 + MONTH ( order_summary[purchase_date] ) )
+			VAR g = GROUPBY ( src, [k], "n", COUNTX ( CURRENTGROUP (), 1 ) )
+			VAR ok = FILTER ( g, [n] >= 0.1 * MAXX ( g, [n] ) )
+			RETURN MAXX ( ok, [k] )
+		isHidden
+		formatString: 0
+		lineageTag: c74e36ef-cee2-4423-94b6-0224112c936d
+		summarizeBy: none
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Is Usable Month' =
+			// tháng đủ dữ liệu: từ tháng đầu tiên đạt ngưỡng 10% đến tháng báo cáo
+			VAR src = SELECTCOLUMNS ( FILTER ( ALL ( order_summary ), order_summary[is_valid] = 1 ), "k", YEAR ( order_summary[purchase_date] ) * 100 + MONTH ( order_summary[purchase_date] ) )
+			VAR g = GROUPBY ( src, [k], "n", COUNTX ( CURRENTGROUP (), 1 ) )
+			VAR ok = FILTER ( g, [n] >= 0.1 * MAXX ( g, [n] ) )
+			VAR ym = dim_date[year] * 100 + dim_date[month]
+			RETURN IF ( ym >= MINX ( ok, [k] ) && ym <= MAXX ( ok, [k] ), "Có", "Không" )
+		lineageTag: 4a3f5e7d-ff48-4306-bf0a-d32ea4aa128a
+		summarizeBy: none
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Month Start' = DATE ( dim_date[year], dim_date[month], 1 )
+		formatString: mm/yyyy
+		lineageTag: 1d127986-08ab-4f98-af80-e8b767ea235b
+		summarizeBy: none
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Month End' = EOMONTH ( dim_date[date], 0 )
+		formatString: mm/yyyy
+		lineageTag: f6695083-b8b8-4dba-a4d0-ba6b645a09a6
+		summarizeBy: none
+
+		annotation SummarizationSetBy = Automatic
+
+	partition dim_date = m
+		mode: import
+		source =
+				let
+					Source = GoldTable("dim_date"),
+					Typed = Table.TransformColumnTypes(Source, {{"date", type date}, {"year", Int64.Type}, {"month", Int64.Type}, {"year_month", type text}, {"year_month_order", Int64.Type}, {"dow", Int64.Type}, {"weekday", type text}}, "en-US")
+				in
+					Typed
+

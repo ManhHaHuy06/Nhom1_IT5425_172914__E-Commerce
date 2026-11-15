@@ -1,0 +1,101 @@
+table cust_2nd_gap
+	lineageTag: 303dd7bf-de39-4f55-be35-b6268186417a
+
+	measure 'Customers 2nd Order' = COUNTROWS ( cust_2nd_gap )
+		formatString: 0
+		lineageTag: 2e02f557-896f-4604-97f3-28f61238202e
+
+	measure 'Customers 2nd Order %' =
+			
+			DIVIDE ( [Customers 2nd Order], CALCULATE ( [Customers 2nd Order], ALLSELECTED ( cust_2nd_gap ) ) )
+		lineageTag: b60c74df-82e4-44d6-a7b8-91fec9e4fcd5
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Gap Bar Color' =
+			
+			IF ( SELECTEDVALUE ( cust_2nd_gap[gap_order] ) = 1, "#A0A6B4", "#4062F0" )
+		lineageTag: f355e116-a6e5-486b-85f2-560b02114141
+
+	column customer_key
+		lineageTag: c47b93d8-1110-4f00-adc9-d92316a5a41e
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [customer_key]
+
+		annotation SummarizationSetBy = Automatic
+
+	column days_to_2nd
+		formatString: 0
+		lineageTag: 8b7a3ae8-7316-4d3c-be9c-00c1ffedfa52
+		summarizeBy: sum
+		isNameInferred
+		sourceColumn: [days_to_2nd]
+
+		annotation SummarizationSetBy = Automatic
+
+	column gap_bucket = ```
+			
+			SWITCH ( TRUE (),
+			    cust_2nd_gap[days_to_2nd] = 0,    "Cùng ngày",
+			    cust_2nd_gap[days_to_2nd] <= 7,   "1-7 ngày",
+			    cust_2nd_gap[days_to_2nd] <= 30,  "8-30 ngày",
+			    cust_2nd_gap[days_to_2nd] <= 90,  "31-90 ngày",
+			    cust_2nd_gap[days_to_2nd] <= 180, "91-180 ngày",
+			    cust_2nd_gap[days_to_2nd] <= 365, "181-365 ngày",
+			    ">365 ngày" )
+			
+			```
+		lineageTag: 0280a9ba-1be7-4ed4-8da7-7bcc56c4b7b3
+		summarizeBy: none
+		sortByColumn: gap_order
+
+		annotation SummarizationSetBy = Automatic
+
+	column gap_order = ```
+			
+			SWITCH ( TRUE (),
+			    cust_2nd_gap[days_to_2nd] = 0, 1,  cust_2nd_gap[days_to_2nd] <= 7, 2,
+			    cust_2nd_gap[days_to_2nd] <= 30, 3, cust_2nd_gap[days_to_2nd] <= 90, 4,
+			    cust_2nd_gap[days_to_2nd] <= 180, 5, cust_2nd_gap[days_to_2nd] <= 365, 6, 7 )
+			
+			```
+		formatString: 0
+		lineageTag: 3d3408df-8075-4b76-ae76-88224700c98c
+		summarizeBy: sum
+
+		annotation SummarizationSetBy = Automatic
+
+	partition cust_2nd_gap = calculated
+		mode: import
+		source = ```
+				
+				VAR base =
+				    ADDCOLUMNS (
+				        CALCULATETABLE ( VALUES ( order_summary[customer_key] ), order_summary[is_valid] = 1 ),
+				        "@first", CALCULATE ( MIN ( order_summary[purchase_date] ), order_summary[is_valid] = 1 ),
+				        "@n",     CALCULATE ( COUNTROWS ( order_summary ), order_summary[is_valid] = 1 )
+				    )
+				VAR repeaters = FILTER ( base, [@n] >= 2 )
+				VAR withGap =
+				    ADDCOLUMNS (
+				        repeaters,
+				        "@gap",
+				            VAR f = [@first]
+				            VAR nSameDay =
+				                CALCULATE ( COUNTROWS ( order_summary ),
+				                            order_summary[is_valid] = 1, order_summary[purchase_date] = f )
+				            VAR nextDate =
+				                CALCULATE ( MIN ( order_summary[purchase_date] ),
+				                            order_summary[is_valid] = 1, order_summary[purchase_date] > f )
+				            RETURN IF ( nSameDay >= 2, 0, INT ( nextDate - f ) )
+				    )
+				RETURN
+				    SELECTCOLUMNS ( withGap,
+				        "customer_key", order_summary[customer_key],
+				        "days_to_2nd",  [@gap] )
+				
+				```
+
+	annotation PBI_Id = e4701a96327d4d92ae077ccc6c0ce5a6
+

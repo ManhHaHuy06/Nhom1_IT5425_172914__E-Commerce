@@ -1,0 +1,35 @@
+expression ClickHouseUrl = "http://localhost:8123/" meta [IsParameterQuery=true, Type="Text", IsParameterQueryRequired=true]
+	lineageTag: b1662427-79f6-4cea-8748-4267d4b68a60
+
+	annotation PBI_ResultType = Text
+
+expression ClickHouseUser = "default" meta [IsParameterQuery=true, Type="Text", IsParameterQueryRequired=true]
+	lineageTag: 0c092ff7-612e-4e50-af43-baad59033006
+
+	annotation PBI_ResultType = Text
+
+expression ClickHousePassword = "admin123" meta [IsParameterQuery=true, Type="Text", IsParameterQueryRequired=true]
+	lineageTag: 89a89e8e-2f9a-4153-9004-9548051b70da
+
+	annotation PBI_ResultType = Text
+
+expression GoldTable =
+		// Đọc một bảng/view olist_gold qua HTTP interface của ClickHouse (CSVWithNames, NULL = ô trống)
+		(view as text) as table =>
+		let
+		    Raw = Web.Contents(ClickHouseUrl, [
+		        Query = [
+		            query = "SELECT * FROM olist_gold." & view & " FORMAT CSVWithNames",
+		            format_csv_null_representation = ""
+		        ],
+		        Headers = [#"X-ClickHouse-User" = ClickHouseUser, #"X-ClickHouse-Key" = ClickHousePassword]
+		    ]),
+		    Source = Csv.Document(Raw, [Delimiter = ",", Encoding = 65001, QuoteStyle = QuoteStyle.Csv]),
+		    Headers = Table.PromoteHeaders(Source, [PromoteAllScalars = true]),
+		    Nulls = Table.ReplaceValue(Headers, "", null, Replacer.ReplaceValue, Table.ColumnNames(Headers))
+		in
+		    Nulls
+	lineageTag: 5db78dae-fbdb-46a8-8b16-ae86ee427b28
+
+	annotation PBI_ResultType = Function
+

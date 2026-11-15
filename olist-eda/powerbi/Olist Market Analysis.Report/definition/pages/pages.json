@@ -1,0 +1,13 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/pagesMetadata/1.1.0/schema.json",
+  "pageOrder": [
+    "p1_executive_overview",
+    "p7_supply_demand",
+    "p2_product_category",
+    "p5_experience_delivery",
+    "p3_shopping_behaviour",
+    "p6_seller_supply",
+    "p9_recommendations"
+  ],
+  "activePageName": "p9_recommendations"
+}

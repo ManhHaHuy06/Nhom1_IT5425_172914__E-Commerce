@@ -1,0 +1,52 @@
+table seller_review_bin
+	lineageTag: 0267f7fc-bda4-40d1-b5b6-cd86d2cd89ef
+
+	measure 'Sellers in Review Bin' =
+			VAR b = SELECTEDVALUE ( seller_review_bin[bin_x10] )
+			RETURN
+			    COUNTROWS (
+			        FILTER ( dim_seller,
+			            dim_seller[orders] >= 30 && NOT ISBLANK ( dim_seller[avg_review] )
+			                && MIN ( INT ( dim_seller[avg_review] * 2 + 0.000001 ) * 5, 45 ) = b ) ) + 0
+		formatString: #,0
+		displayFolder: Người bán
+		lineageTag: e5ed8214-763a-437a-b367-112b359f3b31
+
+	measure 'Review Bin Color' =
+			VAR b = SELECTEDVALUE ( seller_review_bin[bin_x10] )
+			RETURN IF ( b < 35, "#DC2626", IF ( b < 40, "#F59E0B", "#2563EB" ) )
+		displayFolder: Người bán
+		lineageTag: 12064329-1033-499a-94aa-b3a92a3aad11
+
+	measure 'Seller Review Median' = MEDIANX ( FILTER ( dim_seller, dim_seller[orders] >= 30 && NOT ISBLANK ( dim_seller[avg_review] ) ), dim_seller[avg_review] )
+		formatString: 0.00
+		displayFolder: Người bán
+		lineageTag: f4489ec9-18a6-4e70-8bb7-b8cd54ffb451
+
+	measure 'Review Hist Subtitle' = "Người bán ≥ 30 đơn · khoảng 0.5★ · đỏ < 3.5★ · cam 3.5–4.0★ · xanh ≥ 4.0★ · trung vị " & FORMAT ( [Seller Review Median], "0.00" ) & "★"
+		displayFolder: Người bán
+		lineageTag: 24b13201-778f-4dd1-b011-9e968f07fc21
+
+	column bin_x10
+		formatString: 0
+		lineageTag: a88a0b63-e1eb-444f-81ca-3e2fef2e2c6a
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [bin_x10]
+
+	column bin_label
+		lineageTag: 0e5e3d3a-bf2b-42fb-b9a4-6b38f9af26de
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [bin_label]
+		sortByColumn: bin_x10
+
+	partition seller_review_bin = calculated
+		mode: import
+		source =
+				VAR lo = INT ( MINX ( FILTER ( dim_seller, dim_seller[orders] >= 30 && NOT ISBLANK ( dim_seller[avg_review] ) ), dim_seller[avg_review] ) * 2 + 0.000001 ) * 5
+				RETURN
+				    SELECTCOLUMNS ( GENERATESERIES ( lo, 45, 5 ),
+				        "bin_x10", [Value],
+				        "bin_label", FORMAT ( [Value] / 10, "0.0" ) & "–" & FORMAT ( ( [Value] + 5 ) / 10, "0.0" ) )
+

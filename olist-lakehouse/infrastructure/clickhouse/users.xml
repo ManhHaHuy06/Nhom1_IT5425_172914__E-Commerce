@@ -1,0 +1,42 @@
+<?xml version="1.0"?>
+<clickhouse>
+    <!-- Thiết lập giới hạn thực thi truy vấn -->
+    <profiles>
+        <default>
+            <!-- Ram tối đa 8GB -->
+            <max_memory_usage>8000000000</max_memory_usage>
+            <!-- Tối đa 100 kết nối từ clickhouse tới minio -->
+            <s3_max_connections>100</s3_max_connections>
+        </default>
+    </profiles>
+
+    <!-- Quản lý tài khoản truy cập -->
+    <users>
+        <default>
+            <password from_env="CLICKHOUSE_PASSWORD"></password>
+            <!-- Các dải mạng được kết nối -->
+            <networks>
+                <ip>::/0</ip>
+            </networks>
+            <!-- Gán profile ở trên (default) cho tài khoản này (default) -->
+            <profile>default</profile>
+            <quota>default</quota>
+        </default>
+    </users>
+
+    <!-- Giới hạn tài nguyên được sử dụng trong 1 khung thời gian -->
+    <quotas>
+        <default>
+            <interval>
+                <!-- Chu kỳ là 1 giờ -->
+                <duration>3600</duration>
+                <!-- 0 là không có giới hạn -->
+                <queries>0</queries>
+                <errors>0</errors>
+                <result_rows>0</result_rows>
+                <read_rows>0</read_rows>
+                <execution_time>0</execution_time>
+            </interval>
+        </default>
+    </quotas>
+</clickhouse>

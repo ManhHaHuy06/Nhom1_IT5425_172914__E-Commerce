@@ -1,0 +1,44 @@
+"""Phần dùng chung cho 6 notebook EDA của dashboard Olist, chia theo module:
+
+- `config`   — quy tắc nghiệp vụ (giống Gold: olist-lakehouse/layers/gold/config.py), bảng màu, 5 vùng;
+- `period`   — `Period`: kỳ phân tích tự suy ra từ dữ liệu (cùng quy tắc với Gold / Power BI);
+- `db`       — `TrinoSession`, `q`, `scalar`, `create_table_from_df` (kết nối hiện tại ở `db.con`);
+- `tables`   — `connect` (chép Silver → `EDA_SCHEMA`, tạo `state_ref`, `order_base`), `create_item_ps`, `create_order_payment`;
+- `rfm`      — phân khúc RFM `customer_rfm`;
+- `sql`      — `quantile_sql`, `median_sql`, `band_sql` (cú pháp Trino);
+- `plotting` — theme, hàm trục, chú thích vùng, cột nhóm, `band_labels`, `ordered`;
+- `kpi`      — `Kpi`, `kpi_table` so sánh cùng kỳ.
+
+Bảng trung gian của EDA là bảng Iceberg trong schema riêng `iceberg.eda` (REST catalog không hỗ trợ view).
+Notebook nào cần cấu hình riêng thì khai báo ngay trong notebook đó. Cách dùng:
+
+    from common import *
+    con, P = connect(["dim_product", "dim_category"])   # order_base + P được tạo sẵn
+
+Cần lakehouse đang chạy (Trino `localhost:8085`) và đã chạy tới stage `silver`. Cấu hình qua biến môi trường:
+TRINO_HOST, TRINO_PORT, TRINO_USER, TRINO_CATALOG, SILVER_SCHEMA, EDA_SCHEMA. Các notebook dùng chung tên bảng
+trong `EDA_SCHEMA`, nên chạy lần lượt từng notebook (hoặc đặt EDA_SCHEMA khác nhau nếu chạy song song).
+"""
+from .config import (C_ACCENT, C_BAD, C_GOOD, C_GREY, C_MAIN, C_MUTED_TEXT, C_ORANGE, C_YELLOW, CATEGORY_COLORS,
+                     CATEGORY_SQL, MIN_SELLER_ORDERS, REGION_COLORS, REGIONS, SEQ_BLUES, region_colors)
+from .db import q, scalar
+from .kpi import Kpi, kpi_table
+from .plotting import (apply_theme, band_labels, brl_axis, grouped_bar, month_axis, ordered, pct_axis,
+                       region_legend)
+from .rfm import SEG_ORDER, create_customer_rfm
+from .sql import band_sql, median_sql, quantile_sql
+from .tables import connect, create_item_ps, create_order_payment
+
+__all__ = [
+    # bảng màu, vùng
+    "C_MAIN", "C_BAD", "C_GOOD", "C_GREY", "C_ACCENT", "C_ORANGE", "C_YELLOW", "C_MUTED_TEXT",
+    "SEQ_BLUES", "CATEGORY_COLORS", "REGIONS", "REGION_COLORS", "region_colors",
+    # quy tắc nghiệp vụ, dữ liệu (connect trả về (con, Period); create_customer_rfm trả về Rfm)
+    "MIN_SELLER_ORDERS", "CATEGORY_SQL", "connect", "q", "scalar", "create_item_ps", "create_order_payment", "create_customer_rfm", "SEG_ORDER",
+    # SQL / pandas
+    "band_sql", "quantile_sql", "median_sql", "band_labels", "ordered",
+    # biểu đồ
+    "apply_theme", "pct_axis", "brl_axis", "month_axis", "region_legend", "grouped_bar",
+    # KPI
+    "Kpi", "kpi_table",
+]

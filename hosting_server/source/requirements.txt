@@ -1,0 +1,4 @@
+pandas==2.2.3
+pyarrow==18.1.0
+PyMySQL==1.1.1
+cryptography==43.0.3

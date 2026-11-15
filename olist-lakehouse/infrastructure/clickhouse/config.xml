@@ -1,0 +1,17 @@
+<?xml version="1.0"?>
+<!-- Cấu hình để tự động kết nối tới minio -->
+<clickhouse>
+    <s3>
+        <minio>
+            <endpoint>http://minio:9000/</endpoint>
+            <!-- replace="1": Ghi đè giá trị nếu trước đó đã tồn tại một cấu hình cùng tên. -->
+            <access_key_id replace="1" from_env="MINIO_ROOT_USER"/>
+            <secret_access_key replace="1" from_env="MINIO_ROOT_PASSWORD"/>
+            <!-- Tắt cơ chế tự động dò tìm thông tin xác thực từ dịch vụ AWS EC2 Instance Metadata -->
+            <use_environment_credentials>false</use_environment_credentials>
+            <!-- Khai báo vùng lưu trữ -->
+            <region>us-east-1</region>
+        </minio>
+    </s3>
+    <timezone>UTC</timezone>
+</clickhouse>

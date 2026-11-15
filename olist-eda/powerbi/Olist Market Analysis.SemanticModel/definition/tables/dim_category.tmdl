@@ -1,0 +1,53 @@
+table dim_category
+	lineageTag: 9b5409b2-8d4c-40bf-b4a8-d9afff995a7a
+
+	column category
+		dataType: string
+		isKey
+		lineageTag: ac888f26-b926-4575-acb7-df2729ba7b2b
+		summarizeBy: none
+		sourceColumn: category
+
+	column category_group
+		dataType: string
+		lineageTag: 114f3016-c3d3-43ec-bc26-47f6b80a28e7
+		summarizeBy: none
+		sourceColumn: category_group
+		sortByColumn: category_group_order
+
+	column category_group_order
+		dataType: int64
+		isHidden
+		lineageTag: 33f7b560-4704-4850-8a0e-a88a5ff06256
+		summarizeBy: none
+		sourceColumn: category_group_order
+
+	column in_matrix
+		dataType: string
+		lineageTag: 6b99df0c-4616-46ce-8f9a-331b45e020a1
+		summarizeBy: none
+		sourceColumn: in_matrix
+
+	column quadrant
+		dataType: string
+		lineageTag: 540eb03a-0e21-45c1-b2b6-840ee44c1ee8
+		summarizeBy: none
+		sourceColumn: quadrant
+		sortByColumn: quadrant_order
+
+	column quadrant_order
+		dataType: int64
+		isHidden
+		lineageTag: 4e2b3f0b-65be-4e08-b324-f8bc90e588d6
+		summarizeBy: none
+		sourceColumn: quadrant_order
+
+	partition dim_category = m
+		mode: import
+		source =
+				let
+					Source = GoldTable("dim_category"),
+					Typed = Table.TransformColumnTypes(Source, {{"category", type text}, {"category_group", type text}, {"category_group_order", Int64.Type}, {"in_matrix", type text}, {"quadrant", type text}, {"quadrant_order", Int64.Type}}, "en-US")
+				in
+					Typed
+

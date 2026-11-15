@@ -1,0 +1,5 @@
+airflow/logs/**
+!airflow/logs/.gitkeep
+infrastructure/.env
+**/.env
+__pycache__/

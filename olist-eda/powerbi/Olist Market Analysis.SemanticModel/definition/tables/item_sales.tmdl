@@ -1,0 +1,328 @@
+table item_sales
+	lineageTag: 5910110f-b39c-4885-af30-625fb3cdb2e2
+
+	measure 'Product GMV' = SUM ( item_sales[item_gmv] )
+		formatString: \R\$ #,0
+		displayFolder: Ngành hàng
+		lineageTag: b8dd35e4-26fc-4109-ba32-33ad12ccca47
+
+	measure 'Units Sold' = COUNTROWS ( item_sales )
+		formatString: #,0
+		displayFolder: Ngành hàng
+		lineageTag: 0587f935-b4a1-490e-95aa-2b177481b563
+
+	measure 'Avg Item Price' = AVERAGE ( item_sales[price] )
+		formatString: \R\$ #,0.00
+		displayFolder: Ngành hàng
+		lineageTag: 5a36f12b-e8bc-4785-9ebd-4566d2aa9706
+
+	measure 'Item Freight Share' = DIVIDE ( SUM ( item_sales[freight_value] ), [Product GMV] )
+		formatString: 0.0%
+		displayFolder: Ngành hàng
+		lineageTag: ea641d37-39fe-40b8-bcf6-400df987510c
+
+	measure 'Active SKUs' = DISTINCTCOUNT ( item_sales[product_id] )
+		formatString: #,0
+		displayFolder: Ngành hàng
+		lineageTag: c088536d-d85a-4b9c-9fbb-641e545856fe
+
+	measure 'Repeat-sold SKU %' = DIVIDE ( COUNTROWS ( FILTER ( VALUES ( item_sales[product_id] ), CALCULATE ( COUNTROWS ( item_sales ) ) >= 2 ) ), [Active SKUs] )
+		formatString: 0.0%
+		displayFolder: Ngành hàng
+		lineageTag: 1e3c2141-392e-406f-a619-8284ea4ceabc
+
+	measure 'Units %' = DIVIDE ( [Units Sold], CALCULATE ( [Units Sold], ALLSELECTED () ) )
+		formatString: 0.0%
+		displayFolder: Ngành hàng
+		lineageTag: c0a561ba-ff13-4406-a9ad-2da82a4979ba
+
+	measure 'Product GMV %' = DIVIDE ( [Product GMV], CALCULATE ( [Product GMV], ALLSELECTED () ) )
+		formatString: 0.0%
+		displayFolder: Ngành hàng
+		lineageTag: bd8d0186-8b69-4396-a9e1-216606b69da3
+
+	measure 'SKU %' = DIVIDE ( [Active SKUs], CALCULATE ( [Active SKUs], ALLSELECTED () ) )
+		formatString: 0.0%
+		displayFolder: Ngành hàng
+		lineageTag: f6175f01-320f-4fa0-adeb-a4fbdf287621
+
+	measure 'Product GMV YoY %' = DIVIDE ( [Product GMV (Kỳ này)] - [Product GMV (Cùng kỳ)], [Product GMV (Cùng kỳ)] )
+		formatString: +0%;-0%;0%
+		displayFolder: Ngành hàng
+		lineageTag: 95fc1628-211b-4a83-a5b9-3b82194f487e
+
+	measure 'Product GMV YoY % (cap 600%)' =
+			// Ngành tăng > 600% (nền cùng kỳ gần 0) vẽ ở mép trên trục (product §3)
+			VAR g = [Product GMV YoY %]
+			RETURN IF ( ISBLANK ( g ), BLANK (), MIN ( g, 6 ) )
+		formatString: +0%;-0%;0%
+		displayFolder: Ngành hàng
+		lineageTag: c78c4194-81ed-4c59-ae8f-ee83f354827c
+
+	measure 'Category Share (Kỳ này)' = DIVIDE ( [Product GMV (Kỳ này)], CALCULATE ( [Product GMV (Kỳ này)], REMOVEFILTERS ( dim_category ), REMOVEFILTERS ( item_sales[category] ) ) )
+		formatString: 0.0%
+		displayFolder: Ngành hàng
+		lineageTag: 01029785-c2eb-47cc-9e9a-f796d8e00b46
+
+	measure 'Category Share (Cùng kỳ)' = DIVIDE ( [Product GMV (Cùng kỳ)], CALCULATE ( [Product GMV (Cùng kỳ)], REMOVEFILTERS ( dim_category ), REMOVEFILTERS ( item_sales[category] ) ) )
+		formatString: 0.0%
+		displayFolder: Ngành hàng
+		lineageTag: b925dc18-0a36-42fa-b2fa-77049cb7e110
+
+	measure 'Category Share Change pp' = ( [Category Share (Kỳ này)] - [Category Share (Cùng kỳ)] ) * 100
+		formatString: +0.00;-0.00;0.00
+		displayFolder: Ngành hàng
+		lineageTag: 4a4bb633-dcbe-4217-9657-3dd7fb2eb3de
+
+	measure 'Share Change Color' = IF ( [Category Share Change pp] >= 0, "#16A34A", "#DC2626" )
+		displayFolder: Ngành hàng
+		lineageTag: 72ad99fc-bf55-499c-bdfe-8c167f6c0bde
+
+	measure 'Share Change Top/Bottom 7' =
+			// 1 = thuộc 7 ngành được nhiều nhất hoặc 7 ngành mất nhiều tỷ trọng nhất (trong ma trận)
+			VAR cur = [Category Share Change pp]
+			VAR t =
+			    ADDCOLUMNS (
+			        FILTER ( ALLSELECTED ( dim_category[category], dim_category[in_matrix] ), dim_category[in_matrix] = "Có" ),
+			        "@v", [Category Share Change pp]
+			    )
+			VAR up = COUNTROWS ( FILTER ( t, [@v] > cur ) ) + 1
+			VAR down = COUNTROWS ( FILTER ( t, [@v] < cur ) ) + 1
+			RETURN IF ( NOT ISBLANK ( cur ) && ( up <= 7 || down <= 7 ), 1, 0 )
+		formatString: 0
+		displayFolder: Ngành hàng
+		lineageTag: 12e2b7bc-0955-4340-b380-8031e1c6ca5e
+
+	measure 'Top 3 Seller Share' =
+			// GMV của 3 người bán lớn nhất / GMV ngành (seller §4)
+			DIVIDE ( SUMX ( TOPN ( 3, VALUES ( item_sales[seller_id] ), [Product GMV], DESC ), [Product GMV] ), [Product GMV] )
+		formatString: 0%
+		displayFolder: Người bán
+		lineageTag: 76bd9cd3-a40d-496f-924c-1687b91f5dac
+
+	measure 'Units Sold (Kỳ này)' =
+			VAR s = [Period Start]
+			VAR e = [Period End]
+			RETURN CALCULATE ( [Units Sold], REMOVEFILTERS ( dim_date ), DATESBETWEEN ( dim_date[date], s, e ) )
+		formatString: #,0
+		displayFolder: Ngành hàng
+		lineageTag: 154cf312-421e-4eca-8ef6-bb6a80338a5f
+
+	measure 'Avg Item Price (Kỳ này)' =
+			VAR s = [Period Start]
+			VAR e = [Period End]
+			RETURN CALCULATE ( [Avg Item Price], REMOVEFILTERS ( dim_date ), DATESBETWEEN ( dim_date[date], s, e ) )
+		formatString: \R\$ #,0.00
+		displayFolder: Ngành hàng
+		lineageTag: a56362ff-4060-4ba7-a12d-9ca189407644
+
+	measure 'Item Freight Share (Kỳ này)' =
+			VAR s = [Period Start]
+			VAR e = [Period End]
+			RETURN CALCULATE ( [Item Freight Share], REMOVEFILTERS ( dim_date ), DATESBETWEEN ( dim_date[date], s, e ) )
+		formatString: 0.0%
+		displayFolder: Ngành hàng
+		lineageTag: 3512fbbc-1027-4cc5-bf16-d7fcacb2802a
+
+	measure 'Active SKUs (Kỳ này)' =
+			VAR s = [Period Start]
+			VAR e = [Period End]
+			RETURN CALCULATE ( [Active SKUs], REMOVEFILTERS ( dim_date ), DATESBETWEEN ( dim_date[date], s, e ) )
+		formatString: #,0
+		displayFolder: Ngành hàng
+		lineageTag: bb6b501f-33f8-4712-9010-aea2d0597606
+
+	measure 'Repeat-sold SKU % (Kỳ này)' =
+			VAR s = [Period Start]
+			VAR e = [Period End]
+			RETURN CALCULATE ( [Repeat-sold SKU %], REMOVEFILTERS ( dim_date ), DATESBETWEEN ( dim_date[date], s, e ) )
+		formatString: 0.0%
+		displayFolder: Ngành hàng
+		lineageTag: f3000abe-3ea4-4374-9bb6-a1438ee00c32
+
+	measure 'Product GMV (Cùng kỳ)' =
+			VAR s = EDATE ( [Period Start], -12 )
+			VAR e = EDATE ( [Period End], -12 )
+			RETURN CALCULATE ( [Product GMV], REMOVEFILTERS ( dim_date ), DATESBETWEEN ( dim_date[date], s, e ) )
+		formatString: \R\$ #,0
+		displayFolder: Ngành hàng
+		lineageTag: 0ac45f57-4bb8-4cdb-a583-d4dd63b4fec8
+
+	measure 'Product GMV (Kỳ này)' =
+			VAR s = [Period Start]
+			VAR e = [Period End]
+			RETURN CALCULATE ( [Product GMV], REMOVEFILTERS ( dim_date ), DATESBETWEEN ( dim_date[date], s, e ) )
+		formatString: \R\$ #,0
+		displayFolder: Ngành hàng
+		lineageTag: 7b52e41a-04c8-43a3-be64-cc1f98db6b80
+
+	measure 'Active Sellers' = DISTINCTCOUNT ( item_sales[seller_id] )
+		formatString: #,0
+		displayFolder: Người bán
+		lineageTag: b1173ab9-132a-47fb-b630-28c8bdadee19
+
+	measure 'Product GMV per Seller' = DIVIDE ( [Product GMV], [Active Sellers] )
+		formatString: \R\$ #,0
+		displayFolder: Người bán
+		lineageTag: 66ab9ca2-81bd-4a33-9c29-2d30b507ebd5
+
+	measure 'Seller %' = DIVIDE ( [Active Sellers], CALCULATE ( [Active Sellers], ALLSELECTED () ) )
+		formatString: 0.0%
+		displayFolder: Người bán
+		lineageTag: 6a78ac1d-259d-470b-b704-fca8a3375ff8
+
+	measure 'New Seller GMV % (Kỳ này)' =
+			// người bán mới = có đơn đầu tiên trong kỳ đang xem
+			VAR s = [Period Start]
+			RETURN DIVIDE ( CALCULATE ( [Product GMV (Kỳ này)], dim_seller[first_month] >= s ), [Product GMV (Kỳ này)] )
+		formatString: 0.0%
+		displayFolder: Người bán
+		lineageTag: cea6f233-66f6-456f-ae6c-9399cacfd400
+
+	measure 'Active Sellers (Kỳ này)' =
+			VAR s = [Period Start]
+			VAR e = [Period End]
+			RETURN CALCULATE ( [Active Sellers], REMOVEFILTERS ( dim_date ), DATESBETWEEN ( dim_date[date], s, e ) )
+		formatString: #,0
+		displayFolder: Người bán
+		lineageTag: 76a76dc7-affa-4cfc-9405-f6dd1c8fb06b
+
+	measure 'Product GMV per Seller (Kỳ này)' =
+			VAR s = [Period Start]
+			VAR e = [Period End]
+			RETURN CALCULATE ( [Product GMV per Seller], REMOVEFILTERS ( dim_date ), DATESBETWEEN ( dim_date[date], s, e ) )
+		formatString: \R\$ #,0
+		displayFolder: Người bán
+		lineageTag: 54c6576a-5acd-4a19-9afb-29572003aab5
+
+	measure 'Category Share Index' =
+			VAR ShareMonth = DIVIDE ( [Product GMV], CALCULATE ( [Product GMV], REMOVEFILTERS ( dim_category ) ) )
+			VAR ShareAvg =
+			    CALCULATE (
+			        DIVIDE ( [Product GMV], CALCULATE ( [Product GMV], REMOVEFILTERS ( dim_category ) ) ),
+			        ALLSELECTED ( dim_date )
+			    )
+			RETURN
+			    DIVIDE ( ShareMonth, ShareAvg )
+		formatString: 0.00
+		displayFolder: Ngành hàng
+		lineageTag: b2098c5c-c5e6-478e-b8a1-7254acd876b2
+
+	measure 'Market Product GMV Growth' =
+			VAR cy = CALCULATE ( [Product GMV (Kỳ này)], REMOVEFILTERS ( dim_category ), REMOVEFILTERS ( item_sales[category] ) )
+			VAR py = CALCULATE ( [Product GMV (Cùng kỳ)], REMOVEFILTERS ( dim_category ), REMOVEFILTERS ( item_sales[category] ) )
+			RETURN DIVIDE ( cy - py, py )
+		formatString: 0.0%
+		displayFolder: Ngành hàng
+		lineageTag: aead5cbe-95a7-4834-aedb-6800e1354546
+
+	measure 'Seller On-time % (Kỳ này)' =
+			// đơn có hàng của người bán đang lọc (vùng/tầng người bán) → tỷ lệ giao đúng hạn trong kỳ
+			VAR sellerOrders = CALCULATETABLE ( VALUES ( item_sales[order_id] ), REMOVEFILTERS ( dim_date ) )
+			RETURN CALCULATE ( [On-time % (Kỳ này)], TREATAS ( sellerOrders, order_summary[order_id] ) )
+		formatString: 0.0%
+		displayFolder: Người bán
+		lineageTag: 1003749b-f399-474d-b6e1-14b2374d54e1
+
+	measure 'Top 10 Seller GMV Share (Kỳ này)' =
+			VAR s = [Period Start]
+			VAR e = [Period End]
+			RETURN
+			    CALCULATE (
+			        VAR top10 = TOPN ( 10, VALUES ( item_sales[seller_id] ), [Product GMV] )
+			        RETURN DIVIDE ( CALCULATE ( [Product GMV], top10 ), [Product GMV] ),
+			        REMOVEFILTERS ( dim_date ), DATESBETWEEN ( dim_date[date], s, e ) )
+		formatString: 0.0%
+		displayFolder: Người bán
+		lineageTag: 43d469ad-66f8-41ac-ae3a-016d424a7dad
+
+	column order_id
+		dataType: string
+		isHidden
+		lineageTag: 2e15ddf1-2abd-48c5-8a7d-d09b1791f880
+		summarizeBy: none
+		sourceColumn: order_id
+
+	column order_item_id
+		dataType: int64
+		isHidden
+		lineageTag: af8a672b-14d1-49df-bea8-315ec4c58c9e
+		summarizeBy: none
+		sourceColumn: order_item_id
+
+	column product_id
+		dataType: string
+		lineageTag: 97041c9c-006b-4416-9af9-7f60f38585fa
+		summarizeBy: none
+		sourceColumn: product_id
+
+	column seller_id
+		dataType: string
+		lineageTag: f038978c-6e2e-401e-b672-55cf4b3e4cb5
+		summarizeBy: none
+		sourceColumn: seller_id
+
+	column category
+		dataType: string
+		lineageTag: ea389dd4-366e-4b42-9db9-4704d3f4f7fe
+		summarizeBy: none
+		sourceColumn: category
+
+	column price
+		dataType: double
+		formatString: \R\$ #,0.00
+		lineageTag: 61e37ff6-5785-4b8b-bc55-316af7730d71
+		summarizeBy: none
+		sourceColumn: price
+
+	column freight_value
+		dataType: double
+		formatString: \R\$ #,0.00
+		lineageTag: 262a0e96-0044-4a3d-8558-898cb7288aac
+		summarizeBy: none
+		sourceColumn: freight_value
+
+	column item_gmv
+		dataType: double
+		formatString: \R\$ #,0.00
+		lineageTag: de3e37d9-62cb-4025-9e25-6aa200eb4def
+		summarizeBy: none
+		sourceColumn: item_gmv
+
+	column price_band
+		dataType: string
+		lineageTag: 0392b0a2-bd7a-4280-ac6f-5f811fb7e38a
+		summarizeBy: none
+		sourceColumn: price_band
+		sortByColumn: price_band_order
+
+	column price_band_order
+		dataType: int64
+		isHidden
+		lineageTag: 236d7d04-08f3-4826-91d8-73a1760690ba
+		summarizeBy: none
+		sourceColumn: price_band_order
+
+	column sku_band
+		dataType: string
+		lineageTag: 57305d8d-791c-4f5d-a4b1-e56c66804a96
+		summarizeBy: none
+		sourceColumn: sku_band
+		sortByColumn: sku_band_order
+
+	column sku_band_order
+		dataType: int64
+		isHidden
+		lineageTag: b12a3ada-9688-4fb6-a432-aeda7fcb11a9
+		summarizeBy: none
+		sourceColumn: sku_band_order
+
+	partition item_sales = m
+		mode: import
+		source =
+				let
+					Source = GoldTable("item_sales"),
+					Typed = Table.TransformColumnTypes(Source, {{"order_id", type text}, {"order_item_id", Int64.Type}, {"product_id", type text}, {"seller_id", type text}, {"category", type text}, {"price", type number}, {"freight_value", type number}, {"item_gmv", type number}, {"price_band", type text}, {"price_band_order", Int64.Type}, {"sku_band", type text}, {"sku_band_order", Int64.Type}}, "en-US")
+				in
+					Typed
+

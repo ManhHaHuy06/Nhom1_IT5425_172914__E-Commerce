@@ -1,0 +1,671 @@
+table order_summary
+	lineageTag: 8dd453a0-e342-4eef-ae6a-0e51b482c849
+
+	measure 'Valid Orders' = CALCULATE ( COUNTROWS ( order_summary ), order_summary[is_valid] = 1 )
+		formatString: #,0
+		displayFolder: Quy mô
+		lineageTag: d0758905-6b77-4a2d-a4ad-1a92905ebb79
+
+	measure GMV = CALCULATE ( SUM ( order_summary[order_gmv] ), order_summary[is_valid] = 1 )
+		formatString: \R\$ #,0
+		displayFolder: Quy mô
+		lineageTag: 66ecc70b-a83c-4c25-8410-f53eecadc52a
+
+	measure AOV = DIVIDE ( [GMV], [Valid Orders] )
+		formatString: \R\$ #,0.00
+		displayFolder: Quy mô
+		lineageTag: f7ace8ec-2ad2-4611-b9c9-4f1ed474f732
+
+	measure 'Items per Order' = DIVIDE ( CALCULATE ( SUM ( order_summary[n_items] ), order_summary[is_valid] = 1 ), [Valid Orders] )
+		formatString: 0.00
+		displayFolder: Giỏ hàng
+		lineageTag: 3b685540-0a4d-4158-aa9e-55ba4668bbec
+
+	measure 'Multi-product Order %' = DIVIDE ( CALCULATE ( [Valid Orders], order_summary[is_multi_product] = 1 ), [Valid Orders] )
+		formatString: 0.0%
+		displayFolder: Giỏ hàng
+		lineageTag: 99d35122-05cd-4797-a490-08c671fafe57
+
+	measure 'Freight Share' = DIVIDE ( CALCULATE ( SUM ( order_summary[freight_value] ), order_summary[is_valid] = 1 ), [GMV] )
+		formatString: 0.0%
+		displayFolder: Giỏ hàng
+		lineageTag: 5fa335b3-55e6-4a08-8ace-096fdfcc4f09
+
+	measure 'Orders %' = DIVIDE ( [Valid Orders], CALCULATE ( [Valid Orders], ALLSELECTED () ) )
+		formatString: 0.0%
+		displayFolder: Tỷ trọng
+		lineageTag: 97b828e8-a6da-4e76-9888-7112f30b7f20
+
+	measure 'GMV %' = DIVIDE ( [GMV], CALCULATE ( [GMV], ALLSELECTED () ) )
+		formatString: 0.0%
+		displayFolder: Tỷ trọng
+		lineageTag: 3cb93417-2160-40b1-b9b8-ec7f752fd9df
+
+	measure 'Orders MA7' = AVERAGEX ( DATESINPERIOD ( dim_date[date], MAX ( dim_date[date] ), -7, DAY ), [Valid Orders] + 0 )
+		formatString: #,0.0
+		displayFolder: Thời gian
+		lineageTag: b4ea45dd-6d95-4f22-9fb5-d3a97c1faee0
+
+	measure 'Cumulative GMV % (category)' =
+			VAR cur = [GMV]
+			VAR tbl = ADDCOLUMNS ( ALLSELECTED ( order_summary[main_category] ), "@g", [GMV] )
+			RETURN DIVIDE ( SUMX ( FILTER ( tbl, [@g] >= cur ), [@g] ), SUMX ( tbl, [@g] ) )
+		formatString: 0.0%
+		displayFolder: Ngành hàng
+		lineageTag: 2381eb8a-b400-464c-ad32-5bccd5a3fada
+
+	measure 'Reviewed Orders' = CALCULATE ( COUNTROWS ( order_summary ), NOT ISBLANK ( order_summary[review_score] ) )
+		formatString: #,0
+		displayFolder: Trải nghiệm
+		lineageTag: 31de8a83-1d0f-4a12-81cd-f01c74c2a5d0
+
+	measure 'Avg Review Score' = AVERAGE ( order_summary[review_score] )
+		formatString: 0.00
+		displayFolder: Trải nghiệm
+		lineageTag: 82029453-3885-4076-b977-393c8098c5b0
+
+	measure 'Satisfied %' = DIVIDE ( CALCULATE ( [Reviewed Orders], order_summary[is_positive] = 1 ), [Reviewed Orders] )
+		formatString: 0.0%
+		displayFolder: Trải nghiệm
+		lineageTag: 7e30717e-4a45-44a6-9735-77ce3389903d
+
+	measure 'Negative %' = DIVIDE ( CALCULATE ( [Reviewed Orders], order_summary[is_negative] = 1 ), [Reviewed Orders] )
+		formatString: 0.0%
+		displayFolder: Trải nghiệm
+		lineageTag: 1a1f25e0-e04c-4db4-a09c-16bb4d8a80e2
+
+	measure 'Delivered Orders' =
+			// KEEPFILTERS: giữ filter is_late = 0/1 của measure gọi tới
+			CALCULATE ( COUNTROWS ( order_summary ), KEEPFILTERS ( NOT ISBLANK ( order_summary[is_late] ) ) )
+		formatString: #,0
+		displayFolder: Giao hàng
+		lineageTag: d3bf12a6-9b51-4f3c-9cd5-3b2ba9847afb
+
+	measure 'Late %' = DIVIDE ( CALCULATE ( [Delivered Orders], order_summary[is_late] = 1 ), [Delivered Orders] )
+		formatString: 0.0%
+		displayFolder: Giao hàng
+		lineageTag: 7d21d6f0-d604-4189-9847-3c33384a7413
+
+	measure 'On-time %' = DIVIDE ( CALCULATE ( [Delivered Orders], order_summary[is_late] = 0 ), [Delivered Orders] )
+		formatString: 0.0%
+		displayFolder: Giao hàng
+		lineageTag: 7759a986-37de-4e35-a0d2-c3c8aa0282d4
+
+	measure 'Valid Orders (Kỳ này)' =
+			VAR s = [Period Start]
+			VAR e = [Period End]
+			RETURN CALCULATE ( [Valid Orders], REMOVEFILTERS ( dim_date ), DATESBETWEEN ( dim_date[date], s, e ) )
+		formatString: #,0
+		displayFolder: Thị trường
+		lineageTag: 31974c8f-3840-4a00-98b5-f7cd8df518d3
+
+	measure 'GMV (Kỳ này)' =
+			VAR s = [Period Start]
+			VAR e = [Period End]
+			RETURN CALCULATE ( [GMV], REMOVEFILTERS ( dim_date ), DATESBETWEEN ( dim_date[date], s, e ) )
+		formatString: \R\$ #,0
+		displayFolder: Thị trường
+		lineageTag: c5eee4ea-3946-466c-8784-e05ef2995c4a
+
+	measure 'GMV (Cùng kỳ)' =
+			VAR s = EDATE ( [Period Start], -12 )
+			VAR e = EDATE ( [Period End], -12 )
+			RETURN CALCULATE ( [GMV], REMOVEFILTERS ( dim_date ), DATESBETWEEN ( dim_date[date], s, e ) )
+		formatString: \R\$ #,0
+		displayFolder: Thị trường
+		lineageTag: 7ebe3935-6278-4233-b724-6046b07d3e4c
+
+	measure 'GMV YoY % (Kỳ này)' = DIVIDE ( [GMV (Kỳ này)] - [GMV (Cùng kỳ)], [GMV (Cùng kỳ)] )
+		formatString: +0%;-0%;0%
+		displayFolder: Thị trường
+		lineageTag: 03465ccc-22cd-4788-86c1-70115a2d3175
+
+	measure 'Penetration per 100k' = DIVIDE ( [Valid Orders (Kỳ này)], SUM ( dim_state[population_2018] ) ) * 100000
+		formatString: 0.0
+		displayFolder: Thị trường
+		lineageTag: 227a5b4b-637d-48d4-9159-f1c1b68e0ae1
+
+	measure 'Item GMV' = SUM ( item_flow[item_gmv] )
+		formatString: \R\$ #,0
+		displayFolder: Cung – cầu
+		lineageTag: 93c68df4-e8b2-4c66-8c23-07b44f09fe80
+
+	measure 'GMV % of Row' = DIVIDE ( [Item GMV], CALCULATE ( [Item GMV], REMOVEFILTERS ( item_flow[seller_region], item_flow[seller_region_order] ) ) )
+		formatString: 0%
+		displayFolder: Cung – cầu
+		lineageTag: 3a1eae6d-c918-423c-bb3f-7864cff2b3ea
+
+	measure 'Region Category Share' = DIVIDE ( [Item GMV], CALCULATE ( [Item GMV], REMOVEFILTERS ( item_flow[category], item_flow[is_top12_category] ) ) )
+		formatString: 0.0%
+		displayFolder: Cung – cầu
+		lineageTag: cfb63578-608d-4a0c-918d-33c635f66b5d
+
+	measure LQ =
+			// LQ = tỷ trọng ngành trong vùng / tỷ trọng ngành cả nước; > 1: vùng mua nhiều hơn mức chung
+			DIVIDE ( [Region Category Share],
+			         CALCULATE ( [Region Category Share], REMOVEFILTERS ( order_summary[region], order_summary[region_order] ) ) )
+		formatString: 0.00
+		displayFolder: Cung – cầu
+		lineageTag: b8fc7410-4712-426c-bb01-0a368855aabf
+
+	measure 'Reviewed Rate' = DIVIDE ( COUNT ( order_summary[review_score] ), COUNTROWS ( order_summary ) ) * 100
+		displayFolder: Trải nghiệm
+		lineageTag: 9f7ab48c-1a30-4cb0-990f-6ff5a0a8ce3e
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Review Score %' =
+			
+			DIVIDE(
+			    CALCULATE(
+			        [Reviewed Orders],
+			        ALLEXCEPT( order_summary, order_summary[score_label], order_summary[score_int] )
+			    ),
+			    CALCULATE( [Reviewed Orders], ALL( order_summary[score_label], order_summary[score_int] ) )
+			) * 100
+		displayFolder: Trải nghiệm
+		lineageTag: b791b7ef-2d51-46f7-9797-7d6e8c5d5215
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Is Above Avg Negative' =
+			
+			VAR sys_avg =
+			    CALCULATE( [Negative %], ALL( order_summary[main_category] ) )
+			RETURN
+			    IF( [Negative %] >= sys_avg, 1, 0 )
+		formatString: 0
+		displayFolder: Trải nghiệm
+		lineageTag: 929686f6-1985-4903-9fa5-99d3063f7f19
+
+	measure 'Repeat Purchase Rate %' = ```
+			
+			    VAR all_valid_orders =
+			        FILTER ( order_summary, order_summary[is_valid] = 1 )
+			    VAR order_counts =
+			        ADDCOLUMNS (
+			            CALCULATETABLE (
+			                VALUES ( order_summary[customer_key] ),
+			                order_summary[is_valid] = 1
+			            ),
+			            "@n_orders",
+			            CALCULATE (
+			                COUNTROWS ( order_summary ),
+			                ALLEXCEPT ( order_summary, order_summary[customer_key] ),
+			                order_summary[is_valid] = 1
+			            )
+			        )
+			    VAR repeat_customers =
+			        COUNTROWS ( FILTER ( order_counts, [@n_orders] >= 2 ) )
+			    VAR total_customers =
+			        COUNTROWS ( CALCULATETABLE ( VALUES ( order_summary[customer_key] ), order_summary[is_valid] = 1 ) )
+			    RETURN
+			        DIVIDE ( repeat_customers, total_customers )
+			```
+		displayFolder: Khách hàng
+		lineageTag: 9e6716f4-5cd8-416e-8afa-373d3248d6fa
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Customer States' = CALCULATE ( DISTINCTCOUNT ( order_summary[state] ), order_summary[is_valid] = 1 )
+		formatString: 0
+		displayFolder: Địa lý
+		lineageTag: 01e45335-a689-4b1c-890b-275a5e810520
+
+	measure 'Customer Cities' = CALCULATE ( DISTINCTCOUNT ( geo_customer[customer_city_key] ), order_summary[is_valid] = 1 )
+		formatString: 0
+		displayFolder: Địa lý
+		lineageTag: 4836ab38-f56b-464a-ae4a-afb6735d3c1f
+
+	measure 'Seller States' = CALCULATE ( DISTINCTCOUNT ( geo_seller[seller_state] ), order_summary[is_valid] = 1 )
+		formatString: 0
+		displayFolder: Địa lý
+		lineageTag: f1baa266-c730-45cd-a056-dc9908c7e455
+
+	measure 'Seller Cities' = CALCULATE ( DISTINCTCOUNT ( geo_seller[seller_city_key] ), order_summary[is_valid] = 1 )
+		formatString: 0
+		displayFolder: Địa lý
+		lineageTag: cec47b65-f7a9-4f47-80be-50bef2ef20e1
+
+	measure Customers = CALCULATE ( DISTINCTCOUNT ( order_summary[customer_key] ), order_summary[is_valid] = 1 )
+		formatString: #,0
+		displayFolder: Tổng quan
+		lineageTag: a6d9154f-ebaa-4c52-bee6-24b6ce5bc311
+
+	measure 'Repeat Customer %' =
+			VAR CustOrders =
+			    CALCULATETABLE (
+			        ADDCOLUMNS ( VALUES ( order_summary[customer_key] ), "@orders", CALCULATE ( COUNTROWS ( order_summary ) ) ),
+			        order_summary[is_valid] = 1
+			    )
+			RETURN DIVIDE ( COUNTROWS ( FILTER ( CustOrders, [@orders] >= 2 ) ), COUNTROWS ( CustOrders ) )
+		formatString: 0.00%
+		displayFolder: Tổng quan
+		lineageTag: e96c674d-5b4d-467d-9eb4-cf5a38e66d4e
+
+	measure 'Customers (Kỳ này)' =
+			VAR s = [Period Start]
+			VAR e = [Period End]
+			RETURN CALCULATE ( [Customers], REMOVEFILTERS ( dim_date ), DATESBETWEEN ( dim_date[date], s, e ) )
+		formatString: #,0
+		displayFolder: Tổng quan
+		lineageTag: 3301752c-b449-482e-b9f7-d51206e0fb66
+
+	measure 'AOV (Kỳ này)' =
+			VAR s = [Period Start]
+			VAR e = [Period End]
+			RETURN CALCULATE ( [AOV], REMOVEFILTERS ( dim_date ), DATESBETWEEN ( dim_date[date], s, e ) )
+		formatString: \R\$ #,0.00
+		displayFolder: Tổng quan
+		lineageTag: d8520c3d-806b-4bb7-927e-31c2a170cbc9
+
+	measure 'On-time % (Kỳ này)' =
+			VAR s = [Period Start]
+			VAR e = [Period End]
+			RETURN CALCULATE ( [On-time %], REMOVEFILTERS ( dim_date ), DATESBETWEEN ( dim_date[date], s, e ) )
+		formatString: 0.0%
+		displayFolder: Tổng quan
+		lineageTag: 60ff1ec3-0b17-4a8a-b3ed-5938c3bf034d
+
+	measure 'Avg Review Score (Kỳ này)' =
+			VAR s = [Period Start]
+			VAR e = [Period End]
+			RETURN CALCULATE ( [Avg Review Score], REMOVEFILTERS ( dim_date ), DATESBETWEEN ( dim_date[date], s, e ) )
+		formatString: 0.00
+		displayFolder: Tổng quan
+		lineageTag: 93b4cd83-9a27-4edb-9759-f630b24103c3
+
+	measure 'Repeat Customer % (Kỳ này)' =
+			VAR s = [Period Start]
+			VAR e = [Period End]
+			RETURN CALCULATE ( [Repeat Customer %], REMOVEFILTERS ( dim_date ), DATESBETWEEN ( dim_date[date], s, e ) )
+		formatString: 0.00%
+		displayFolder: Tổng quan
+		lineageTag: 271512be-de9a-46c1-ba52-768d1aaff3c5
+
+	measure 'Report Period Key' = CALCULATE ( MAX ( dim_date[Report Key] ), REMOVEFILTERS ( dim_date ) )
+		formatString: 0
+		displayFolder: Kỳ báo cáo
+		lineageTag: 7aa1d4b5-a84d-4b25-8bfb-484ea22d5a11
+
+	measure 'Period Is Selected' =
+			// TRUE khi khoảng chọn trên slicer Khoảng thời gian hẹp hơn toàn bộ lịch (chọn hết = chưa chọn → kỳ mặc định)
+			VAR selS = CALCULATE ( MIN ( dim_date[date] ), ALLSELECTED ( dim_date ) )
+			VAR selE = CALCULATE ( MAX ( dim_date[date] ), ALLSELECTED ( dim_date ) )
+			VAR allS = CALCULATE ( MIN ( dim_date[date] ), REMOVEFILTERS ( dim_date ) )
+			VAR allE = CALCULATE ( MAX ( dim_date[date] ), REMOVEFILTERS ( dim_date ) )
+			RETURN selS > allS || selE < allE
+		displayFolder: Kỳ báo cáo
+		lineageTag: a0da0010-5b95-4e83-99c8-6e4a28d4aec3
+
+	measure 'Period Start' =
+			VAR k = [Report Period Key]
+			RETURN IF ( [Period Is Selected], CALCULATE ( MIN ( dim_date[date] ), ALLSELECTED ( dim_date ) ), DATE ( INT ( k / 100 ), 1, 1 ) )
+		formatString: dd/mm/yyyy
+		displayFolder: Kỳ báo cáo
+		lineageTag: 77a9a2be-9380-4053-bb1b-87b933a4b528
+
+	measure 'Period End' =
+			VAR k = [Report Period Key]
+			// không vượt quá tháng mới nhất có dữ liệu đầy đủ
+			VAR lastFull = EOMONTH ( DATE ( INT ( k / 100 ), MOD ( k, 100 ), 1 ), 0 )
+			RETURN IF ( [Period Is Selected], MIN ( CALCULATE ( MAX ( dim_date[date] ), ALLSELECTED ( dim_date ) ), lastFull ), lastFull )
+		formatString: dd/mm/yyyy
+		displayFolder: Kỳ báo cáo
+		lineageTag: 8dad55eb-00bc-4793-bc55-27e528ed8531
+
+	measure 'GMV by Month (Kỳ này)' =
+			// so sánh cùng tháng: giữ tháng của trục, bỏ lọc năm
+			VAR s = [Period Start]
+			VAR e = [Period End]
+			RETURN CALCULATE ( [GMV], REMOVEFILTERS ( dim_date ), DATESBETWEEN ( dim_date[date], s, e ), VALUES ( dim_date[month] ) )
+		formatString: \R\$ #,0
+		displayFolder: Tổng quan
+		lineageTag: 83b79ab8-e95f-49fa-8809-02071b3c4eac
+
+	measure 'GMV by Month (Cùng kỳ)' =
+			VAR s = EDATE ( [Period Start], -12 )
+			VAR e = EDATE ( [Period End], -12 )
+			RETURN CALCULATE ( [GMV], REMOVEFILTERS ( dim_date ), DATESBETWEEN ( dim_date[date], s, e ), VALUES ( dim_date[month] ) )
+		formatString: \R\$ #,0
+		displayFolder: Tổng quan
+		lineageTag: 5a36bc6a-35ec-4bfa-83b1-bb3ebadde506
+
+	column order_id
+		dataType: string
+		isHidden
+		lineageTag: bb1d6a0b-ee7d-4ce4-aa44-112e341e9435
+		summarizeBy: none
+		sourceColumn: order_id
+
+	column customer_key
+		dataType: string
+		isHidden
+		lineageTag: c05f4337-bcab-4865-ad98-f0b7fadab81a
+		summarizeBy: none
+		sourceColumn: customer_key
+
+	column order_status
+		dataType: string
+		lineageTag: b8a62536-38c7-4a71-8fdd-f60c1af44b10
+		summarizeBy: none
+		sourceColumn: order_status
+
+	column state
+		dataType: string
+		lineageTag: 94bc3afd-a8b2-4cb8-885e-9c02bc616863
+		dataCategory: StateOrProvince
+		summarizeBy: none
+		sourceColumn: state
+
+	column region
+		dataType: string
+		lineageTag: 8f3aaa8d-e507-46df-b1f5-bafa3ba40eff
+		summarizeBy: none
+		sourceColumn: region
+		sortByColumn: region_order
+
+	column region_order
+		dataType: int64
+		isHidden
+		lineageTag: ae552385-133a-47c9-86fa-2434612c2a6c
+		summarizeBy: sum
+		sourceColumn: region_order
+
+		annotation SummarizationSetBy = Automatic
+
+	column purchase_date
+		dataType: dateTime
+		isHidden
+		formatString: Long Date
+		lineageTag: 5c3bca8e-b0d1-42aa-9cc1-c4bc34f95704
+		summarizeBy: none
+		sourceColumn: purchase_date
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	column purchase_hour
+		dataType: int64
+		lineageTag: fa650951-83a0-4d56-8092-32ae8d7b8b2f
+		summarizeBy: sum
+		sourceColumn: purchase_hour
+
+		annotation SummarizationSetBy = Automatic
+
+	column n_items
+		dataType: int64
+		lineageTag: eb6eb424-f9f5-4e4f-8dad-1b043a704b87
+		summarizeBy: sum
+		sourceColumn: n_items
+
+		annotation SummarizationSetBy = Automatic
+
+	column n_products
+		dataType: int64
+		lineageTag: fb9d83a1-9b44-4252-95b2-5b2785394567
+		summarizeBy: sum
+		sourceColumn: n_products
+
+		annotation SummarizationSetBy = Automatic
+
+	column n_sellers
+		dataType: int64
+		lineageTag: 8cf189e0-8dd9-444a-9b7b-09f8746ca654
+		summarizeBy: sum
+		sourceColumn: n_sellers
+
+		annotation SummarizationSetBy = Automatic
+
+	column product_value
+		dataType: double
+		formatString: \R\$ #,0.00
+		lineageTag: 6364440d-612d-459a-a4e2-5451ef99a7db
+		summarizeBy: sum
+		sourceColumn: product_value
+
+		annotation SummarizationSetBy = Automatic
+
+	column freight_value
+		dataType: double
+		formatString: \R\$ #,0.00
+		lineageTag: c7d9afc4-5b10-44b4-b192-d69fc8d321c5
+		summarizeBy: sum
+		sourceColumn: freight_value
+
+		annotation SummarizationSetBy = Automatic
+
+	column order_gmv
+		dataType: double
+		formatString: \R\$ #,0.00
+		lineageTag: 10035de1-4cc6-4539-b62a-c6d5f30a2cb3
+		summarizeBy: sum
+		sourceColumn: gmv
+
+		annotation SummarizationSetBy = Automatic
+
+	column main_category
+		dataType: string
+		lineageTag: 5fbdc102-94b6-4d2e-a073-ff89346dfc30
+		summarizeBy: none
+		sourceColumn: main_category
+
+	column payment_type
+		dataType: string
+		lineageTag: dfadfb44-578a-4abf-8353-5cc2e9d404bd
+		summarizeBy: none
+		sourceColumn: payment_type
+
+	column installments
+		dataType: int64
+		lineageTag: 976bb85f-4f15-40a2-be4e-9cfcd28269f5
+		summarizeBy: sum
+		sourceColumn: installments
+
+		annotation SummarizationSetBy = Automatic
+
+	column is_valid
+		dataType: int64
+		isHidden
+		lineageTag: 6b75705d-b24d-4a3f-ad64-299d70f8931f
+		summarizeBy: sum
+		sourceColumn: is_valid
+
+		annotation SummarizationSetBy = Automatic
+
+	column order_value_band
+		dataType: string
+		lineageTag: 7cd315e0-89e5-4e0e-92f6-f5176771c05a
+		summarizeBy: none
+		sourceColumn: order_value_band
+		sortByColumn: band_order
+
+	column band_order
+		dataType: int64
+		isHidden
+		lineageTag: 55f98bea-c274-4701-942a-1da2c55d05d6
+		summarizeBy: sum
+		sourceColumn: band_order
+
+		annotation SummarizationSetBy = Automatic
+
+	column inst_order
+		dataType: int64
+		isHidden
+		lineageTag: 6758f30a-757e-4d0f-8d01-ea5d87c0c38a
+		summarizeBy: sum
+		sourceColumn: inst_order
+
+		annotation SummarizationSetBy = Automatic
+
+	column installment_band
+		dataType: string
+		lineageTag: c6bcf885-b6aa-430a-a612-2925ab54e917
+		summarizeBy: none
+		sourceColumn: installment_band
+		sortByColumn: inst_order
+
+	column is_multi_product
+		dataType: int64
+		isHidden
+		lineageTag: 258a1e3e-d22e-49dc-a11b-d1dfb7d74a7e
+		summarizeBy: sum
+		sourceColumn: is_multi_product
+
+		annotation SummarizationSetBy = Automatic
+
+	column is_delivered
+		dataType: int64
+		isHidden
+		lineageTag: ed8f57df-7989-485b-8c42-c40c2ddcb33f
+		summarizeBy: sum
+		sourceColumn: is_delivered
+
+		annotation SummarizationSetBy = Automatic
+
+	column delivery_days
+		dataType: int64
+		lineageTag: 0cc2efe4-1f96-4627-b5cb-56055601dea7
+		summarizeBy: sum
+		sourceColumn: delivery_days
+
+		annotation SummarizationSetBy = Automatic
+
+	column estimated_delivery_days
+		dataType: int64
+		lineageTag: 18801c63-c19e-4f35-adba-a450958c1eef
+		summarizeBy: sum
+		sourceColumn: estimated_delivery_days
+
+		annotation SummarizationSetBy = Automatic
+
+	column delivery_delay_days
+		dataType: int64
+		lineageTag: c0b46aee-9224-4fa3-bf18-da5c168e6637
+		summarizeBy: sum
+		sourceColumn: delivery_delay_days
+
+		annotation SummarizationSetBy = Automatic
+
+	column review_score
+		dataType: double
+		formatString: 0.00
+		lineageTag: 726a7f91-0276-4e62-9427-c4c5a3cf98d9
+		summarizeBy: sum
+		sourceColumn: review_score
+
+		annotation SummarizationSetBy = Automatic
+
+	column is_negative
+		dataType: int64
+		isHidden
+		lineageTag: 3fcf7246-efea-4129-9efb-e035c52eec3a
+		summarizeBy: sum
+		sourceColumn: is_negative
+
+		annotation SummarizationSetBy = Automatic
+
+	column is_positive
+		dataType: int64
+		isHidden
+		lineageTag: ce3330ee-8a63-4d1c-8e14-51d333204b48
+		summarizeBy: sum
+		sourceColumn: is_positive
+
+		annotation SummarizationSetBy = Automatic
+
+	column is_late
+		dataType: int64
+		isHidden
+		lineageTag: 12bbf618-f99b-4f2b-a2da-a7028ad92c69
+		summarizeBy: sum
+		sourceColumn: is_late
+
+		annotation SummarizationSetBy = Automatic
+
+	column score_int
+		dataType: int64
+		isHidden
+		lineageTag: d59c0be9-d5e2-46e6-9939-75bd3ce66c3c
+		summarizeBy: sum
+		sourceColumn: score_int
+
+		annotation SummarizationSetBy = Automatic
+
+	column score_label
+		dataType: string
+		lineageTag: fa434e46-99c3-4ef0-b5c6-b15af622134d
+		summarizeBy: none
+		sourceColumn: score_label
+		sortByColumn: score_int
+
+	column delay_bucket
+		dataType: string
+		lineageTag: bd359660-f7e0-43ae-bc11-bfe906c4dac9
+		summarizeBy: none
+		sourceColumn: delay_bucket
+		sortByColumn: delay_bucket_order
+
+	column delay_bucket_order
+		dataType: int64
+		isHidden
+		lineageTag: 36f0260a-774f-4511-b881-006593f1337f
+		summarizeBy: sum
+		sourceColumn: delay_bucket_order
+
+		annotation SummarizationSetBy = Automatic
+
+	column delivery_status
+		dataType: string
+		lineageTag: 4d93c279-d643-42c9-8737-7244ad468ccf
+		summarizeBy: none
+		sourceColumn: delivery_status
+
+	column delivery_days_capped
+		dataType: int64
+		lineageTag: 10bf9101-d71c-4cd4-a3a8-f4a635f9cbd5
+		summarizeBy: sum
+		sourceColumn: delivery_days_capped
+
+		annotation SummarizationSetBy = Automatic
+
+	column items_band
+		dataType: string
+		lineageTag: 40a14ecb-94d7-4202-8496-932ad152fa8d
+		summarizeBy: none
+		sourceColumn: items_band
+		sortByColumn: items_band_order
+
+	column items_band_order
+		dataType: int64
+		isHidden
+		lineageTag: b61ce959-c3d3-4a87-bed0-2f9e060aa65f
+		summarizeBy: sum
+		sourceColumn: items_band_order
+
+		annotation SummarizationSetBy = Automatic
+
+	column sellers_band
+		dataType: string
+		lineageTag: 329d604c-1b6b-4506-8709-27b7d4ddb350
+		summarizeBy: none
+		sourceColumn: sellers_band
+		sortByColumn: sellers_band_order
+
+	column sellers_band_order
+		dataType: int64
+		isHidden
+		lineageTag: e5191a11-36c7-41f0-9adf-bf836f33c76d
+		summarizeBy: sum
+		sourceColumn: sellers_band_order
+
+		annotation SummarizationSetBy = Automatic
+
+	partition order_summary = m
+		mode: import
+		source =
+				let
+					Source = GoldTable("order_summary"),
+					Typed = Table.TransformColumnTypes(Source, {{"order_id", type text}, {"customer_key", type text}, {"order_status", type text}, {"state", type text}, {"region", type text}, {"region_order", Int64.Type}, {"purchase_date", type date}, {"purchase_hour", Int64.Type}, {"n_items", Int64.Type}, {"n_products", Int64.Type}, {"n_sellers", Int64.Type}, {"product_value", type number}, {"freight_value", type number}, {"gmv", type number}, {"main_category", type text}, {"payment_type", type text}, {"installments", Int64.Type}, {"is_valid", Int64.Type}, {"order_value_band", type text}, {"band_order", Int64.Type}, {"inst_order", Int64.Type}, {"installment_band", type text}, {"is_multi_product", Int64.Type}, {"is_delivered", Int64.Type}, {"delivery_days", Int64.Type}, {"estimated_delivery_days", Int64.Type}, {"delivery_delay_days", Int64.Type}, {"review_score", type number}, {"is_negative", Int64.Type}, {"is_positive", Int64.Type}, {"is_late", Int64.Type}, {"score_int", Int64.Type}, {"score_label", type text}, {"delay_bucket", type text}, {"delay_bucket_order", Int64.Type}, {"delivery_status", type text}, {"delivery_days_capped", Int64.Type}, {"items_band", type text}, {"items_band_order", Int64.Type}, {"sellers_band", type text}, {"sellers_band_order", Int64.Type}}, "en-US")
+				in
+					Typed
+

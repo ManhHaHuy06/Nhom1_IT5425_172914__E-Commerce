@@ -1,0 +1,91 @@
+table customer_rfm
+	lineageTag: a8059b67-5817-4c22-8121-b6834b777c00
+
+	measure 'RFM Customer %' = DIVIDE ( COUNTROWS ( customer_rfm ), CALCULATE ( COUNTROWS ( customer_rfm ), ALL ( customer_rfm ) ) )
+		formatString: 0.0%
+		displayFolder: Tổng quan
+		lineageTag: 631bce28-30af-4beb-a410-42536f423a15
+
+	measure 'RFM GMV %' = DIVIDE ( SUM ( customer_rfm[monetary] ), CALCULATE ( SUM ( customer_rfm[monetary] ), ALL ( customer_rfm ) ) )
+		formatString: 0.0%
+		displayFolder: Tổng quan
+		lineageTag: 5b6b6c26-4e85-4849-ba69-c24bda1847fa
+
+	measure 'RFM Customers' = COUNTROWS ( customer_rfm )
+		formatString: #,0
+		displayFolder: Tổng quan
+		lineageTag: 3be2ff1e-1441-4d3a-b3bc-528d54cdc04d
+
+	column customer_key
+		dataType: string
+		isKey
+		lineageTag: bcfa2b27-7d8c-483a-b631-378224c4b349
+		summarizeBy: none
+		sourceColumn: customer_key
+
+	column recency_days
+		dataType: int64
+		formatString: 0
+		lineageTag: c219ca3f-48f1-4b58-92f1-ae60e51c85ff
+		summarizeBy: none
+		sourceColumn: recency_days
+
+	column frequency
+		dataType: int64
+		formatString: 0
+		lineageTag: 353fe160-c241-4fb8-ac5f-18c5b104dd1d
+		summarizeBy: none
+		sourceColumn: frequency
+
+	column monetary
+		dataType: double
+		formatString: \R\$ #,0
+		lineageTag: 00f88398-96bd-4ed2-8260-abfea50da6e7
+		summarizeBy: sum
+		sourceColumn: monetary
+
+	column R
+		dataType: int64
+		formatString: 0
+		lineageTag: 06a8acdc-1b57-40b3-b057-18ac60a32918
+		summarizeBy: none
+		sourceColumn: R
+
+	column F
+		dataType: int64
+		formatString: 0
+		lineageTag: a83b653f-cab5-4dff-af3e-8737d355a4c1
+		summarizeBy: none
+		sourceColumn: F
+
+	column M
+		dataType: int64
+		formatString: 0
+		lineageTag: 01a518a5-4bbb-4fdf-8eab-ea84ad977121
+		summarizeBy: none
+		sourceColumn: M
+
+	column segment
+		dataType: string
+		lineageTag: c79a189e-9a64-4a97-be9e-ab3368bec4b8
+		summarizeBy: none
+		sourceColumn: segment
+		sortByColumn: segment_order
+
+	column segment_order
+		dataType: int64
+		isHidden
+		formatString: 0
+		lineageTag: 7c6bdd68-092c-4a08-a807-a3128e069fc6
+		summarizeBy: none
+		sourceColumn: segment_order
+
+	partition customer_rfm = m
+		mode: import
+		source =
+				let
+					Source = GoldTable("customer_rfm"),
+					Typed = Table.TransformColumnTypes(Source, {{"customer_key", type text}, {"recency_days", Int64.Type}, {"frequency", Int64.Type}, {"monetary", type number}, {"R", Int64.Type}, {"F", Int64.Type}, {"M", Int64.Type}, {"segment", type text}, {"segment_order", Int64.Type}}, "en-US")
+				in
+					Typed
+

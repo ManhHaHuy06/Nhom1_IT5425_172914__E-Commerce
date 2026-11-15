@@ -1,0 +1,30 @@
+model Model
+	culture: en-US
+	defaultPowerBIDataSourceVersion: powerBI_V3
+	sourceQueryCulture: en-US
+	dataAccessOptions
+		legacyRedirects
+		returnErrorValuesAsNull
+
+annotation __PBI_TimeIntelligenceEnabled = 0
+
+annotation PBI_QueryOrder = ["ClickHouseUrl","ClickHouseUser","ClickHousePassword","GoldTable","dim_date","dim_state","order_summary","item_flow","geo_customer","geo_seller","item_sales","dim_category","dim_seller","customer_rfm","first_order_repurchase"]
+
+annotation PBI_ProTooling = ["DevMode"]
+
+ref table dim_date
+ref table dim_state
+ref table order_summary
+ref table item_flow
+ref table cust_2nd_gap
+ref table geo_customer
+ref table geo_seller
+ref table dim_seller
+ref table dim_category
+ref table item_sales
+ref table customer_rfm
+ref table first_order_repurchase
+ref table seller_review_bin
+
+ref cultureInfo en-US
+

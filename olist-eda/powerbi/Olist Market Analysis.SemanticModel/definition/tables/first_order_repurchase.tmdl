@@ -1,0 +1,64 @@
+table first_order_repurchase
+	lineageTag: 83ad51c8-35ae-4be5-8aba-fe7fbacf7872
+
+	measure 'Repurchase 90d %' = CALCULATE ( DIVIDE ( SUM ( first_order_repurchase[repurchase_90d] ), COUNTROWS ( first_order_repurchase ) ), NOT ISBLANK ( first_order_repurchase[score_int] ) )
+		formatString: 0.00%
+		displayFolder: Trải nghiệm
+		lineageTag: 1242fd32-ad9b-499f-82fd-08f1af32c6de
+
+	measure 'First Order Customers' = CALCULATE ( COUNTROWS ( first_order_repurchase ), NOT ISBLANK ( first_order_repurchase[score_int] ) )
+		formatString: #,0
+		displayFolder: Trải nghiệm
+		lineageTag: 09ae8846-4272-4f60-835c-5538a12745c4
+
+	measure 'Repurchase Bar Color' = SWITCH ( SELECTEDVALUE ( first_order_repurchase[score_int] ), 1, "#DC2626", 2, "#F97316", 3, "#FACC15", 4, "#84CC16", 5, "#16A34A", "#9CA3AF" )
+		displayFolder: Trải nghiệm
+		lineageTag: d6f233e6-79a9-406b-88b5-b50aecbeb59d
+
+	column customer_key
+		dataType: string
+		isKey
+		lineageTag: aaeee70b-9f75-4eb9-850d-484a1fc55544
+		summarizeBy: none
+		sourceColumn: customer_key
+
+	column first_purchase_date
+		dataType: dateTime
+		formatString: Long Date
+		lineageTag: 4d99be79-94c1-4cb7-a240-0204862f9398
+		summarizeBy: none
+		sourceColumn: first_purchase_date
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	column score_int
+		dataType: int64
+		isHidden
+		formatString: 0
+		lineageTag: 002cc870-ca65-47d8-8096-5f8f20b06114
+		summarizeBy: none
+		sourceColumn: score_int
+
+	column first_score_label
+		dataType: string
+		lineageTag: 767c8860-9086-4d38-b97e-7abb5b389f08
+		summarizeBy: none
+		sourceColumn: first_score_label
+		sortByColumn: score_int
+
+	column repurchase_90d
+		dataType: int64
+		formatString: 0
+		lineageTag: d8fb5c29-65bb-4839-909d-db4b016b5353
+		summarizeBy: sum
+		sourceColumn: repurchase_90d
+
+	partition first_order_repurchase = m
+		mode: import
+		source =
+				let
+					Source = GoldTable("first_order_repurchase"),
+					Typed = Table.TransformColumnTypes(Source, {{"customer_key", type text}, {"first_purchase_date", type date}, {"score_int", Int64.Type}, {"first_score_label", type text}, {"repurchase_90d", Int64.Type}}, "en-US")
+				in
+					Typed
+

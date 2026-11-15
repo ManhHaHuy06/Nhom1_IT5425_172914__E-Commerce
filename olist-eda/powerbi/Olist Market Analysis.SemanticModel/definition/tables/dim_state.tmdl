@@ -1,0 +1,118 @@
+table dim_state
+	lineageTag: 25d1def3-9550-41a4-805f-3460d5e778d0
+
+	measure 'Region Revenue Share' = ```
+			
+			DIVIDE (
+			    [GMV],
+			    CALCULATE ( [GMV], REMOVEFILTERS ( dim_state[region], dim_state[region_order] ) )
+			)
+			
+			```
+		formatString: 0.00%;-0.00%;0.00%
+		lineageTag: 4c9f1978-b36a-451f-a3b1-7874405d1fe3
+
+	measure 'GMV Cum % (state)' = ```
+			
+			VAR cur = [GMV]
+			VAR tbl = ADDCOLUMNS ( ALLSELECTED ( dim_state ), "@g", [GMV] )
+			RETURN
+			    IF ( NOT ISBLANK ( cur ),
+			         DIVIDE ( SUMX ( FILTER ( tbl, [@g] >= cur ), [@g] ), SUMX ( tbl, [@g] ) ) )
+			
+			```
+		formatString: 0%
+		lineageTag: 83bc4afc-0967-4882-8f89-cd9e7f576a8d
+
+		annotation PBI_FormatHint = {"isCustom":true}
+
+	measure 'Pareto 80%' = 0.8
+		lineageTag: 9140375d-235f-476b-b1e5-9e646de91e10
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Cầu (khách)' = ```
+			
+			SUM ( item_flow[item_gmv] )
+			
+			```
+		lineageTag: 91552cd3-6ea1-44c2-99a7-11b10aa78839
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Cung (người bán)' = ```
+			
+			CALCULATE (
+			    SUM ( item_flow[item_gmv] ),
+			    REMOVEFILTERS ( dim_state ),
+			    TREATAS ( VALUES ( dim_state[state] ), item_flow[seller_state] )
+			)
+			
+			```
+		lineageTag: 6b9bd468-af4f-4178-be34-1b49d382713f
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column state
+		dataType: string
+		lineageTag: 966baaab-38ea-4d48-8a85-326437354c21
+		dataCategory: StateOrProvince
+		summarizeBy: none
+		sourceColumn: state
+
+	column region
+		dataType: string
+		lineageTag: df24d26f-a288-4d33-8936-e068f6781318
+		summarizeBy: none
+		sourceColumn: region
+		sortByColumn: region_order
+
+	column region_order
+		dataType: int64
+		isHidden
+		lineageTag: fcd0b485-70c5-4522-94dc-b4671140eb9f
+		summarizeBy: sum
+		sourceColumn: region_order
+
+		annotation SummarizationSetBy = Automatic
+
+	column population_2018
+		dataType: int64
+		formatString: #,0
+		lineageTag: 1ae22727-c8d7-4538-8123-b1dba3ed4bae
+		summarizeBy: sum
+		sourceColumn: population_2018
+
+		annotation SummarizationSetBy = Automatic
+
+	column in_matrix
+		dataType: string
+		lineageTag: 6d6778d6-295c-4c28-b81c-30bb656bb5d5
+		summarizeBy: none
+		sourceColumn: in_matrix
+
+	column quadrant
+		dataType: string
+		lineageTag: 427b4f86-31c9-4584-9271-73e2c053ee79
+		summarizeBy: none
+		sourceColumn: quadrant
+		sortByColumn: quadrant_order
+
+	column quadrant_order
+		dataType: int64
+		isHidden
+		lineageTag: 8f2f3437-b970-4f08-ae4f-37c42b624bae
+		summarizeBy: sum
+		sourceColumn: quadrant_order
+
+		annotation SummarizationSetBy = Automatic
+
+	partition dim_state = m
+		mode: import
+		source =
+				let
+					Source = GoldTable("dim_state"),
+					Typed = Table.TransformColumnTypes(Source, {{"state", type text}, {"region", type text}, {"region_order", Int64.Type}, {"population_2018", Int64.Type}, {"in_matrix", type text}, {"quadrant", type text}, {"quadrant_order", Int64.Type}}, "en-US")
+				in
+					Typed
+

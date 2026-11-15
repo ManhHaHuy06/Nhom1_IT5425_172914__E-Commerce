@@ -1,0 +1,48 @@
+table geo_customer
+	lineageTag: 113eeea7-6d8e-4998-b8a6-485db2e37887
+
+	column order_id
+		dataType: string
+		lineageTag: 2b9bba64-879b-49d6-817c-89baa2453e8d
+		summarizeBy: none
+		sourceColumn: order_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column customer_state
+		dataType: string
+		lineageTag: 91e0dfee-273d-47fd-9d50-15f014be9863
+		summarizeBy: none
+		sourceColumn: customer_state
+
+		annotation SummarizationSetBy = Automatic
+
+	column customer_city
+		dataType: string
+		lineageTag: de7b8252-7556-4abb-a580-21378bef6436
+		summarizeBy: none
+		sourceColumn: customer_city
+
+		annotation SummarizationSetBy = Automatic
+
+	column customer_city_key
+		dataType: string
+		lineageTag: 54195b35-66f0-4114-97c9-7601aacc7f0a
+		summarizeBy: none
+		sourceColumn: customer_city_key
+
+		annotation SummarizationSetBy = Automatic
+
+	partition geo_customer = m
+		mode: import
+		source =
+				let
+					Source = GoldTable("geo_customer"),
+					Typed = Table.TransformColumnTypes(Source, {{"order_id", type text}, {"customer_state", type text}, {"customer_city", type text}, {"customer_city_key", type text}}, "en-US")
+				in
+					Typed
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+
