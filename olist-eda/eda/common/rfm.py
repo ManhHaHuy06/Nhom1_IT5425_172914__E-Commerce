@@ -2,20 +2,17 @@
 from typing import NamedTuple
 
 from . import db
+from .config import GOLD
 from .db import scalar
 from .sql import quantile_sql
 
-RFM_QUINTILES = [0.2, 0.4, 0.6, 0.8]
-RFM_F_CUT = [1, 2, 3, 4]   # F: ngưỡng cố định 1 | 2 | 3 | 4 | 5+ đơn (≈97% khách chỉ mua 1 đơn nên ngũ phân vị của F đều = 1)
-# Xét theo thứ tự: khách thuộc quy tắc đầu tiên khớp; khách không khớp quy tắc nào là RFM_OTHER
-RFM_SEGMENT_RULES = [
-    ("Champions",             "F >= 2 AND R >= 4"),
-    ("Loyal - cần giữ chân",  "F >= 2"),               # F >= 2 và R <= 3
-    ("Khách mới",             "R >= 4"),               # từ đây trở xuống: F = 1
-    ("Cần nuôi dưỡng",        "R = 3"),
-    ("Giá trị cao sắp mất",   "M >= 4"),               # R <= 2
-]
-RFM_OTHER = "Đã rời bỏ"                                # F = 1, R <= 2, M <= 3
+# Quy tắc lấy từ Gold (olist-lakehouse/layers/gold/config.py), để phân khúc trong EDA = phân khúc trên dashboard.
+RFM_QUINTILES = GOLD.RFM_QUANTILES       # R, M chấm theo ngũ phân vị
+RFM_F_CUT = GOLD.RFM_FREQUENCY_CUTS      # F: ngưỡng cố định 1 | 2 | 3 | 4 | 5+ đơn (≈97% khách chỉ mua 1 đơn)
+# Xét theo thứ tự: khách thuộc quy tắc đầu tiên khớp (Champions → Loyal → Khách mới → Cần nuôi dưỡng → Giá trị cao
+# sắp mất); khách không khớp quy tắc nào là RFM_OTHER (F = 1, R <= 2, M <= 3)
+RFM_SEGMENT_RULES = GOLD.RFM_SEGMENTS
+RFM_OTHER = GOLD.RFM_OTHER_SEGMENT
 SEG_ORDER = [name for name, _ in RFM_SEGMENT_RULES] + [RFM_OTHER]
 
 
