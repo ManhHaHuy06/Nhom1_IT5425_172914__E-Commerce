@@ -1,13 +1,13 @@
 {
   "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.14.0/schema.json",
-  "name": "25306bdf107e28c8151d",
+  "name": "kpi_state_gmv",
   "position": {
-    "x": 426.1,
-    "y": 10.018601280347868,
-    "z": 11000,
-    "height": 142.48677376494746,
-    "width": 182.7,
-    "tabOrder": 11000
+    "x": 233.50356985706375,
+    "y": 9.8837489886587839,
+    "z": 15000,
+    "height": 86.482803650764353,
+    "width": 206.3232601382521,
+    "tabOrder": 15000
   },
   "visual": {
     "visualType": "card",
@@ -23,33 +23,15 @@
                       "Entity": "order_summary"
                     }
                   },
-                  "Property": "Customer Cities"
+                  "Property": "GMV (Kỳ này)"
                 }
               },
-              "queryRef": "order_summary.Customer Cities",
-              "nativeQueryRef": "Thành phố",
-              "displayName": "Thành phố"
+              "queryRef": "order_summary.GMV (Kỳ này)",
+              "nativeQueryRef": "GMV (Kỳ này)",
+              "displayName": "GMV KỲ NÀY"
             }
           ]
         }
-      },
-      "sortDefinition": {
-        "sort": [
-          {
-            "field": {
-              "Measure": {
-                "Expression": {
-                  "SourceRef": {
-                    "Entity": "order_summary"
-                  }
-                },
-                "Property": "Customer Cities"
-              }
-            },
-            "direction": "Descending"
-          }
-        ],
-        "isDefaultSort": true
       }
     },
     "objects": {
@@ -59,7 +41,7 @@
             "fontSize": {
               "expr": {
                 "Literal": {
-                  "Value": "22D"
+                  "Value": "20D"
                 }
               }
             },
@@ -73,6 +55,20 @@
                   }
                 }
               }
+            },
+            "labelDisplayUnits": {
+              "expr": {
+                "Literal": {
+                  "Value": "1000000D"
+                }
+              }
+            },
+            "labelPrecision": {
+              "expr": {
+                "Literal": {
+                  "Value": "2L"
+                }
+              }
             }
           }
         }
@@ -83,25 +79,7 @@
             "show": {
               "expr": {
                 "Literal": {
-                  "Value": "true"
-                }
-              }
-            },
-            "fontSize": {
-              "expr": {
-                "Literal": {
-                  "Value": "9D"
-                }
-              }
-            },
-            "color": {
-              "solid": {
-                "color": {
-                  "expr": {
-                    "Literal": {
-                      "Value": "'#6B7280'"
-                    }
-                  }
+                  "Value": "false"
                 }
               }
             }
@@ -123,14 +101,14 @@
             "text": {
               "expr": {
                 "Literal": {
-                  "Value": "'SỐ THÀNH PHỐ CÓ KHÁCH'"
+                  "Value": "'GMV'"
                 }
               }
             },
             "fontSize": {
               "expr": {
                 "Literal": {
-                  "Value": "9D"
+                  "Value": "12D"
                 }
               }
             },
@@ -164,6 +142,51 @@
               "expr": {
                 "Literal": {
                   "Value": "'''Segoe UI Light'', wf_segoe-ui_light, helvetica, arial, sans-serif'"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "subTitle": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "false"
+                }
+              }
+            },
+            "text": {
+              "expr": {
+                "Literal": {
+                  "Value": "'Theo bang / vùng đang lọc'"
+                }
+              }
+            },
+            "fontSize": {
+              "expr": {
+                "Literal": {
+                  "Value": "8D"
+                }
+              }
+            },
+            "fontColor": {
+              "solid": {
+                "color": {
+                  "expr": {
+                    "Literal": {
+                      "Value": "'#6B7280'"
+                    }
+                  }
+                }
+              }
+            },
+            "alignment": {
+              "expr": {
+                "Literal": {
+                  "Value": "'center'"
                 }
               }
             }

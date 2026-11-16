@@ -1,13 +1,13 @@
 {
   "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.14.0/schema.json",
-  "name": "d8723eb018200b881656",
+  "name": "kpi_state_freight",
   "position": {
-    "x": 234.2,
-    "y": 10.018601280347868,
-    "z": 10000,
-    "height": 142.48677376494746,
-    "width": 180.4,
-    "tabOrder": 10000
+    "x": 679.50774297029136,
+    "y": 9.8837489886587839,
+    "z": 17000,
+    "height": 86.482803650764353,
+    "width": 207.55872876183446,
+    "tabOrder": 17000
   },
   "visual": {
     "visualType": "card",
@@ -23,34 +23,15 @@
                       "Entity": "order_summary"
                     }
                   },
-                  "Property": "Customer States"
+                  "Property": "Freight Ratio (Kỳ này)"
                 }
               },
-              "queryRef": "order_summary.Customer States",
-              "nativeQueryRef": "Bang",
-              "displayName": "Bang",
-              "format": "0 \"bang\""
+              "queryRef": "order_summary.Freight Ratio (Kỳ này)",
+              "nativeQueryRef": "Freight Ratio (Kỳ này)",
+              "displayName": "TỶ LỆ PHÍ SHIP"
             }
           ]
         }
-      },
-      "sortDefinition": {
-        "sort": [
-          {
-            "field": {
-              "Measure": {
-                "Expression": {
-                  "SourceRef": {
-                    "Entity": "order_summary"
-                  }
-                },
-                "Property": "Customer States"
-              }
-            },
-            "direction": "Descending"
-          }
-        ],
-        "isDefaultSort": true
       }
     },
     "objects": {
@@ -60,7 +41,7 @@
             "fontSize": {
               "expr": {
                 "Literal": {
-                  "Value": "22D"
+                  "Value": "20D"
                 }
               }
             },
@@ -87,24 +68,6 @@
                   "Value": "false"
                 }
               }
-            },
-            "fontSize": {
-              "expr": {
-                "Literal": {
-                  "Value": "9D"
-                }
-              }
-            },
-            "color": {
-              "solid": {
-                "color": {
-                  "expr": {
-                    "Literal": {
-                      "Value": "'#6B7280'"
-                    }
-                  }
-                }
-              }
             }
           }
         }
@@ -124,14 +87,14 @@
             "text": {
               "expr": {
                 "Literal": {
-                  "Value": "'SỐ BANG CÓ KHÁCH'"
+                  "Value": "'TỶ LỆ PHÍ SHIP'"
                 }
               }
             },
             "fontSize": {
               "expr": {
                 "Literal": {
-                  "Value": "9D"
+                  "Value": "12D"
                 }
               }
             },
@@ -165,6 +128,51 @@
               "expr": {
                 "Literal": {
                   "Value": "'''Segoe UI Light'', wf_segoe-ui_light, helvetica, arial, sans-serif'"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "subTitle": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "false"
+                }
+              }
+            },
+            "text": {
+              "expr": {
+                "Literal": {
+                  "Value": "'Phí ship / giá hàng'"
+                }
+              }
+            },
+            "fontSize": {
+              "expr": {
+                "Literal": {
+                  "Value": "8D"
+                }
+              }
+            },
+            "fontColor": {
+              "solid": {
+                "color": {
+                  "expr": {
+                    "Literal": {
+                      "Value": "'#6B7280'"
+                    }
+                  }
+                }
+              }
+            },
+            "alignment": {
+              "expr": {
+                "Literal": {
+                  "Value": "'center'"
                 }
               }
             }

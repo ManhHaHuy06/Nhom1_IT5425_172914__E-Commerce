@@ -23,7 +23,7 @@
                     "textStyle": {
                       "fontWeight": "bold",
                       "fontSize": "14pt",
-                      "color": "#2563EB"
+                      "color": "#2563eb"
                     }
                   }
                 ]
@@ -34,7 +34,7 @@
                     "value": "Market Analysis",
                     "textStyle": {
                       "fontSize": "10pt",
-                      "color": "#6B7280"
+                      "color": "#6b7280"
                     }
                   }
                 ]

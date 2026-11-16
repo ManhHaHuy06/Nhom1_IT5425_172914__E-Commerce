@@ -2,12 +2,12 @@
   "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.14.0/schema.json",
   "name": "rfm_segments",
   "position": {
-    "x": 232.9,
-    "y": 441,
-    "z": 27000,
-    "height": 268,
-    "width": 554.4,
-    "tabOrder": 27000
+    "x": 233.50356985706375,
+    "y": 441.06229861889824,
+    "z": 23000,
+    "height": 268.0966913173695,
+    "width": 654.79837049864443,
+    "tabOrder": 23000
   },
   "visual": {
     "visualType": "clusteredColumnChart",

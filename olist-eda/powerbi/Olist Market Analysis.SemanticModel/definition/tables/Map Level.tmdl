@@ -1,0 +1,28 @@
+table 'Map Level'
+	lineageTag: f2b7ca47-0ca8-4c4c-b208-01512e9b690e
+
+	column 'Cấp độ'
+		dataType: string
+		lineageTag: d18e027c-e350-478c-ae3e-b46d3c08a9b2
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [Cấp độ]
+		sortByColumn: 'Thứ tự'
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Thứ tự'
+		dataType: int64
+		isHidden
+		formatString: 0
+		lineageTag: cd5ef533-b12a-4918-b0ab-703bc0936ffc
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [Thứ tự]
+
+		annotation SummarizationSetBy = Automatic
+
+	partition 'Map Level' = calculated
+		mode: import
+		source = DATATABLE ( "Cấp độ", STRING, "Thứ tự", INTEGER, { { "Bang", 1 }, { "Vùng", 2 } } )
+

@@ -44,6 +44,17 @@
           "type": "CustomTheme"
         }
       ]
+    },
+    {
+      "name": "SharedResources",
+      "type": "SharedResources",
+      "items": [
+        {
+          "name": "brazil.states.topo",
+          "path": "Shapemaps/brazil.states.topo.json",
+          "type": "ShapeMap"
+        }
+      ]
     }
   ],
   "settings": {

@@ -2,12 +2,12 @@
   "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.14.0/schema.json",
   "name": "kpi_7_val",
   "position": {
-    "x": 795.1,
-    "y": 91.8607258945934,
-    "z": 21000,
+    "x": 796.1,
+    "y": 91.86,
+    "z": 26000,
     "height": 70.930433918610092,
-    "width": 273.7,
-    "tabOrder": 21000
+    "width": 272.5,
+    "tabOrder": 26000
   },
   "visual": {
     "visualType": "card",
@@ -23,12 +23,13 @@
                       "Entity": "order_summary"
                     }
                   },
-                  "Property": "Repeat Customer % (Kỳ này)"
+                  "Property": "GMV QoQ %"
                 }
               },
-              "queryRef": "order_summary.Repeat Customer % (Kỳ này)",
-              "nativeQueryRef": "% KHÁCH MUA ≥ 2 ĐƠN",
-              "displayName": "% KHÁCH MUA ≥ 2 ĐƠN"
+              "queryRef": "order_summary.GMV QoQ %",
+              "nativeQueryRef": "% QoQ (GMV)",
+              "displayName": "% QoQ (GMV)",
+              "format": "+0.0%;-0.0%;0.0%"
             }
           ]
         }
@@ -49,8 +50,13 @@
               "solid": {
                 "color": {
                   "expr": {
-                    "Literal": {
-                      "Value": "'#111827'"
+                    "Measure": {
+                      "Expression": {
+                        "SourceRef": {
+                          "Entity": "order_summary"
+                        }
+                      },
+                      "Property": "KPI Color QoQ"
                     }
                   }
                 }
@@ -87,7 +93,7 @@
             "text": {
               "expr": {
                 "Literal": {
-                  "Value": "'TỶ LỆ KHÁCH MUA LẠI ( ≥ 2 ĐƠN )'"
+                  "Value": "'% QoQ (GMV)'"
                 }
               }
             },

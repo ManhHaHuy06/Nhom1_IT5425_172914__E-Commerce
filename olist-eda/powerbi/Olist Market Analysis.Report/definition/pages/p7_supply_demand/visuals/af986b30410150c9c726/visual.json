@@ -1,16 +1,16 @@
 {
   "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.14.0/schema.json",
-  "name": "f3d47d6ad113471a2d7c",
+  "name": "af986b30410150c9c726",
   "position": {
-    "x": 589.9,
-    "y": 431.25,
-    "z": 17000,
-    "height": 280,
-    "width": 379.4,
-    "tabOrder": 17000
+    "x": 233.50356985706375,
+    "y": 431.17854963023944,
+    "z": 20000,
+    "height": 273.0385658116989,
+    "width": 653.562901875062,
+    "tabOrder": 20000
   },
   "visual": {
-    "visualType": "scatterChart",
+    "visualType": "lineStackedColumnComboChart",
     "query": {
       "queryState": {
         "Category": {
@@ -46,44 +46,8 @@
                 }
               },
               "queryRef": "dim_state.region",
-              "nativeQueryRef": "region"
-            }
-          ]
-        },
-        "Size": {
-          "projections": [
-            {
-              "field": {
-                "Measure": {
-                  "Expression": {
-                    "SourceRef": {
-                      "Entity": "order_summary"
-                    }
-                  },
-                  "Property": "GMV (Kỳ này)"
-                }
-              },
-              "queryRef": "order_summary.GMV (Kỳ này)",
-              "nativeQueryRef": "GMV kỳ này"
-            }
-          ]
-        },
-        "X": {
-          "projections": [
-            {
-              "field": {
-                "Measure": {
-                  "Expression": {
-                    "SourceRef": {
-                      "Entity": "order_summary"
-                    }
-                  },
-                  "Property": "Penetration per 100k"
-                }
-              },
-              "queryRef": "order_summary.Penetration per 100k",
-              "nativeQueryRef": "Penetration per 100k",
-              "active": true
+              "nativeQueryRef": "Region",
+              "displayName": "Region"
             }
           ]
         },
@@ -97,144 +61,153 @@
                       "Entity": "order_summary"
                     }
                   },
-                  "Property": "GMV YoY % (Kỳ này)"
+                  "Property": "GMV"
                 }
               },
-              "queryRef": "order_summary.GMV YoY % (Kỳ này)",
-              "nativeQueryRef": "GMV YoY %"
+              "queryRef": "order_summary.GMV",
+              "nativeQueryRef": "Doanh thu GMV",
+              "displayName": "Doanh thu GMV"
+            }
+          ]
+        },
+        "Y2": {
+          "projections": [
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "dim_state"
+                    }
+                  },
+                  "Property": "Pareto 80%"
+                }
+              },
+              "queryRef": "dim_state.Pareto 80%",
+              "nativeQueryRef": "Pareto 80%"
+            },
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "dim_state"
+                    }
+                  },
+                  "Property": "GMV Cum % (state)"
+                }
+              },
+              "queryRef": "dim_state.GMV Cum % (state)",
+              "nativeQueryRef": "doanh thu tích lũy",
+              "displayName": "doanh thu tích lũy"
             }
           ]
         }
+      },
+      "sortDefinition": {
+        "sort": [
+          {
+            "field": {
+              "Measure": {
+                "Expression": {
+                  "SourceRef": {
+                    "Entity": "order_summary"
+                  }
+                },
+                "Property": "GMV"
+              }
+            },
+            "direction": "Descending"
+          }
+        ]
       }
     },
     "objects": {
-      "categoryAxis": [
-        {
-          "properties": {
-            "logAxisScale": {
-              "expr": {
-                "Literal": {
-                  "Value": "true"
-                }
-              }
-            },
-            "titleText": {
-              "expr": {
-                "Literal": {
-                  "Value": "'Mức thâm nhập = số đơn trên 100k dân (thang log)'"
-                }
-              }
-            },
-            "titleFontSize": {
-              "expr": {
-                "Literal": {
-                  "Value": "8D"
-                }
-              }
-            }
-          }
-        }
-      ],
       "valueAxis": [
         {
           "properties": {
             "labelDisplayUnits": {
               "expr": {
                 "Literal": {
-                  "Value": "1D"
+                  "Value": "1000000D"
                 }
               }
             },
-            "titleText": {
+            "secStart": {
               "expr": {
                 "Literal": {
-                  "Value": "'Tăng trưởng doanh thu YoY'"
+                  "Value": "0D"
                 }
               }
-            }
-          }
-        }
-      ],
-      "categoryLabels": [
-        {
-          "properties": {
-            "show": {
+            },
+            "secEnd": {
               "expr": {
                 "Literal": {
-                  "Value": "false"
+                  "Value": "1.05D"
                 }
               }
-            }
-          }
-        }
-      ],
-      "referenceLine": [
-        {
-          "properties": {
-            "show": {
+            },
+            "secShowAxisTitle": {
               "expr": {
                 "Literal": {
                   "Value": "true"
                 }
               }
             },
-            "displayName": {
+            "secTitleText": {
               "expr": {
                 "Literal": {
-                  "Value": "'Median line 1'"
-                }
-              }
-            },
-            "value": {
-              "expr": {
-                "Aggregation": {
-                  "Expression": {
-                    "SelectRef": {
-                      "ExpressionName": "order_summary.Penetration per 100k"
-                    }
-                  },
-                  "Function": 6
+                  "Value": "'% doanh thu tích lũy'"
                 }
               }
             }
-          },
-          "selector": {
-            "metadata": "order_summary.Penetration per 100k",
-            "id": "1"
           }
-        },
+        }
+      ],
+      "legend": [
         {
           "properties": {
-            "show": {
+            "matchLineColor": {
               "expr": {
                 "Literal": {
                   "Value": "true"
                 }
               }
             },
-            "displayName": {
+            "legendMarkerRendering": {
               "expr": {
                 "Literal": {
-                  "Value": "'Median line 2'"
-                }
-              }
-            },
-            "value": {
-              "expr": {
-                "Aggregation": {
-                  "Expression": {
-                    "SelectRef": {
-                      "ExpressionName": "order_summary.GMV YoY % (Kỳ này)"
-                    }
-                  },
-                  "Function": 6
+                  "Value": "'markerOnly'"
                 }
               }
             }
-          },
-          "selector": {
-            "metadata": "order_summary.GMV YoY % (Kỳ này)",
-            "id": "2"
+          }
+        }
+      ],
+      "lineStyles": [
+        {
+          "properties": {
+            "lineStyle": {
+              "expr": {
+                "Literal": {
+                  "Value": "'solid'"
+                }
+              }
+            },
+            "strokeWidth": {
+              "expr": {
+                "Literal": {
+                  "Value": "1.5D"
+                }
+              }
+            },
+            "lineChartType": {
+              "expr": {
+                "Literal": {
+                  "Value": "'linear'"
+                }
+              }
+            }
           }
         }
       ]
@@ -246,14 +219,7 @@
             "text": {
               "expr": {
                 "Literal": {
-                  "Value": "'Ma trận cơ hội: Thâm nhập và tăng trưởng'"
-                }
-              }
-            },
-            "fontFamily": {
-              "expr": {
-                "Literal": {
-                  "Value": "'''Segoe UI Light'', wf_segoe-ui_light, helvetica, arial, sans-serif'"
+                  "Value": "'Doanh thu theo bang'"
                 }
               }
             },
@@ -261,6 +227,13 @@
               "expr": {
                 "Literal": {
                   "Value": "12D"
+                }
+              }
+            },
+            "fontFamily": {
+              "expr": {
+                "Literal": {
+                  "Value": "'''Segoe UI Light'', wf_segoe-ui_light, helvetica, arial, sans-serif'"
                 }
               }
             },
@@ -292,7 +265,7 @@
   "filterConfig": {
     "filters": [
       {
-        "name": "5d9d35f6ddab103b7100",
+        "name": "3b5290362146a590ce5d",
         "field": {
           "Column": {
             "Expression": {
@@ -300,7 +273,7 @@
                 "Entity": "dim_state"
               }
             },
-            "Property": "in_matrix"
+            "Property": "region"
           }
         },
         "type": "Categorical",
@@ -325,7 +298,7 @@
                             "Source": "d"
                           }
                         },
-                        "Property": "in_matrix"
+                        "Property": "region"
                       }
                     }
                   ],
@@ -333,7 +306,35 @@
                     [
                       {
                         "Literal": {
-                          "Value": "'Có'"
+                          "Value": "'Sudeste'"
+                        }
+                      }
+                    ],
+                    [
+                      {
+                        "Literal": {
+                          "Value": "'Sul'"
+                        }
+                      }
+                    ],
+                    [
+                      {
+                        "Literal": {
+                          "Value": "'Nordeste'"
+                        }
+                      }
+                    ],
+                    [
+                      {
+                        "Literal": {
+                          "Value": "'Centro-Oeste'"
+                        }
+                      }
+                    ],
+                    [
+                      {
+                        "Literal": {
+                          "Value": "'Norte'"
                         }
                       }
                     ]
@@ -342,8 +343,7 @@
               }
             }
           ]
-        },
-        "howCreated": "User"
+        }
       }
     ]
   }

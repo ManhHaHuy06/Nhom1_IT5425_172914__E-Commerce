@@ -49,14 +49,14 @@
             "startDate": {
               "expr": {
                 "Literal": {
-                  "Value": "datetime'2016-09-01T00:00:00'"
+                  "Value": "datetime'2018-01-01T00:00:00'"
                 }
               }
             },
             "endDate": {
               "expr": {
                 "Literal": {
-                  "Value": "datetime'2018-10-01T00:00:00'"
+                  "Value": "datetime'2018-03-31T00:00:00'"
                 }
               }
             }
@@ -124,7 +124,7 @@
                             },
                             "Right": {
                               "Literal": {
-                                "Value": "datetime'2016-09-01T00:00:00'"
+                                "Value": "datetime'2018-01-01T00:00:00'"
                               }
                             }
                           }
@@ -144,7 +144,7 @@
                             },
                             "Right": {
                               "Literal": {
-                                "Value": "datetime'2018-10-02T00:00:00'"
+                                "Value": "datetime'2018-04-01T00:00:00'"
                               }
                             }
                           }

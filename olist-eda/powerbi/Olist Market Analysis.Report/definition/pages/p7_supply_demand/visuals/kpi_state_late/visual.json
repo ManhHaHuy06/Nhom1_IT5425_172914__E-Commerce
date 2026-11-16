@@ -1,13 +1,13 @@
 {
   "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.14.0/schema.json",
-  "name": "3cdf18b49b2d20793b14",
+  "name": "kpi_state_late",
   "position": {
-    "x": 811.1,
-    "y": 11.13177920038652,
-    "z": 13000,
-    "height": 141.37359584490881,
-    "width": 180.4,
-    "tabOrder": 13000
+    "x": 908.0694383330258,
+    "y": 9.8837489886587839,
+    "z": 18000,
+    "height": 86.482803650764353,
+    "width": 208.79419738541679,
+    "tabOrder": 18000
   },
   "visual": {
     "visualType": "card",
@@ -23,33 +23,15 @@
                       "Entity": "order_summary"
                     }
                   },
-                  "Property": "Seller Cities"
+                  "Property": "Late % (Kỳ này)"
                 }
               },
-              "queryRef": "order_summary.Seller Cities",
-              "nativeQueryRef": "thành phố",
-              "displayName": "thành phố"
+              "queryRef": "order_summary.Late % (Kỳ này)",
+              "nativeQueryRef": "Late % (Kỳ này)",
+              "displayName": "TỶ LỆ GIAO TRỄ HẠN"
             }
           ]
         }
-      },
-      "sortDefinition": {
-        "sort": [
-          {
-            "field": {
-              "Measure": {
-                "Expression": {
-                  "SourceRef": {
-                    "Entity": "order_summary"
-                  }
-                },
-                "Property": "Seller Cities"
-              }
-            },
-            "direction": "Descending"
-          }
-        ],
-        "isDefaultSort": true
       }
     },
     "objects": {
@@ -59,7 +41,7 @@
             "fontSize": {
               "expr": {
                 "Literal": {
-                  "Value": "22D"
+                  "Value": "20D"
                 }
               }
             },
@@ -83,25 +65,7 @@
             "show": {
               "expr": {
                 "Literal": {
-                  "Value": "true"
-                }
-              }
-            },
-            "fontSize": {
-              "expr": {
-                "Literal": {
-                  "Value": "9D"
-                }
-              }
-            },
-            "color": {
-              "solid": {
-                "color": {
-                  "expr": {
-                    "Literal": {
-                      "Value": "'#6B7280'"
-                    }
-                  }
+                  "Value": "false"
                 }
               }
             }
@@ -123,14 +87,14 @@
             "text": {
               "expr": {
                 "Literal": {
-                  "Value": "'SỐ THÀNH PHỐ CÓ NGƯỜI BÁN'"
+                  "Value": "'TỶ LỆ GIAO TRỄ HẠN'"
                 }
               }
             },
             "fontSize": {
               "expr": {
                 "Literal": {
-                  "Value": "9D"
+                  "Value": "12D"
                 }
               }
             },
@@ -164,6 +128,51 @@
               "expr": {
                 "Literal": {
                   "Value": "'''Segoe UI Light'', wf_segoe-ui_light, helvetica, arial, sans-serif'"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "subTitle": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "false"
+                }
+              }
+            },
+            "text": {
+              "expr": {
+                "Literal": {
+                  "Value": "'% đơn đã giao trễ ngày hẹn'"
+                }
+              }
+            },
+            "fontSize": {
+              "expr": {
+                "Literal": {
+                  "Value": "8D"
+                }
+              }
+            },
+            "fontColor": {
+              "solid": {
+                "color": {
+                  "expr": {
+                    "Literal": {
+                      "Value": "'#6B7280'"
+                    }
+                  }
+                }
+              }
+            },
+            "alignment": {
+              "expr": {
+                "Literal": {
+                  "Value": "'center'"
                 }
               }
             }

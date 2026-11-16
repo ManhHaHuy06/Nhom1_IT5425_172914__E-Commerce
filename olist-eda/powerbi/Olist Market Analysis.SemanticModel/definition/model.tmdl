@@ -25,6 +25,8 @@ ref table item_sales
 ref table customer_rfm
 ref table first_order_repurchase
 ref table seller_review_bin
+ref table 'Map Metric'
+ref table 'Map Level'
 
 ref cultureInfo en-US
 

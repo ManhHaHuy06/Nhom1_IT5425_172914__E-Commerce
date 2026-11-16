@@ -1,13 +1,13 @@
 {
   "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.14.0/schema.json",
-  "name": "94c92e8f05d533073601",
+  "name": "kpi_state_yoy",
   "position": {
-    "x": 620.3,
-    "y": 10.018601280347868,
-    "z": 12000,
-    "height": 142.48677376494746,
-    "width": 174.7,
-    "tabOrder": 12000
+    "x": 464.53620246696283,
+    "y": 9.8837489886587839,
+    "z": 16000,
+    "height": 86.482803650764353,
+    "width": 197.67497977317566,
+    "tabOrder": 16000
   },
   "visual": {
     "visualType": "card",
@@ -23,33 +23,16 @@
                       "Entity": "order_summary"
                     }
                   },
-                  "Property": "Seller States"
+                  "Property": "GMV YoY % (Kỳ này)"
                 }
               },
-              "queryRef": "order_summary.Seller States",
-              "nativeQueryRef": "Seller States",
-              "format": "0 \"bang\""
+              "queryRef": "order_summary.GMV YoY % (Kỳ này)",
+              "nativeQueryRef": "GMV YoY % (Kỳ này)",
+              "displayName": "TĂNG TRƯỞNG GMV (YoY)",
+              "format": "+0.0%;-0.0%;0.0%"
             }
           ]
         }
-      },
-      "sortDefinition": {
-        "sort": [
-          {
-            "field": {
-              "Measure": {
-                "Expression": {
-                  "SourceRef": {
-                    "Entity": "order_summary"
-                  }
-                },
-                "Property": "Seller States"
-              }
-            },
-            "direction": "Descending"
-          }
-        ],
-        "isDefaultSort": true
       }
     },
     "objects": {
@@ -59,7 +42,7 @@
             "fontSize": {
               "expr": {
                 "Literal": {
-                  "Value": "22D"
+                  "Value": "20D"
                 }
               }
             },
@@ -67,8 +50,13 @@
               "solid": {
                 "color": {
                   "expr": {
-                    "Literal": {
-                      "Value": "'#111827'"
+                    "Measure": {
+                      "Expression": {
+                        "SourceRef": {
+                          "Entity": "order_summary"
+                        }
+                      },
+                      "Property": "KPI Color YoY"
                     }
                   }
                 }
@@ -84,24 +72,6 @@
               "expr": {
                 "Literal": {
                   "Value": "false"
-                }
-              }
-            },
-            "fontSize": {
-              "expr": {
-                "Literal": {
-                  "Value": "9D"
-                }
-              }
-            },
-            "color": {
-              "solid": {
-                "color": {
-                  "expr": {
-                    "Literal": {
-                      "Value": "'#6B7280'"
-                    }
-                  }
                 }
               }
             }
@@ -123,14 +93,14 @@
             "text": {
               "expr": {
                 "Literal": {
-                  "Value": "'SỐ BANG CÓ NGƯỜI BÁN'"
+                  "Value": "'% YoY (GMV)'"
                 }
               }
             },
             "fontSize": {
               "expr": {
                 "Literal": {
-                  "Value": "9D"
+                  "Value": "12D"
                 }
               }
             },
@@ -164,6 +134,51 @@
               "expr": {
                 "Literal": {
                   "Value": "'''Segoe UI Light'', wf_segoe-ui_light, helvetica, arial, sans-serif'"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "subTitle": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "false"
+                }
+              }
+            },
+            "text": {
+              "expr": {
+                "Literal": {
+                  "Value": "'So với cùng kỳ năm trước'"
+                }
+              }
+            },
+            "fontSize": {
+              "expr": {
+                "Literal": {
+                  "Value": "8D"
+                }
+              }
+            },
+            "fontColor": {
+              "solid": {
+                "color": {
+                  "expr": {
+                    "Literal": {
+                      "Value": "'#6B7280'"
+                    }
+                  }
+                }
+              }
+            },
+            "alignment": {
+              "expr": {
+                "Literal": {
+                  "Value": "'center'"
                 }
               }
             }

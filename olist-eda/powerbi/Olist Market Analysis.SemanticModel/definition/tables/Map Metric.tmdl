@@ -1,0 +1,28 @@
+table 'Map Metric'
+	lineageTag: 49f8093b-60a2-4bc9-94d3-c348e5b73014
+
+	column 'Chỉ số'
+		dataType: string
+		lineageTag: 7b618803-486d-4206-b15a-7a1668fc700a
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [Chỉ số]
+		sortByColumn: 'Thứ tự'
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Thứ tự'
+		dataType: int64
+		isHidden
+		formatString: 0
+		lineageTag: 40508d2b-3bfc-49ee-a9c5-c1352b4f65a0
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [Thứ tự]
+
+		annotation SummarizationSetBy = Automatic
+
+	partition 'Map Metric' = calculated
+		mode: import
+		source = DATATABLE ( "Chỉ số", STRING, "Thứ tự", INTEGER, { { "GMV", 1 }, { "Số đơn", 2 }, { "Số khách hàng", 3 }, { "Số người bán", 4 }, { "Tăng trưởng QoQ", 5 } } )
+

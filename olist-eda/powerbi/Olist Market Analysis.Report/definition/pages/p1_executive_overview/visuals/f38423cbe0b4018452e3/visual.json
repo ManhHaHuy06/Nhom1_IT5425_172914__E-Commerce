@@ -1,13 +1,13 @@
 {
   "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.14.0/schema.json",
-  "name": "kpi_4_val",
+  "name": "f38423cbe0b4018452e3",
   "position": {
-    "x": 1077.2,
-    "y": 11.627939986657392,
-    "z": 15000,
-    "height": 70.930433918610092,
-    "width": 272.5,
-    "tabOrder": 15000
+    "x": 1078.5641083873898,
+    "y": 11.119217612241131,
+    "z": 24000,
+    "height": 71.657180167776175,
+    "width": 271.80309718811657,
+    "tabOrder": 24000
   },
   "visual": {
     "visualType": "card",
@@ -20,15 +20,15 @@
                 "Measure": {
                   "Expression": {
                     "SourceRef": {
-                      "Entity": "order_summary"
+                      "Entity": "item_sales"
                     }
                   },
-                  "Property": "AOV (Kỳ này)"
+                  "Property": "Active Sellers (Kỳ này)"
                 }
               },
-              "queryRef": "order_summary.AOV (Kỳ này)",
-              "nativeQueryRef": "GIÁ TRỊ ĐƠN TB (AOV)",
-              "displayName": "GIÁ TRỊ ĐƠN TB (AOV)"
+              "queryRef": "item_sales.Active Sellers (Kỳ này)",
+              "nativeQueryRef": "NGƯỜI BÁN HOẠT ĐỘNG kỳ này",
+              "displayName": "NGƯỜI BÁN HOẠT ĐỘNG kỳ này"
             }
           ]
         }
@@ -87,7 +87,7 @@
             "text": {
               "expr": {
                 "Literal": {
-                  "Value": "'GIÁ TRỊ ĐƠN TB (AOV)'"
+                  "Value": "'NGƯỜI BÁN HOẠT ĐỘNG'"
                 }
               }
             },

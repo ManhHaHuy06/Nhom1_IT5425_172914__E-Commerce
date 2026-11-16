@@ -53,6 +53,153 @@ table dim_state
 
 		annotation PBI_FormatHint = {"isGeneralNumber":true}
 
+	measure 'Map Metric Selected' = SELECTEDVALUE ( 'Map Metric'[Chỉ số], "GMV" )
+		displayFolder: Bản đồ
+		lineageTag: f67beb39-623a-4624-bf35-86eabff7fb10
+
+	measure 'Map Level Selected' = SELECTEDVALUE ( 'Map Level'[Cấp độ], "Bang" )
+		displayFolder: Bản đồ
+		lineageTag: f9c281e9-f80e-4c9e-bb88-7959e3708642
+
+	measure 'Map GMV' = ```
+			// GMV ở cấp đã chọn (bang, hoặc cả vùng kinh tế chứa bang)
+			VAR r = SELECTEDVALUE ( dim_state[region] )
+			RETURN
+			    IF ( [Map Level Selected] = "Vùng",
+			         IF ( NOT ISBLANK ( r ), CALCULATE ( [GMV], REMOVEFILTERS ( dim_state ), dim_state[region] = r ) ),
+			         [GMV] )
+			
+			```
+		formatString: \R\$ #,0
+		displayFolder: Bản đồ
+		lineageTag: 24b086b9-0f15-4b5f-abbc-31be582f16ad
+
+	measure 'Map Orders' = ```
+			
+			VAR r = SELECTEDVALUE ( dim_state[region] )
+			RETURN
+			    IF ( [Map Level Selected] = "Vùng",
+			         IF ( NOT ISBLANK ( r ), CALCULATE ( [Valid Orders], REMOVEFILTERS ( dim_state ), dim_state[region] = r ) ),
+			         [Valid Orders] )
+			
+			```
+		formatString: #,0
+		displayFolder: Bản đồ
+		lineageTag: 540f0a90-da91-44ef-a0df-ca06c0573e6a
+
+	measure 'Map QoQ' = ```
+			// GMV quý chứa ngày cuối kỳ so với quý trước (cùng logic KPI QoQ trang Tổng quan)
+			VAR r = SELECTEDVALUE ( dim_state[region] )
+			RETURN
+			    IF ( [Map Level Selected] = "Vùng",
+			         IF ( NOT ISBLANK ( r ), CALCULATE ( [GMV QoQ %], REMOVEFILTERS ( dim_state ), dim_state[region] = r ) ),
+			         [GMV QoQ %] )
+			
+			```
+		formatString: +0.0%;-0.0%;0.0%
+		displayFolder: Bản đồ
+		lineageTag: cb72faa1-8aa6-4118-84e5-6db143bade19
+
+	measure 'Map GMV Share' =
+			// tỷ trọng GMV của bang/vùng trên toàn quốc (trong bộ lọc hiện tại)
+			DIVIDE ( [Map GMV], CALCULATE ( [GMV], REMOVEFILTERS ( dim_state ) ) )
+		formatString: 0.0%
+		displayFolder: Bản đồ
+		lineageTag: cdc256bc-044d-455a-bb81-cc7aae55fb56
+
+	measure 'Map Value' =
+			SWITCH ( [Map Metric Selected],
+			    "Số đơn", [Map Orders],
+			    "Số khách hàng", [Map Customers],
+			    "Số người bán", [Map Sellers],
+			    "Tăng trưởng QoQ", [Map QoQ],
+			    [Map GMV] )
+		displayFolder: Bản đồ
+		lineageTag: 71dbf5af-6e90-45be-a353-52e17ee3bc00
+
+	measure 'Map Score' =
+			// Điểm tô màu cho Shape map (gradient 3 màu cố định: -1 đỏ, 0 xám, +1 xanh đậm)
+			// GMV / Số đơn: 5 lớp 0.2..1 theo % so với bang (vùng) lớn nhất; QoQ: tăng trưởng / 30%, giới hạn [-1, 1]
+			VAR v = [Map Value]
+			RETURN
+			    IF ( NOT ISBLANK ( v ),
+			        IF ( [Map Metric Selected] = "Tăng trưởng QoQ",
+			            MAX ( -1, MIN ( 1, v / 0.3 ) ),
+			            VAR mx = MAXX ( ALLSELECTED ( dim_state[Map Location] ), [Map Value] )
+			            VAR r = DIVIDE ( v, mx )
+			            RETURN
+			                SWITCH ( TRUE (),
+			                    r >= 0.5, 1,
+			                    r >= 0.2, 0.8,
+			                    r >= 0.08, 0.6,
+			                    r >= 0.03, 0.4,
+			                    0.2 ) ) )
+		formatString: 0.00
+		displayFolder: Bản đồ
+		lineageTag: da251e6b-1c22-4570-a34f-97c25a83e390
+
+	measure 'Map Area' =
+			VAR st = SELECTEDVALUE ( dim_state[state_name] )
+			VAR cd = SELECTEDVALUE ( dim_state[state] )
+			VAR rg = SELECTEDVALUE ( dim_state[region] )
+			RETURN
+			    IF ( [Map Level Selected] = "Vùng",
+			         "Vùng " & rg & " (bang " & st & ")",
+			         st & " (" & cd & ") – vùng " & rg )
+		displayFolder: Bản đồ
+		lineageTag: 7a9c8589-094f-47ea-8d32-a7b2c8198b91
+
+	measure 'Map Title' =
+			VAR m = [Map Metric Selected]
+			VAR lv = IF ( [Map Level Selected] = "Vùng", "5 vùng kinh tế", "bang" )
+			RETURN
+			    SWITCH ( m,
+			        "Số đơn", "Số đơn hàng theo " & lv,
+			        "Số khách hàng", "Số khách hàng theo " & lv,
+			        "Số người bán", "Số người bán (đặt tại) theo " & lv,
+			        "Tăng trưởng QoQ", "Tăng trưởng GMV QoQ theo " & lv,
+			        "GMV theo " & lv )
+		displayFolder: Bản đồ
+		lineageTag: 7be8eb26-f71a-4718-b0f3-c9df7e327d5b
+
+	measure 'Sellers in State' =
+			// số người bán (có đơn hợp lệ trong bộ lọc) ĐẶT TẠI bang/vùng đang xét — theo bang của người bán, không phải bang khách
+			CALCULATE (
+			    DISTINCTCOUNT ( geo_seller[seller_id] ),
+			    order_summary[is_valid] = 1,
+			    REMOVEFILTERS ( dim_state ),
+			    TREATAS ( VALUES ( dim_state[state] ), geo_seller[seller_state] )
+			)
+		formatString: #,0
+		displayFolder: Bản đồ
+		lineageTag: 21ff6d2a-ee96-4aab-b305-b0532627a166
+
+	measure 'Map Customers' = ```
+			// số khách hàng (customer_key) có đơn hợp lệ, theo bang của khách
+			VAR r = SELECTEDVALUE ( dim_state[region] )
+			RETURN
+			    IF ( [Map Level Selected] = "Vùng",
+			         IF ( NOT ISBLANK ( r ), CALCULATE ( [Customers], REMOVEFILTERS ( dim_state ), dim_state[region] = r ) ),
+			         [Customers] )
+			
+			```
+		formatString: #,0
+		displayFolder: Bản đồ
+		lineageTag: 0ad2e0ab-870b-48fd-8b6d-37a1b7adc203
+
+	measure 'Map Sellers' = ```
+			
+			VAR r = SELECTEDVALUE ( dim_state[region] )
+			RETURN
+			    IF ( [Map Level Selected] = "Vùng",
+			         IF ( NOT ISBLANK ( r ), CALCULATE ( [Sellers in State], REMOVEFILTERS ( dim_state ), dim_state[region] = r ) ),
+			         [Sellers in State] )
+			
+			```
+		formatString: #,0
+		displayFolder: Bản đồ
+		lineageTag: ef527295-f088-4259-9bb3-86d9933c91df
+
 	column state
 		dataType: string
 		lineageTag: 966baaab-38ea-4d48-8a85-326437354c21
@@ -104,6 +251,64 @@ table dim_state
 		lineageTag: 8f2f3437-b970-4f08-ae4f-37c42b624bae
 		summarizeBy: sum
 		sourceColumn: quadrant_order
+
+		annotation SummarizationSetBy = Automatic
+
+	column state_name =
+			SWITCH ( dim_state[state],
+			    "AC", "Acre",
+			    "AL", "Alagoas",
+			    "AP", "Amapá",
+			    "AM", "Amazonas",
+			    "BA", "Bahia",
+			    "CE", "Ceará",
+			    "DF", "Distrito Federal",
+			    "ES", "Espírito Santo",
+			    "GO", "Goiás",
+			    "MA", "Maranhão",
+			    "MT", "Mato Grosso",
+			    "MS", "Mato Grosso do Sul",
+			    "MG", "Minas Gerais",
+			    "PA", "Pará",
+			    "PB", "Paraíba",
+			    "PR", "Paraná",
+			    "PE", "Pernambuco",
+			    "PI", "Piauí",
+			    "RJ", "Rio de Janeiro",
+			    "RN", "Rio Grande do Norte",
+			    "RS", "Rio Grande do Sul",
+			    "RO", "Rondônia",
+			    "RR", "Roraima",
+			    "SC", "Santa Catarina",
+			    "SP", "São Paulo",
+			    "SE", "Sergipe",
+			    "TO", "Tocantins",
+			    dim_state[state] )
+		dataType: string
+		lineageTag: 12ded250-8cdf-4492-b001-4188f481752f
+		summarizeBy: none
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Map Location' =
+			// key của Shape map 'Brazil: states' = tên bang không dấu
+			VAR n = dim_state[state_name] RETURN SWITCH ( n,
+			    "Amapá", "Amapa",
+			    "Ceará", "Ceara",
+			    "Espírito Santo", "Espirito Santo",
+			    "Goiás", "Goias",
+			    "Maranhão", "Maranhao",
+			    "Pará", "Para",
+			    "Paraíba", "Paraiba",
+			    "Paraná", "Parana",
+			    "Piauí", "Piaui",
+			    "Rondônia", "Rondonia",
+			    "São Paulo", "Sao Paulo",
+			    n )
+		dataType: string
+		lineageTag: 7d1331ad-8824-43fb-a070-ec3fbcdaf1c5
+		dataCategory: StateOrProvince
+		summarizeBy: none
 
 		annotation SummarizationSetBy = Automatic
 

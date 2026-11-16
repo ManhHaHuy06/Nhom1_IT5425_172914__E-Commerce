@@ -2,12 +2,12 @@
   "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.14.0/schema.json",
   "name": "quality_trend",
   "position": {
-    "x": 795.7,
-    "y": 441.24032549429063,
-    "z": 26000,
-    "height": 267.45952037653922,
-    "width": 553.7,
-    "tabOrder": 26000
+    "x": 898.185689344367,
+    "y": 441.06229861889824,
+    "z": 22000,
+    "height": 268.0966913173695,
+    "width": 450.94604760755703,
+    "tabOrder": 22000
   },
   "visual": {
     "visualType": "lineChart",
@@ -285,7 +285,7 @@
             "text": {
               "expr": {
                 "Literal": {
-                  "Value": "'Điểm đánh giá trung bình mỗi đơn theo tháng'"
+                  "Value": "'Điểm đánh giá trung bình đơn theo tháng'"
                 }
               }
             },

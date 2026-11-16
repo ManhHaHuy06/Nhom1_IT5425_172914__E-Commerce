@@ -331,6 +331,68 @@ table order_summary
 		displayFolder: Tổng quan
 		lineageTag: 5a36bc6a-35ec-4bfa-83b1-bb3ebadde506
 
+	measure 'GMV (Quý này)' =
+			// quý chứa ngày cuối kỳ (từ đầu quý, không sớm hơn đầu kỳ, tới cuối kỳ)
+			VAR e = [Period End]
+			VAR qs = DATE ( YEAR ( e ), INT ( ( MONTH ( e ) - 1 ) / 3 ) * 3 + 1, 1 )
+			VAR s = MAX ( qs, [Period Start] )
+			RETURN CALCULATE ( [GMV], REMOVEFILTERS ( dim_date ), DATESBETWEEN ( dim_date[date], s, e ) )
+		formatString: \R\$ #,0
+		displayFolder: Tổng quan
+		lineageTag: 4f2b9c61-7d3e-4a8b-9c15-2e6f0a7b3d41
+
+	measure 'GMV (Quý trước)' =
+			// cùng khoảng ngày của 'GMV (Quý này)', lùi 3 tháng
+			VAR e = [Period End]
+			VAR qs = DATE ( YEAR ( e ), INT ( ( MONTH ( e ) - 1 ) / 3 ) * 3 + 1, 1 )
+			VAR s = MAX ( qs, [Period Start] )
+			VAR ps = EDATE ( s, -3 )
+			VAR pe = IF ( e = EOMONTH ( e, 0 ), EOMONTH ( e, -3 ), EDATE ( e, -3 ) )
+			RETURN CALCULATE ( [GMV], REMOVEFILTERS ( dim_date ), DATESBETWEEN ( dim_date[date], ps, pe ) )
+		formatString: \R\$ #,0
+		displayFolder: Tổng quan
+		lineageTag: 8a1d3e52-6c4f-4b7a-a2e9-5d0c7f1b9e63
+
+	measure 'GMV QoQ %' = DIVIDE ( [GMV (Quý này)] - [GMV (Quý trước)], [GMV (Quý trước)] )
+		formatString: +0.0%;-0.0%;0.0%
+		displayFolder: Tổng quan
+		lineageTag: c3e7a914-2b5d-4f6e-8a1c-9d4b6e2f7a05
+
+	measure 'KPI Color QoQ' = IF ( ISBLANK ( [GMV QoQ %] ), "#6B7280", IF ( [GMV QoQ %] >= 0, "#16A34A", "#DC2626" ) )
+		displayFolder: Tổng quan
+		lineageTag: 5b9e2d73-1f4a-4c8e-b6d2-7a3f9c1e8b24
+
+	measure 'KPI Color YoY' = IF ( ISBLANK ( [GMV YoY % (Kỳ này)] ), "#6B7280", IF ( [GMV YoY % (Kỳ này)] >= 0, "#16A34A", "#DC2626" ) )
+		displayFolder: Tổng quan
+		lineageTag: e6a4c8b1-9d2f-4e7b-8c3a-1f5d7b9e2c46
+
+	measure 'Freight Ratio' =
+			// tỷ lệ phí ship = freight / giá hàng (đơn hợp lệ)
+			DIVIDE (
+			    CALCULATE ( SUM ( order_summary[freight_value] ), order_summary[is_valid] = 1 ),
+			    CALCULATE ( SUM ( order_summary[product_value] ), order_summary[is_valid] = 1 )
+			)
+		formatString: 0.0%
+		displayFolder: Khu vực
+		lineageTag: 4c8098c1-cc6a-4966-97ec-95e0cb0b6b12
+
+	measure 'Freight Ratio (Kỳ này)' =
+			VAR s = [Period Start]
+			VAR e = [Period End]
+			RETURN CALCULATE ( [Freight Ratio], REMOVEFILTERS ( dim_date ), DATESBETWEEN ( dim_date[date], s, e ) )
+		formatString: 0.0%
+		displayFolder: Khu vực
+		lineageTag: 1f0c3dee-c106-4a74-a9f4-0e64cc4f4b31
+
+	measure 'Late % (Kỳ này)' =
+			// tỷ lệ đơn đã giao bị trễ so với ngày hẹn
+			VAR s = [Period Start]
+			VAR e = [Period End]
+			RETURN CALCULATE ( [Late %], REMOVEFILTERS ( dim_date ), DATESBETWEEN ( dim_date[date], s, e ) )
+		formatString: 0.0%
+		displayFolder: Khu vực
+		lineageTag: 3f677342-9a79-44fa-bcbb-139c7e15b3c8
+
 	column order_id
 		dataType: string
 		isHidden

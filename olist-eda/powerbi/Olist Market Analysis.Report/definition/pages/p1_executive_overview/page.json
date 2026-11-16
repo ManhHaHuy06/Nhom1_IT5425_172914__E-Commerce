@@ -4,5 +4,27 @@
   "displayName": "Tổng quan kinh doanh",
   "displayOption": "FitToPage",
   "height": 720,
-  "width": 1360
+  "width": 1360,
+  "visualInteractions": [
+    {
+      "source": "gmv_trend",
+      "target": "kpi_7_val",
+      "type": "NoFilter"
+    },
+    {
+      "source": "gmv_same_month",
+      "target": "kpi_7_val",
+      "type": "NoFilter"
+    },
+    {
+      "source": "rfm_segments",
+      "target": "kpi_7_val",
+      "type": "NoFilter"
+    },
+    {
+      "source": "quality_trend",
+      "target": "kpi_7_val",
+      "type": "NoFilter"
+    }
+  ]
 }

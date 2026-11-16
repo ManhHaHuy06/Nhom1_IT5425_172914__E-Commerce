@@ -1,0 +1,202 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.14.0/schema.json",
+  "name": "map_legend",
+  "position": {
+    "x": 606.61509417893149,
+    "y": 244.37567866318437,
+    "z": 12000,
+    "height": 154.43357794779351,
+    "width": 143.31436033555235,
+    "tabOrder": 12000
+  },
+  "visual": {
+    "visualType": "textbox",
+    "objects": {
+      "general": [
+        {
+          "properties": {
+            "paragraphs": [
+              {
+                "textRuns": [
+                  {
+                    "value": "GMV · Đơn · Khách · NB",
+                    "textStyle": {
+                      "fontWeight": "bold",
+                      "fontSize": "9pt",
+                      "color": "#374151"
+                    }
+                  }
+                ]
+              },
+              {
+                "textRuns": [
+                  {
+                    "value": "■",
+                    "textStyle": {
+                      "fontSize": "11pt",
+                      "color": "#bdc4d8"
+                    }
+                  },
+                  {
+                    "value": "■",
+                    "textStyle": {
+                      "fontSize": "11pt",
+                      "color": "#95a2c4"
+                    }
+                  },
+                  {
+                    "value": "■",
+                    "textStyle": {
+                      "fontSize": "11pt",
+                      "color": "#6e7fb1"
+                    }
+                  },
+                  {
+                    "value": "■",
+                    "textStyle": {
+                      "fontSize": "11pt",
+                      "color": "#465d9d"
+                    }
+                  },
+                  {
+                    "value": "■",
+                    "textStyle": {
+                      "fontSize": "11pt",
+                      "color": "#1e3a8a"
+                    }
+                  }
+                ]
+              },
+              {
+                "textRuns": [
+                  {
+                    "value": "thấp  →  cao",
+                    "textStyle": {
+                      "fontSize": "8pt",
+                      "color": "#6b7280"
+                    }
+                  }
+                ]
+              },
+              {
+                "textRuns": [
+                  {
+                    "value": " ",
+                    "textStyle": {
+                      "fontSize": "7pt",
+                      "color": "#6b7280"
+                    }
+                  }
+                ]
+              },
+              {
+                "textRuns": [
+                  {
+                    "value": "Tăng trưởng QoQ",
+                    "textStyle": {
+                      "fontWeight": "bold",
+                      "fontSize": "9pt",
+                      "color": "#374151"
+                    }
+                  }
+                ]
+              },
+              {
+                "textRuns": [
+                  {
+                    "value": "■",
+                    "textStyle": {
+                      "fontSize": "11pt",
+                      "color": "#b91c1c"
+                    }
+                  },
+                  {
+                    "value": "■",
+                    "textStyle": {
+                      "fontSize": "11pt",
+                      "color": "#cf8284"
+                    }
+                  },
+                  {
+                    "value": "■",
+                    "textStyle": {
+                      "fontSize": "11pt",
+                      "color": "#e5e7eb"
+                    }
+                  },
+                  {
+                    "value": "■",
+                    "textStyle": {
+                      "fontSize": "11pt",
+                      "color": "#8290ba"
+                    }
+                  },
+                  {
+                    "value": "■",
+                    "textStyle": {
+                      "fontSize": "11pt",
+                      "color": "#1e3a8a"
+                    }
+                  }
+                ]
+              },
+              {
+                "textRuns": [
+                  {
+                    "value": "giảm  →  tăng",
+                    "textStyle": {
+                      "fontSize": "8pt",
+                      "color": "#6b7280"
+                    }
+                  }
+                ]
+              }
+            ]
+          }
+        }
+      ]
+    },
+    "visualContainerObjects": {
+      "title": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "false"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "border": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "false"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "background": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "false"
+                }
+              }
+            }
+          }
+        }
+      ]
+    },
+    "drillFilterOtherVisuals": true
+  }
+}
