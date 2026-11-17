@@ -1,16 +1,16 @@
 {
   "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.14.0/schema.json",
-  "name": "sku_long_tail",
+  "name": "970777f2e09671950d00",
   "position": {
-    "x": 1035.2,
-    "y": 400.00113554101432,
-    "z": 24000,
-    "height": 310,
-    "width": 314.8,
-    "tabOrder": 24000
+    "x": 738.34166775755989,
+    "y": 389.68032464982326,
+    "z": 17000,
+    "height": 320.91320853514856,
+    "width": 611.66540123052755,
+    "tabOrder": 17000
   },
   "visual": {
-    "visualType": "clusteredColumnChart",
+    "visualType": "lineClusteredColumnComboChart",
     "query": {
       "queryState": {
         "Category": {
@@ -20,16 +20,16 @@
                 "Column": {
                   "Expression": {
                     "SourceRef": {
-                      "Entity": "item_sales"
+                      "Entity": "order_summary"
                     }
                   },
-                  "Property": "sku_band"
+                  "Property": "installment_band"
                 }
               },
-              "queryRef": "item_sales.sku_band",
-              "nativeQueryRef": "Số đơn vị bán / SKU",
+              "queryRef": "order_summary.installment_band",
+              "nativeQueryRef": "installment_band",
               "active": true,
-              "displayName": "Số đơn vị bán / SKU"
+              "displayName": "Số kỳ trả góp"
             }
           ]
         },
@@ -40,30 +40,34 @@
                 "Measure": {
                   "Expression": {
                     "SourceRef": {
-                      "Entity": "item_sales"
+                      "Entity": "order_summary"
                     }
                   },
-                  "Property": "SKU %"
+                  "Property": "Orders %"
                 }
               },
-              "queryRef": "item_sales.SKU %",
-              "nativeQueryRef": "% SKU",
-              "displayName": "% SKU"
-            },
+              "queryRef": "order_summary.Orders %",
+              "nativeQueryRef": "Orders %",
+              "displayName": "% số đơn"
+            }
+          ]
+        },
+        "Y2": {
+          "projections": [
             {
               "field": {
                 "Measure": {
                   "Expression": {
                     "SourceRef": {
-                      "Entity": "item_sales"
+                      "Entity": "order_summary"
                     }
                   },
-                  "Property": "Product GMV %"
+                  "Property": "AOV"
                 }
               },
-              "queryRef": "item_sales.Product GMV %",
-              "nativeQueryRef": "% GMV",
-              "displayName": "% GMV"
+              "queryRef": "order_summary.AOV",
+              "nativeQueryRef": "AOV",
+              "displayName": "AOV (R$)"
             }
           ]
         }
@@ -75,10 +79,10 @@
               "Column": {
                 "Expression": {
                   "SourceRef": {
-                    "Entity": "item_sales"
+                    "Entity": "order_summary"
                   }
                 },
-                "Property": "sku_band"
+                "Property": "installment_band"
               }
             },
             "direction": "Ascending"
@@ -96,6 +100,13 @@
                   "Value": "false"
                 }
               }
+            },
+            "axisType": {
+              "expr": {
+                "Literal": {
+                  "Value": "'Categorical'"
+                }
+              }
             }
           }
         }
@@ -104,6 +115,13 @@
         {
           "properties": {
             "showAxisTitle": {
+              "expr": {
+                "Literal": {
+                  "Value": "false"
+                }
+              }
+            },
+            "secShowAxisTitle": {
               "expr": {
                 "Literal": {
                   "Value": "false"
@@ -167,7 +185,7 @@
             }
           },
           "selector": {
-            "metadata": "item_sales.SKU %"
+            "metadata": "order_summary.Orders %"
           }
         },
         {
@@ -177,7 +195,7 @@
                 "color": {
                   "expr": {
                     "Literal": {
-                      "Value": "'#2563EB'"
+                      "Value": "'#F59E0B'"
                     }
                   }
                 }
@@ -185,24 +203,24 @@
             }
           },
           "selector": {
-            "metadata": "item_sales.Product GMV %"
+            "metadata": "order_summary.AOV"
           }
         }
       ],
-      "labels": [
+      "lineStyles": [
         {
           "properties": {
-            "show": {
+            "strokeWidth": {
               "expr": {
                 "Literal": {
-                  "Value": "true"
+                  "Value": "3D"
                 }
               }
             },
-            "fontSize": {
+            "showMarker": {
               "expr": {
                 "Literal": {
-                  "Value": "7D"
+                  "Value": "true"
                 }
               }
             }
@@ -224,14 +242,26 @@
             "text": {
               "expr": {
                 "Literal": {
-                  "Value": "'Tỷ trọng SKU và GMV theo số sản phẩm đã bán'"
+                  "Value": "'Số kỳ trả góp và giá trị đơn trung bình'"
+                }
+              }
+            },
+            "fontColor": {
+              "solid": {
+                "color": {
+                  "expr": {
+                    "ThemeDataColor": {
+                      "ColorId": 1,
+                      "Percent": 0.2
+                    }
+                  }
                 }
               }
             },
             "fontSize": {
               "expr": {
                 "Literal": {
-                  "Value": "10D"
+                  "Value": "12D"
                 }
               }
             },
@@ -248,16 +278,42 @@
                   "Value": "'''Segoe UI Light'', wf_segoe-ui_light, helvetica, arial, sans-serif'"
                 }
               }
+            }
+          }
+        }
+      ],
+      "subTitle": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "false"
+                }
+              }
+            },
+            "text": {
+              "expr": {
+                "Literal": {
+                  "Value": "'Chỉ đơn thẻ tín dụng · 1 kỳ → 10+ kỳ'"
+                }
+              }
             },
             "fontColor": {
               "solid": {
                 "color": {
                   "expr": {
-                    "ThemeDataColor": {
-                      "ColorId": 1,
-                      "Percent": 0.2
+                    "Literal": {
+                      "Value": "'#6B7280'"
                     }
                   }
+                }
+              }
+            },
+            "fontSize": {
+              "expr": {
+                "Literal": {
+                  "Value": "8D"
                 }
               }
             }
@@ -266,5 +322,63 @@
       ]
     },
     "drillFilterOtherVisuals": true
+  },
+  "filterConfig": {
+    "filters": [
+      {
+        "name": "f_credit_card",
+        "field": {
+          "Column": {
+            "Expression": {
+              "SourceRef": {
+                "Entity": "order_summary"
+              }
+            },
+            "Property": "payment_type"
+          }
+        },
+        "type": "Categorical",
+        "filter": {
+          "Version": 2,
+          "From": [
+            {
+              "Name": "t",
+              "Entity": "order_summary",
+              "Type": 0
+            }
+          ],
+          "Where": [
+            {
+              "Condition": {
+                "In": {
+                  "Expressions": [
+                    {
+                      "Column": {
+                        "Expression": {
+                          "SourceRef": {
+                            "Source": "t"
+                          }
+                        },
+                        "Property": "payment_type"
+                      }
+                    }
+                  ],
+                  "Values": [
+                    [
+                      {
+                        "Literal": {
+                          "Value": "'credit_card'"
+                        }
+                      }
+                    ]
+                  ]
+                }
+              }
+            }
+          ]
+        },
+        "howCreated": "User"
+      }
+    ]
   }
 }

@@ -1,16 +1,16 @@
 {
   "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.14.0/schema.json",
-  "name": "share_change",
+  "name": "price_freight_mix",
   "position": {
-    "x": 1065,
-    "y": 92,
-    "z": 21000,
-    "height": 300,
-    "width": 285,
-    "tabOrder": 21000
+    "x": 753.63586038523226,
+    "y": 400.29183404068073,
+    "z": 24000,
+    "height": 310.10262451916935,
+    "width": 595.49587656669166,
+    "tabOrder": 24000
   },
   "visual": {
-    "visualType": "clusteredBarChart",
+    "visualType": "barChart",
     "query": {
       "queryState": {
         "Category": {
@@ -33,6 +33,40 @@
             }
           ]
         },
+        "Tooltips": {
+          "projections": [
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "item_sales"
+                    }
+                  },
+                  "Property": "Category Product Value (Kỳ này)"
+                }
+              },
+              "queryRef": "item_sales.Category Product Value (Kỳ này)",
+              "nativeQueryRef": "Tiền hàng",
+              "displayName": "Tiền hàng"
+            },
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "item_sales"
+                    }
+                  },
+                  "Property": "Category Freight Value (Kỳ này)"
+                }
+              },
+              "queryRef": "item_sales.Category Freight Value (Kỳ này)",
+              "nativeQueryRef": "Phí ship (R$)",
+              "displayName": "Phí ship (R$)"
+            }
+          ]
+        },
         "Y": {
           "projections": [
             {
@@ -43,12 +77,27 @@
                       "Entity": "item_sales"
                     }
                   },
-                  "Property": "Category Share Change pp"
+                  "Property": "Category Price Share (Kỳ này)"
                 }
               },
-              "queryRef": "item_sales.Category Share Change pp",
-              "nativeQueryRef": "Thay đổi tỷ trọng (điểm %)",
-              "displayName": "Thay đổi tỷ trọng (điểm %)"
+              "queryRef": "item_sales.Category Price Share (Kỳ này)",
+              "nativeQueryRef": "Giá sản phẩm",
+              "displayName": "Giá sản phẩm"
+            },
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "item_sales"
+                    }
+                  },
+                  "Property": "Category Freight Share (Kỳ này)"
+                }
+              },
+              "queryRef": "item_sales.Category Freight Share (Kỳ này)",
+              "nativeQueryRef": "Phí ship",
+              "displayName": "Phí ship"
             }
           ]
         }
@@ -63,7 +112,7 @@
                     "Entity": "item_sales"
                   }
                 },
-                "Property": "Category Share Change pp"
+                "Property": "Category Freight Share (Kỳ này)"
               }
             },
             "direction": "Descending"
@@ -105,6 +154,20 @@
                   }
                 }
               }
+            },
+            "start": {
+              "expr": {
+                "Literal": {
+                  "Value": "0D"
+                }
+              }
+            },
+            "end": {
+              "expr": {
+                "Literal": {
+                  "Value": "1D"
+                }
+              }
             }
           }
         }
@@ -115,7 +178,21 @@
             "show": {
               "expr": {
                 "Literal": {
-                  "Value": "false"
+                  "Value": "true"
+                }
+              }
+            },
+            "position": {
+              "expr": {
+                "Literal": {
+                  "Value": "'Top'"
+                }
+              }
+            },
+            "fontSize": {
+              "expr": {
+                "Literal": {
+                  "Value": "8D"
                 }
               }
             }
@@ -129,13 +206,8 @@
               "solid": {
                 "color": {
                   "expr": {
-                    "Measure": {
-                      "Expression": {
-                        "SourceRef": {
-                          "Entity": "item_sales"
-                        }
-                      },
-                      "Property": "Share Change Color"
+                    "Literal": {
+                      "Value": "'#2563EB'"
                     }
                   }
                 }
@@ -143,13 +215,25 @@
             }
           },
           "selector": {
-            "data": [
-              {
-                "dataViewWildcard": {
-                  "matchingOption": 1
+            "metadata": "item_sales.Category Price Share (Kỳ này)"
+          }
+        },
+        {
+          "properties": {
+            "fill": {
+              "solid": {
+                "color": {
+                  "expr": {
+                    "Literal": {
+                      "Value": "'#F59E0B'"
+                    }
+                  }
                 }
               }
-            ]
+            }
+          },
+          "selector": {
+            "metadata": "item_sales.Category Freight Share (Kỳ này)"
           }
         }
       ],
@@ -160,6 +244,13 @@
               "expr": {
                 "Literal": {
                   "Value": "true"
+                }
+              }
+            },
+            "labelPrecision": {
+              "expr": {
+                "Literal": {
+                  "Value": "0L"
                 }
               }
             },
@@ -188,14 +279,14 @@
             "text": {
               "expr": {
                 "Literal": {
-                  "Value": "'Thay đổi tỷ trọng GMV theo ngành (điểm % )'"
+                  "Value": "'Cấu trúc giá và phí ship theo ngành hàng'"
                 }
               }
             },
             "fontSize": {
               "expr": {
                 "Literal": {
-                  "Value": "10D"
+                  "Value": "12D"
                 }
               }
             },
@@ -227,6 +318,44 @@
             }
           }
         }
+      ],
+      "subTitle": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "false"
+                }
+              }
+            },
+            "text": {
+              "expr": {
+                "Literal": {
+                  "Value": "'Top 15 ngành theo GMV kỳ đã chọn, xếp theo tỷ trọng phí ship giảm dần'"
+                }
+              }
+            },
+            "fontColor": {
+              "solid": {
+                "color": {
+                  "expr": {
+                    "Literal": {
+                      "Value": "'#6B7280'"
+                    }
+                  }
+                }
+              }
+            },
+            "fontSize": {
+              "expr": {
+                "Literal": {
+                  "Value": "7D"
+                }
+              }
+            }
+          }
+        }
       ]
     },
     "drillFilterOtherVisuals": true
@@ -234,61 +363,7 @@
   "filterConfig": {
     "filters": [
       {
-        "name": "210927d73f874f92abcf",
-        "field": {
-          "Column": {
-            "Expression": {
-              "SourceRef": {
-                "Entity": "dim_category"
-              }
-            },
-            "Property": "in_matrix"
-          }
-        },
-        "type": "Categorical",
-        "filter": {
-          "Version": 2,
-          "From": [
-            {
-              "Name": "d",
-              "Entity": "dim_category",
-              "Type": 0
-            }
-          ],
-          "Where": [
-            {
-              "Condition": {
-                "In": {
-                  "Expressions": [
-                    {
-                      "Column": {
-                        "Expression": {
-                          "SourceRef": {
-                            "Source": "d"
-                          }
-                        },
-                        "Property": "in_matrix"
-                      }
-                    }
-                  ],
-                  "Values": [
-                    [
-                      {
-                        "Literal": {
-                          "Value": "'Có'"
-                        }
-                      }
-                    ]
-                  ]
-                }
-              }
-            }
-          ]
-        },
-        "howCreated": "User"
-      },
-      {
-        "name": "7123eecaf9d944b69aec",
+        "name": "top15categoryfrt0001",
         "field": {
           "Measure": {
             "Expression": {
@@ -296,7 +371,7 @@
                 "Entity": "item_sales"
               }
             },
-            "Property": "Share Change Top/Bottom 7"
+            "Property": "Top 15 Category (Kỳ này)"
           }
         },
         "type": "Advanced",
@@ -321,7 +396,7 @@
                           "Source": "i"
                         }
                       },
-                      "Property": "Share Change Top/Bottom 7"
+                      "Property": "Top 15 Category (Kỳ này)"
                     }
                   },
                   "Right": {

@@ -2,11 +2,11 @@
   "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.14.0/schema.json",
   "name": "kpi_3_val",
   "position": {
-    "x": 683.3,
-    "y": 11.756095460872809,
+    "x": 683,
+    "y": 11,
     "z": 13000,
-    "height": 72.887791857411415,
-    "width": 216,
+    "height": 72,
+    "width": 216.8,
     "tabOrder": 13000
   },
   "visual": {
@@ -23,12 +23,13 @@
                       "Entity": "item_sales"
                     }
                   },
-                  "Property": "Item Freight Share (Kỳ này)"
+                  "Property": "Category GMV YoY %"
                 }
               },
-              "queryRef": "item_sales.Item Freight Share (Kỳ này)",
-              "nativeQueryRef": "PHÍ SHIP / GMV",
-              "displayName": "PHÍ SHIP / GMV"
+              "queryRef": "item_sales.Category GMV YoY %",
+              "nativeQueryRef": "TĂNG TRƯỞNG YoY",
+              "displayName": "TĂNG TRƯỞNG YoY",
+              "format": "+0.0%;-0.0%;0.0%"
             }
           ]
         }
@@ -49,8 +50,13 @@
               "solid": {
                 "color": {
                   "expr": {
-                    "Literal": {
-                      "Value": "'#111827'"
+                    "Measure": {
+                      "Expression": {
+                        "SourceRef": {
+                          "Entity": "item_sales"
+                        }
+                      },
+                      "Property": "KPI Color Category YoY"
                     }
                   }
                 }
@@ -87,7 +93,7 @@
             "text": {
               "expr": {
                 "Literal": {
-                  "Value": "'PHÍ SHIP / GMV'"
+                  "Value": "'TĂNG TRƯỞNG YoY'"
                 }
               }
             },

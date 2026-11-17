@@ -2,11 +2,11 @@
   "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.14.0/schema.json",
   "name": "kpi_4_val",
   "position": {
-    "x": 907.8,
-    "y": 11.756095460872809,
+    "x": 908,
+    "y": 11,
     "z": 15000,
-    "height": 72.887791857411415,
-    "width": 217.3,
+    "height": 72,
+    "width": 216.8,
     "tabOrder": 15000
   },
   "visual": {
@@ -20,15 +20,16 @@
                 "Measure": {
                   "Expression": {
                     "SourceRef": {
-                      "Entity": "item_sales"
+                      "Entity": "order_summary"
                     }
                   },
-                  "Property": "Active SKUs (Kỳ này)"
+                  "Property": "Category Avg Review Score (Kỳ này)"
                 }
               },
-              "queryRef": "item_sales.Active SKUs (Kỳ này)",
-              "nativeQueryRef": "SKU CÓ DOANH THU",
-              "displayName": "SKU CÓ DOANH THU"
+              "queryRef": "order_summary.Category Avg Review Score (Kỳ này)",
+              "nativeQueryRef": "ĐIỂM REVIEW TB",
+              "displayName": "ĐIỂM REVIEW TB",
+              "format": "0.00 \"/ 5"
             }
           ]
         }
@@ -87,7 +88,7 @@
             "text": {
               "expr": {
                 "Literal": {
-                  "Value": "'SỐ MÃ SẢN PHẨM (SKU)'"
+                  "Value": "'ĐIỂM REVIEW TB'"
                 }
               }
             },

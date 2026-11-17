@@ -2,11 +2,11 @@
   "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.14.0/schema.json",
   "name": "category_matrix",
   "position": {
-    "x": 233,
-    "y": 91.697544594807908,
+    "x": 233.50356985706375,
+    "y": 91.42467814509375,
     "z": 18000,
-    "height": 299.78043425225667,
-    "width": 453.9,
+    "height": 300.21887553051056,
+    "width": 507.777604292345,
     "tabOrder": 18000
   },
   "visual": {
@@ -40,13 +40,13 @@
                 "Column": {
                   "Expression": {
                     "SourceRef": {
-                      "Entity": "dim_category"
+                      "Entity": "Category Quadrant"
                     }
                   },
-                  "Property": "quadrant"
+                  "Property": "Nhóm"
                 }
               },
-              "queryRef": "dim_category.quadrant",
+              "queryRef": "Category Quadrant.Nhóm",
               "nativeQueryRef": "Nhóm",
               "displayName": "Nhóm"
             }
@@ -96,10 +96,10 @@
                       "Entity": "item_sales"
                     }
                   },
-                  "Property": "Top 3 Seller Share"
+                  "Property": "Top 3 Seller Share (Kỳ này)"
                 }
               },
-              "queryRef": "item_sales.Top 3 Seller Share",
+              "queryRef": "item_sales.Top 3 Seller Share (Kỳ này)",
               "nativeQueryRef": "Top 3 người bán",
               "displayName": "Top 3 người bán"
             }
@@ -277,10 +277,10 @@
                       "Column": {
                         "Expression": {
                           "SourceRef": {
-                            "Entity": "dim_category"
+                            "Entity": "Category Quadrant"
                           }
                         },
-                        "Property": "quadrant"
+                        "Property": "Nhóm"
                       }
                     },
                     "Right": {
@@ -318,10 +318,10 @@
                       "Column": {
                         "Expression": {
                           "SourceRef": {
-                            "Entity": "dim_category"
+                            "Entity": "Category Quadrant"
                           }
                         },
-                        "Property": "quadrant"
+                        "Property": "Nhóm"
                       }
                     },
                     "Right": {
@@ -359,10 +359,10 @@
                       "Column": {
                         "Expression": {
                           "SourceRef": {
-                            "Entity": "dim_category"
+                            "Entity": "Category Quadrant"
                           }
                         },
-                        "Property": "quadrant"
+                        "Property": "Nhóm"
                       }
                     },
                     "Right": {
@@ -400,10 +400,10 @@
                       "Column": {
                         "Expression": {
                           "SourceRef": {
-                            "Entity": "dim_category"
+                            "Entity": "Category Quadrant"
                           }
                         },
-                        "Property": "quadrant"
+                        "Property": "Nhóm"
                       }
                     },
                     "Right": {
@@ -415,60 +415,6 @@
                 }
               }
             ]
-          }
-        }
-      ],
-      "referenceLine": [
-        {
-          "properties": {
-            "show": {
-              "expr": {
-                "Literal": {
-                  "Value": "true"
-                }
-              }
-            },
-            "displayName": {
-              "expr": {
-                "Literal": {
-                  "Value": "'Trung vị tỷ trọng'"
-                }
-              }
-            },
-            "value": {
-              "expr": {
-                "Aggregation": {
-                  "Expression": {
-                    "SelectRef": {
-                      "ExpressionName": "item_sales.Category Share (Kỳ này)"
-                    }
-                  },
-                  "Function": 6
-                }
-              }
-            },
-            "lineColor": {
-              "solid": {
-                "color": {
-                  "expr": {
-                    "Literal": {
-                      "Value": "'#6B7280'"
-                    }
-                  }
-                }
-              }
-            },
-            "style": {
-              "expr": {
-                "Literal": {
-                  "Value": "'dashed'"
-                }
-              }
-            }
-          },
-          "selector": {
-            "metadata": "item_sales.Category Share (Kỳ này)",
-            "id": "1"
           }
         }
       ],
@@ -523,6 +469,91 @@
               "expr": {
                 "Literal": {
                   "Value": "'Toàn sàn'"
+                }
+              }
+            },
+            "dataLabelShow": {
+              "expr": {
+                "Literal": {
+                  "Value": "false"
+                }
+              }
+            },
+            "dataLabelColor": {
+              "solid": {
+                "color": {
+                  "expr": {
+                    "Literal": {
+                      "Value": "'#6B7280'"
+                    }
+                  }
+                }
+              }
+            },
+            "dataLabelText": {
+              "expr": {
+                "Literal": {
+                  "Value": "'Name'"
+                }
+              }
+            }
+          },
+          "selector": {
+            "id": "0"
+          }
+        }
+      ],
+      "xAxisReferenceLine": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            },
+            "value": {
+              "expr": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "item_sales"
+                    }
+                  },
+                  "Property": "Category Share Median (Kỳ này)"
+                }
+              }
+            },
+            "lineColor": {
+              "solid": {
+                "color": {
+                  "expr": {
+                    "Literal": {
+                      "Value": "'#6B7280'"
+                    }
+                  }
+                }
+              }
+            },
+            "style": {
+              "expr": {
+                "Literal": {
+                  "Value": "'dashed'"
+                }
+              }
+            },
+            "transparency": {
+              "expr": {
+                "Literal": {
+                  "Value": "20D"
+                }
+              }
+            },
+            "displayName": {
+              "expr": {
+                "Literal": {
+                  "Value": "'Trung vị tỷ trọng'"
                 }
               }
             },
@@ -618,7 +649,56 @@
   "filterConfig": {
     "filters": [
       {
-        "name": "e210460c7b404d4390a2",
+        "name": "quadrantmatch0000001",
+        "field": {
+          "Measure": {
+            "Expression": {
+              "SourceRef": {
+                "Entity": "item_sales"
+              }
+            },
+            "Property": "Category Quadrant Match"
+          }
+        },
+        "type": "Advanced",
+        "filter": {
+          "Version": 2,
+          "From": [
+            {
+              "Name": "i",
+              "Entity": "item_sales",
+              "Type": 0
+            }
+          ],
+          "Where": [
+            {
+              "Condition": {
+                "Comparison": {
+                  "ComparisonKind": 0,
+                  "Left": {
+                    "Measure": {
+                      "Expression": {
+                        "SourceRef": {
+                          "Source": "i"
+                        }
+                      },
+                      "Property": "Category Quadrant Match"
+                    }
+                  },
+                  "Right": {
+                    "Literal": {
+                      "Value": "1L"
+                    }
+                  }
+                }
+              }
+            }
+          ]
+        },
+        "howCreated": "User"
+      },
+      {
+        "name": "3b03ebb0d02724b69488",
         "field": {
           "Column": {
             "Expression": {
@@ -626,50 +706,94 @@
                 "Entity": "dim_category"
               }
             },
-            "Property": "in_matrix"
+            "Property": "category"
           }
         },
-        "type": "Categorical",
-        "filter": {
-          "Version": 2,
-          "From": [
-            {
-              "Name": "d",
-              "Entity": "dim_category",
-              "Type": 0
-            }
-          ],
-          "Where": [
-            {
-              "Condition": {
-                "In": {
-                  "Expressions": [
-                    {
-                      "Column": {
-                        "Expression": {
-                          "SourceRef": {
-                            "Source": "d"
-                          }
-                        },
-                        "Property": "in_matrix"
-                      }
-                    }
-                  ],
-                  "Values": [
-                    [
-                      {
-                        "Literal": {
-                          "Value": "'Có'"
-                        }
-                      }
-                    ]
-                  ]
-                }
+        "type": "Categorical"
+      },
+      {
+        "name": "8329fa050e52c7536367",
+        "field": {
+          "Column": {
+            "Expression": {
+              "SourceRef": {
+                "Entity": "Category Quadrant"
               }
-            }
-          ]
+            },
+            "Property": "Nhóm"
+          }
         },
-        "howCreated": "User"
+        "type": "Categorical"
+      },
+      {
+        "name": "7c114a7140b752c02ea0",
+        "field": {
+          "Measure": {
+            "Expression": {
+              "SourceRef": {
+                "Entity": "item_sales"
+              }
+            },
+            "Property": "Product GMV (Kỳ này)"
+          }
+        },
+        "type": "Advanced"
+      },
+      {
+        "name": "e21efe9bb17352e03130",
+        "field": {
+          "Measure": {
+            "Expression": {
+              "SourceRef": {
+                "Entity": "item_sales"
+              }
+            },
+            "Property": "Product GMV YoY %"
+          }
+        },
+        "type": "Advanced"
+      },
+      {
+        "name": "4793beea223e80257bc0",
+        "field": {
+          "Measure": {
+            "Expression": {
+              "SourceRef": {
+                "Entity": "item_sales"
+              }
+            },
+            "Property": "Top 3 Seller Share (Kỳ này)"
+          }
+        },
+        "type": "Advanced"
+      },
+      {
+        "name": "da6da61ab012d5029a70",
+        "field": {
+          "Measure": {
+            "Expression": {
+              "SourceRef": {
+                "Entity": "item_sales"
+              }
+            },
+            "Property": "Category Share (Kỳ này)"
+          }
+        },
+        "type": "Advanced"
+      },
+      {
+        "name": "6cc0c8c6ba7a869934c9",
+        "field": {
+          "Measure": {
+            "Expression": {
+              "SourceRef": {
+                "Entity": "item_sales"
+              }
+            },
+            "Property": "Product GMV YoY % (cap 600%)"
+          }
+        },
+        "type": "Advanced"
       }
     ]
   }

@@ -2,11 +2,11 @@
   "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.14.0/schema.json",
   "name": "price_band",
   "position": {
-    "x": 695.4,
-    "y": 400,
+    "x": 233.50356985706375,
+    "y": 401.52730266426306,
     "z": 23000,
-    "height": 310,
-    "width": 330.4,
+    "height": 310.10262451916935,
+    "width": 507.777604292345,
     "tabOrder": 23000
   },
   "visual": {
@@ -43,10 +43,10 @@
                       "Entity": "item_sales"
                     }
                   },
-                  "Property": "Units %"
+                  "Property": "Units % (Kỳ này)"
                 }
               },
-              "queryRef": "item_sales.Units %",
+              "queryRef": "item_sales.Units % (Kỳ này)",
               "nativeQueryRef": "% số sản phẩm bán",
               "displayName": "% số sản phẩm bán"
             },
@@ -58,10 +58,10 @@
                       "Entity": "item_sales"
                     }
                   },
-                  "Property": "Product GMV %"
+                  "Property": "Product GMV % (Kỳ này)"
                 }
               },
-              "queryRef": "item_sales.Product GMV %",
+              "queryRef": "item_sales.Product GMV % (Kỳ này)",
               "nativeQueryRef": "% GMV",
               "displayName": "% GMV"
             }
@@ -77,10 +77,10 @@
                       "Entity": "item_sales"
                     }
                   },
-                  "Property": "Item Freight Share"
+                  "Property": "Item Freight Share (Kỳ này)"
                 }
               },
-              "queryRef": "item_sales.Item Freight Share",
+              "queryRef": "item_sales.Item Freight Share (Kỳ này)",
               "nativeQueryRef": "Phí ship / GMV",
               "displayName": "Phí ship / GMV"
             }
@@ -193,7 +193,7 @@
             }
           },
           "selector": {
-            "metadata": "item_sales.Units %"
+            "metadata": "item_sales.Units % (Kỳ này)"
           }
         },
         {
@@ -211,7 +211,7 @@
             }
           },
           "selector": {
-            "metadata": "item_sales.Product GMV %"
+            "metadata": "item_sales.Product GMV % (Kỳ này)"
           }
         },
         {
@@ -229,7 +229,7 @@
             }
           },
           "selector": {
-            "metadata": "item_sales.Item Freight Share"
+            "metadata": "item_sales.Item Freight Share (Kỳ này)"
           }
         }
       ],

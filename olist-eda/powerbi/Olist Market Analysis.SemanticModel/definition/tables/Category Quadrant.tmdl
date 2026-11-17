@@ -1,0 +1,28 @@
+table 'Category Quadrant'
+	lineageTag: 8f936aea-bf15-4de6-9d62-41d557b70319
+
+	column Nhóm
+		dataType: string
+		lineageTag: 1e2e16d7-bca5-434c-adb6-8fc789d4110a
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [Nhóm]
+		sortByColumn: 'Thứ tự'
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Thứ tự'
+		dataType: int64
+		isHidden
+		formatString: 0
+		lineageTag: 345cc34f-ef4f-493b-ab84-3474188df750
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [Thứ tự]
+
+		annotation SummarizationSetBy = Automatic
+
+	partition 'Category Quadrant' = calculated
+		mode: import
+		source = DATATABLE ( "Nhóm", STRING, "Thứ tự", INTEGER, { { "Ngôi sao", 1 }, { "Trụ cột chững lại", 2 }, { "Đang lên", 3 }, { "Tụt lại", 4 } } )
+

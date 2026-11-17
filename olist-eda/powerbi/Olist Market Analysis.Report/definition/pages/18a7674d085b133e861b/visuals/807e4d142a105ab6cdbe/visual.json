@@ -1,13 +1,13 @@
 {
   "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.14.0/schema.json",
-  "name": "category_mix",
+  "name": "807e4d142a105ab6cdbe",
   "position": {
-    "x": 233.3,
-    "y": 400.00113554101432,
-    "z": 22000,
-    "height": 310,
-    "width": 454.3,
-    "tabOrder": 22000
+    "x": 232.84304228302133,
+    "y": 132.70846969498623,
+    "z": 13000,
+    "height": 243.70100798533838,
+    "width": 609.252519963346,
+    "tabOrder": 13000
   },
   "visual": {
     "visualType": "pivotTable",
@@ -20,16 +20,16 @@
                 "Column": {
                   "Expression": {
                     "SourceRef": {
-                      "Entity": "dim_date"
+                      "Entity": "order_summary"
                     }
                   },
-                  "Property": "Month Label"
+                  "Property": "purchase_hour"
                 }
               },
-              "queryRef": "dim_date.Month Label",
-              "nativeQueryRef": "Month Label",
+              "queryRef": "order_summary.purchase_hour",
+              "nativeQueryRef": "purchase_hour",
               "active": true,
-              "displayName": "Tháng"
+              "displayName": "Giờ"
             }
           ]
         },
@@ -40,16 +40,16 @@
                 "Column": {
                   "Expression": {
                     "SourceRef": {
-                      "Entity": "dim_category"
+                      "Entity": "dim_date"
                     }
                   },
-                  "Property": "category_group"
+                  "Property": "weekday"
                 }
               },
-              "queryRef": "dim_category.category_group",
-              "nativeQueryRef": "category_group",
+              "queryRef": "dim_date.weekday",
+              "nativeQueryRef": "weekday",
               "active": true,
-              "displayName": "Ngành"
+              "displayName": "Thứ"
             }
           ]
         },
@@ -60,15 +60,15 @@
                 "Measure": {
                   "Expression": {
                     "SourceRef": {
-                      "Entity": "item_sales"
+                      "Entity": "order_summary"
                     }
                   },
-                  "Property": "Category Share Index"
+                  "Property": "Valid Orders"
                 }
               },
-              "queryRef": "item_sales.Category Share Index",
-              "nativeQueryRef": "Category Share Index",
-              "displayName": "Chỉ số tỷ trọng"
+              "queryRef": "order_summary.Valid Orders",
+              "nativeQueryRef": "Valid Orders",
+              "displayName": "Số đơn"
             }
           ]
         }
@@ -80,10 +80,10 @@
               "Column": {
                 "Expression": {
                   "SourceRef": {
-                    "Entity": "dim_category"
+                    "Entity": "dim_date"
                   }
                 },
-                "Property": "category_group"
+                "Property": "weekday"
               }
             },
             "direction": "Ascending"
@@ -104,10 +104,10 @@
                         "Measure": {
                           "Expression": {
                             "SourceRef": {
-                              "Entity": "item_sales"
+                              "Entity": "order_summary"
                             }
                           },
-                          "Property": "Category Share Index"
+                          "Property": "Valid Orders"
                         }
                       },
                       "FillRule": {
@@ -115,36 +115,21 @@
                           "min": {
                             "color": {
                               "Literal": {
-                                "Value": "'#053061'"
-                              }
-                            },
-                            "value": {
-                              "Literal": {
-                                "Value": "0.4D"
+                                "Value": "'#EFF6FF'"
                               }
                             }
                           },
                           "mid": {
                             "color": {
                               "Literal": {
-                                "Value": "'#F7F7F7'"
-                              }
-                            },
-                            "value": {
-                              "Literal": {
-                                "Value": "1D"
+                                "Value": "'#93C5FD'"
                               }
                             }
                           },
                           "max": {
                             "color": {
                               "Literal": {
-                                "Value": "'#67001F'"
-                              }
-                            },
-                            "value": {
-                              "Literal": {
-                                "Value": "1.6D"
+                                "Value": "'#1E3A8A'"
                               }
                             }
                           },
@@ -171,10 +156,10 @@
                         "Measure": {
                           "Expression": {
                             "SourceRef": {
-                              "Entity": "item_sales"
+                              "Entity": "order_summary"
                             }
                           },
-                          "Property": "Category Share Index"
+                          "Property": "Valid Orders"
                         }
                       },
                       "FillRule": {
@@ -182,36 +167,21 @@
                           "min": {
                             "color": {
                               "Literal": {
-                                "Value": "'#053061'"
-                              }
-                            },
-                            "value": {
-                              "Literal": {
-                                "Value": "0.4D"
+                                "Value": "'#EFF6FF'"
                               }
                             }
                           },
                           "mid": {
                             "color": {
                               "Literal": {
-                                "Value": "'#F7F7F7'"
-                              }
-                            },
-                            "value": {
-                              "Literal": {
-                                "Value": "1D"
+                                "Value": "'#93C5FD'"
                               }
                             }
                           },
                           "max": {
                             "color": {
                               "Literal": {
-                                "Value": "'#67001F'"
-                              }
-                            },
-                            "value": {
-                              "Literal": {
-                                "Value": "1.6D"
+                                "Value": "'#1E3A8A'"
                               }
                             }
                           },
@@ -245,7 +215,7 @@
                 }
               }
             ],
-            "metadata": "item_sales.Category Share Index"
+            "metadata": "order_summary.Valid Orders"
           }
         }
       ],
@@ -279,6 +249,13 @@
                 }
               }
             },
+            "alignment": {
+              "expr": {
+                "Literal": {
+                  "Value": "'Center'"
+                }
+              }
+            },
             "wordWrap": {
               "expr": {
                 "Literal": {
@@ -286,13 +263,29 @@
                 }
               }
             },
-            "alignment": {
+            "autoSizeColumnWidth": {
               "expr": {
                 "Literal": {
-                  "Value": "'Center'"
+                  "Value": "true"
                 }
               }
             }
+          }
+        }
+      ],
+      "columnWidth": [
+        {
+          "properties": {
+            "value": {
+              "expr": {
+                "Literal": {
+                  "Value": "26D"
+                }
+              }
+            }
+          },
+          "selector": {
+            "metadata": "order_summary.Valid Orders"
           }
         }
       ],
@@ -312,10 +305,21 @@
       "grid": [
         {
           "properties": {
-            "rowPadding": {
+            "gridHorizontal": {
               "expr": {
                 "Literal": {
-                  "Value": "5D"
+                  "Value": "true"
+                }
+              }
+            },
+            "gridHorizontalColor": {
+              "solid": {
+                "color": {
+                  "expr": {
+                    "Literal": {
+                      "Value": "'#FFFFFF'"
+                    }
+                  }
                 }
               }
             },
@@ -337,32 +341,14 @@
                 }
               }
             },
-            "gridVerticalWeight": {
+            "rowPadding": {
               "expr": {
                 "Literal": {
-                  "Value": "1D"
+                  "Value": "3D"
                 }
               }
             },
-            "gridHorizontal": {
-              "expr": {
-                "Literal": {
-                  "Value": "true"
-                }
-              }
-            },
-            "gridHorizontalColor": {
-              "solid": {
-                "color": {
-                  "expr": {
-                    "Literal": {
-                      "Value": "'#FFFFFF'"
-                    }
-                  }
-                }
-              }
-            },
-            "gridHorizontalWeight": {
+            "outlineWeight": {
               "expr": {
                 "Literal": {
                   "Value": "1D"
@@ -387,7 +373,18 @@
             "text": {
               "expr": {
                 "Literal": {
-                  "Value": "'Chỉ số tỷ trọng GMV theo tháng của top 8 ngành'"
+                  "Value": "'Số đơn theo thứ và giờ đặt hàng'"
+                }
+              }
+            },
+            "fontColor": {
+              "solid": {
+                "color": {
+                  "expr": {
+                    "Literal": {
+                      "Value": "'#111827'"
+                    }
+                  }
                 }
               }
             },
@@ -411,18 +408,6 @@
                   "Value": "'''Segoe UI Light'', wf_segoe-ui_light, helvetica, arial, sans-serif'"
                 }
               }
-            },
-            "fontColor": {
-              "solid": {
-                "color": {
-                  "expr": {
-                    "ThemeDataColor": {
-                      "ColorId": 1,
-                      "Percent": 0.2
-                    }
-                  }
-                }
-              }
             }
           }
         }
@@ -433,14 +418,14 @@
             "show": {
               "expr": {
                 "Literal": {
-                  "Value": "true"
+                  "Value": "false"
                 }
               }
             },
             "text": {
               "expr": {
                 "Literal": {
-                  "Value": "'Đỏ: chiếm tỷ trọng cao hơn mức TB, Xanh: chiếm tỷ trọng thấp hơn mức trung bình'"
+                  "Value": "'Số đơn hợp lệ theo thứ × giờ · chiều 39%, tối 34% số đơn · màu đậm = nhiều đơn'"
                 }
               }
             },
@@ -467,121 +452,5 @@
       ]
     },
     "drillFilterOtherVisuals": true
-  },
-  "filterConfig": {
-    "filters": [
-      {
-        "name": "90db4008cc7d4865a534",
-        "field": {
-          "Column": {
-            "Expression": {
-              "SourceRef": {
-                "Entity": "dim_date"
-              }
-            },
-            "Property": "Is Usable Month"
-          }
-        },
-        "type": "Categorical",
-        "filter": {
-          "Version": 2,
-          "From": [
-            {
-              "Name": "d",
-              "Entity": "dim_date",
-              "Type": 0
-            }
-          ],
-          "Where": [
-            {
-              "Condition": {
-                "In": {
-                  "Expressions": [
-                    {
-                      "Column": {
-                        "Expression": {
-                          "SourceRef": {
-                            "Source": "d"
-                          }
-                        },
-                        "Property": "Is Usable Month"
-                      }
-                    }
-                  ],
-                  "Values": [
-                    [
-                      {
-                        "Literal": {
-                          "Value": "'Có'"
-                        }
-                      }
-                    ]
-                  ]
-                }
-              }
-            }
-          ]
-        },
-        "howCreated": "User"
-      },
-      {
-        "name": "f_not_khac",
-        "field": {
-          "Column": {
-            "Expression": {
-              "SourceRef": {
-                "Entity": "dim_category"
-              }
-            },
-            "Property": "category_group"
-          }
-        },
-        "type": "Categorical",
-        "filter": {
-          "Version": 2,
-          "From": [
-            {
-              "Name": "c",
-              "Entity": "dim_category",
-              "Type": 0
-            }
-          ],
-          "Where": [
-            {
-              "Condition": {
-                "Not": {
-                  "Expression": {
-                    "In": {
-                      "Expressions": [
-                        {
-                          "Column": {
-                            "Expression": {
-                              "SourceRef": {
-                                "Source": "c"
-                              }
-                            },
-                            "Property": "category_group"
-                          }
-                        }
-                      ],
-                      "Values": [
-                        [
-                          {
-                            "Literal": {
-                              "Value": "'Khác'"
-                            }
-                          }
-                        ]
-                      ]
-                    }
-                  }
-                }
-              }
-            }
-          ]
-        },
-        "howCreated": "User"
-      }
-    ]
   }
 }

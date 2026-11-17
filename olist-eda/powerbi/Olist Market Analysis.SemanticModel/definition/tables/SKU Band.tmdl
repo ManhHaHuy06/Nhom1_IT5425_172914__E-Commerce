@@ -1,0 +1,50 @@
+table 'SKU Band'
+	lineageTag: 5cdb790d-2976-4691-9b9a-9cd96b830e8b
+
+	column 'Nhóm SKU'
+		dataType: string
+		lineageTag: 9afc232c-9d78-4f28-a8d7-9c198c51f5fe
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [Nhóm SKU]
+		sortByColumn: 'Thứ tự'
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Thứ tự'
+		dataType: int64
+		isHidden
+		formatString: 0
+		lineageTag: 27f35b14-8529-4c30-a94a-3e609c3fbe0d
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [Thứ tự]
+
+		annotation SummarizationSetBy = Automatic
+
+	column Từ
+		dataType: int64
+		isHidden
+		formatString: 0
+		lineageTag: 55ff2597-82db-4179-b812-6999b521f829
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [Từ]
+
+		annotation SummarizationSetBy = Automatic
+
+	column Đến
+		dataType: int64
+		isHidden
+		formatString: 0
+		lineageTag: 266d551d-7ae6-4505-ba19-fd446245fe70
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [Đến]
+
+		annotation SummarizationSetBy = Automatic
+
+	partition 'SKU Band' = calculated
+		mode: import
+		source = DATATABLE ( "Nhóm SKU", STRING, "Thứ tự", INTEGER, "Từ", INTEGER, "Đến", INTEGER, { { "1", 1, 1, 1 }, { "2–5", 2, 2, 5 }, { "6–20", 3, 6, 20 }, { "21–100", 4, 21, 100 }, { "> 100", 5, 101, 2147483647 } } )
+

@@ -393,6 +393,93 @@ table order_summary
 		displayFolder: Khu vực
 		lineageTag: 3f677342-9a79-44fa-bcbb-139c7e15b3c8
 
+	measure 'Cancel Rate' =
+			// đơn bị hủy hoặc không có hàng (canceled, unavailable) / tổng số đơn mọi trạng thái
+			DIVIDE ( CALCULATE ( COUNTROWS ( order_summary ), order_summary[order_status] IN { "canceled", "unavailable" } ) + 0, COUNTROWS ( order_summary ) )
+		formatString: 0.00%
+		displayFolder: Ngành hàng
+		lineageTag: 38d40c2b-d2d5-46b3-936b-4ee81b1e2777
+
+	measure 'Category Cancel Rate (Kỳ này)' =
+			// chọn ngành trên biểu đồ (dim_category) -> lọc đơn theo main_category; slicer Ngành hàng đã lọc trực tiếp
+			VAR s = [Period Start]
+			VAR e = [Period End]
+			RETURN
+			    IF (
+			        ISFILTERED ( dim_category ),
+			        CALCULATE ( [Cancel Rate], REMOVEFILTERS ( dim_date ), DATESBETWEEN ( dim_date[date], s, e ),
+			            KEEPFILTERS ( TREATAS ( VALUES ( dim_category[category] ), order_summary[main_category] ) ) ),
+			        CALCULATE ( [Cancel Rate], REMOVEFILTERS ( dim_date ), DATESBETWEEN ( dim_date[date], s, e ) )
+			    )
+		formatString: 0.00%
+		displayFolder: Ngành hàng
+		lineageTag: 580cce22-9e4d-48f9-afcd-771e0dce5f3b
+
+	measure 'Category Avg Review Score (Kỳ này)' =
+			// chọn ngành trên biểu đồ (dim_category) -> lọc đơn theo main_category; slicer Ngành hàng đã lọc trực tiếp
+			VAR s = [Period Start]
+			VAR e = [Period End]
+			RETURN
+			    IF (
+			        ISFILTERED ( dim_category ),
+			        CALCULATE ( [Avg Review Score], REMOVEFILTERS ( dim_date ), DATESBETWEEN ( dim_date[date], s, e ),
+			            KEEPFILTERS ( TREATAS ( VALUES ( dim_category[category] ), order_summary[main_category] ) ) ),
+			        CALCULATE ( [Avg Review Score], REMOVEFILTERS ( dim_date ), DATESBETWEEN ( dim_date[date], s, e ) )
+			    )
+		formatString: 0.00
+		displayFolder: Ngành hàng
+		lineageTag: 6b2ad7ba-c7ae-4f9d-91b2-5d2f5c1a2303
+
+	measure 'Category Avg Review Score (Quý này)' =
+			// điểm review trung bình (1–5) của đơn trong quý
+			// quý chứa ngày cuối kỳ (giống 'GMV (Quý này)'); chọn ngành (dim_category) -> lọc đơn theo main_category
+			VAR e = [Period End]
+			VAR qs = DATE ( YEAR ( e ), INT ( ( MONTH ( e ) - 1 ) / 3 ) * 3 + 1, 1 )
+			VAR s = MAX ( qs, [Period Start] )
+			RETURN
+			    IF (
+			        ISFILTERED ( dim_category ),
+			        CALCULATE ( [Avg Review Score], REMOVEFILTERS ( dim_date ), DATESBETWEEN ( dim_date[date], s, e ),
+			            KEEPFILTERS ( TREATAS ( VALUES ( dim_category[category] ), order_summary[main_category] ) ) ),
+			        CALCULATE ( [Avg Review Score], REMOVEFILTERS ( dim_date ), DATESBETWEEN ( dim_date[date], s, e ) )
+			    )
+		formatString: 0.00
+		displayFolder: Ngành hàng
+		lineageTag: a85ea777-05a4-4429-adfd-880ac55f62d0
+
+	measure 'Category Cancel Rate pct (Quý này)' =
+			// tỷ lệ hủy tính theo điểm phần trăm (1.08 = 1,08%) để chung trục phụ 0–5 với điểm review
+			// quý chứa ngày cuối kỳ (giống 'GMV (Quý này)'); chọn ngành (dim_category) -> lọc đơn theo main_category
+			VAR e = [Period End]
+			VAR qs = DATE ( YEAR ( e ), INT ( ( MONTH ( e ) - 1 ) / 3 ) * 3 + 1, 1 )
+			VAR s = MAX ( qs, [Period Start] )
+			RETURN
+			    IF (
+			        ISFILTERED ( dim_category ),
+			        CALCULATE ( [Cancel Rate] * 100, REMOVEFILTERS ( dim_date ), DATESBETWEEN ( dim_date[date], s, e ),
+			            KEEPFILTERS ( TREATAS ( VALUES ( dim_category[category] ), order_summary[main_category] ) ) ),
+			        CALCULATE ( [Cancel Rate] * 100, REMOVEFILTERS ( dim_date ), DATESBETWEEN ( dim_date[date], s, e ) )
+			    )
+		formatString: 0.00\%
+		displayFolder: Ngành hàng
+		lineageTag: d16b15d3-9f3c-4099-bd16-e1becab2b1af
+
+	measure 'Category Cancel Rate pct (Kỳ này)' =
+			// tỷ lệ hủy theo điểm phần trăm (1.08 = 1,08%) để chung trục phụ 0–5 với điểm review
+			// chọn ngành (dim_category) -> lọc đơn theo main_category
+			VAR s = [Period Start]
+			VAR e = [Period End]
+			RETURN
+			    IF (
+			        ISFILTERED ( dim_category ),
+			        CALCULATE ( [Cancel Rate] * 100, REMOVEFILTERS ( dim_date ), DATESBETWEEN ( dim_date[date], s, e ),
+			            KEEPFILTERS ( TREATAS ( VALUES ( dim_category[category] ), order_summary[main_category] ) ) ),
+			        CALCULATE ( [Cancel Rate] * 100, REMOVEFILTERS ( dim_date ), DATESBETWEEN ( dim_date[date], s, e ) )
+			    )
+		formatString: 0.00\%
+		displayFolder: Ngành hàng
+		lineageTag: bb3335d4-8b97-48ba-9856-1592bab714b5
+
 	column order_id
 		dataType: string
 		isHidden

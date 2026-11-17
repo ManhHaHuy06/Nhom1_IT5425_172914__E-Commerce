@@ -5,7 +5,7 @@
     "x": 898.185689344367,
     "y": 380.52433606336319,
     "z": 22001,
-    "height": 323.69277937857515,
+    "height": 331.10559112006928,
     "width": 446.00417311322764,
     "tabOrder": 22001
   },
@@ -121,7 +121,7 @@
             "titleText": {
               "expr": {
                 "Literal": {
-                  "Value": "'Mức thâm nhập = số đơn trên 100k dân (thang log)'"
+                  "Value": "'Số đơn bình quân trên 100.000 người dân (thang log)'"
                 }
               }
             },

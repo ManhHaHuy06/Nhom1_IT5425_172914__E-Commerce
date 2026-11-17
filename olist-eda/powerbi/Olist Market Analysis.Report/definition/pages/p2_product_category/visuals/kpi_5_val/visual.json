@@ -2,11 +2,11 @@
   "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.14.0/schema.json",
   "name": "kpi_5_val",
   "position": {
-    "x": 1133.6,
-    "y": 11.756095460872809,
+    "x": 1133,
+    "y": 11,
     "z": 17000,
-    "height": 72.887791857411415,
-    "width": 216,
+    "height": 72,
+    "width": 216.8,
     "tabOrder": 17000
   },
   "visual": {
@@ -20,15 +20,15 @@
                 "Measure": {
                   "Expression": {
                     "SourceRef": {
-                      "Entity": "item_sales"
+                      "Entity": "order_summary"
                     }
                   },
-                  "Property": "Repeat-sold SKU % (Kỳ này)"
+                  "Property": "Category Cancel Rate (Kỳ này)"
                 }
               },
-              "queryRef": "item_sales.Repeat-sold SKU % (Kỳ này)",
-              "nativeQueryRef": "% SKU BÁN ≥ 2 ĐƠN VỊ",
-              "displayName": "% SKU BÁN ≥ 2 ĐƠN VỊ"
+              "queryRef": "order_summary.Category Cancel Rate (Kỳ này)",
+              "nativeQueryRef": "TỶ LỆ HỦY ĐƠN",
+              "displayName": "TỶ LỆ HỦY ĐƠN"
             }
           ]
         }
@@ -87,14 +87,14 @@
             "text": {
               "expr": {
                 "Literal": {
-                  "Value": "'TỶ LỆ SKU BÁN ≥ 2 SẢN PHẨM'"
+                  "Value": "'TỶ LỆ HỦY ĐƠN'"
                 }
               }
             },
             "fontSize": {
               "expr": {
                 "Literal": {
-                  "Value": "10D"
+                  "Value": "12D"
                 }
               }
             },
