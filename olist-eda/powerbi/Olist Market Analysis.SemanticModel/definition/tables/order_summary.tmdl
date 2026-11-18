@@ -196,7 +196,7 @@ table order_summary
 			            )
 			        )
 			    VAR repeat_customers =
-			        COUNTROWS ( FILTER ( order_counts, [@n_orders] >= 2 ) )
+			        COUNTROWS ( FILTER ( order_counts, [@n_orders] >= 2 ) ) + 0
 			    VAR total_customers =
 			        COUNTROWS ( CALCULATETABLE ( VALUES ( order_summary[customer_key] ), order_summary[is_valid] = 1 ) )
 			    RETURN

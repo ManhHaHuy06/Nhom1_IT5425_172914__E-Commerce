@@ -2,12 +2,12 @@
   "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.14.0/schema.json",
   "name": "map_legend",
   "position": {
-    "x": 606.61509417893149,
-    "y": 244.37567866318437,
-    "z": 12000,
-    "height": 154.43357794779351,
+    "x": 609.08603142609752,
+    "y": 255.74200508154604,
+    "z": 10000,
+    "height": 128,
     "width": 143.31436033555235,
-    "tabOrder": 12000
+    "tabOrder": 10000
   },
   "visual": {
     "visualType": "textbox",

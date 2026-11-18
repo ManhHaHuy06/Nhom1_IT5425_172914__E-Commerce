@@ -2,10 +2,10 @@
   "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.14.0/schema.json",
   "name": "seller_tier",
   "position": {
-    "x": 232.26810123348142,
-    "y": 376.81793019261613,
+    "x": 961.19458914706672,
+    "y": 132.19514272331122,
     "z": 25000,
-    "height": 333.57652836723395,
+    "height": 256.97747370512838,
     "width": 380.52433606336319,
     "tabOrder": 25000
   },

@@ -200,6 +200,125 @@ table dim_state
 		displayFolder: Bản đồ
 		lineageTag: ef527295-f088-4259-9bb3-86d9933c91df
 
+	measure 'Seller Density (Kỳ này)' = ```
+			// mật độ người bán = số người bán đặt tại vùng i / số khách hàng tại vùng i (đơn hợp lệ trong kỳ), hiển thị trên 1.000 khách
+			// vùng i lấy theo bang khách đang lọc (slicer order_summary hoặc dim_state), rồi chuyển sang bang người bán
+			VAR s = [Period Start]
+			VAR e = [Period End]
+			VAR states = CALCULATETABLE ( VALUES ( order_summary[state] ), REMOVEFILTERS ( dim_date ) )
+			VAR sellers =
+			    CALCULATE (
+			        DISTINCTCOUNT ( geo_seller[seller_id] ),
+			        order_summary[is_valid] = 1,
+			        REMOVEFILTERS ( dim_state ),
+			        REMOVEFILTERS ( order_summary[state], order_summary[region], order_summary[region_order] ),
+			        TREATAS ( states, geo_seller[seller_state] ),
+			        REMOVEFILTERS ( dim_date ), DATESBETWEEN ( dim_date[date], s, e )
+			    )
+			VAR customers = [Customers (Kỳ này)]
+			RETURN DIVIDE ( sellers, customers ) * 1000
+			
+			```
+		formatString: #,0.0
+		displayFolder: KPI Khu vực
+		lineageTag: 2c67a81d-5124-474d-848e-5093370060ef
+
+	measure 'Supply-Demand Gap (Kỳ này)' =
+			// (GMV người bán đặt tại vùng i bán ra - GMV khách vùng i mua vào) / GMV khách vùng i mua; âm = vùng thiếu cung, phải nhập hàng từ vùng khác
+			VAR s = [Period Start]
+			VAR e = [Period End]
+			VAR states = CALCULATETABLE ( VALUES ( order_summary[state] ), REMOVEFILTERS ( dim_date ) )
+			VAR cau = CALCULATE ( SUM ( item_flow[item_gmv] ), REMOVEFILTERS ( dim_date ), DATESBETWEEN ( dim_date[date], s, e ) )
+			VAR cung =
+			    CALCULATE (
+			        SUM ( item_flow[item_gmv] ),
+			        REMOVEFILTERS ( dim_state ),
+			        REMOVEFILTERS ( order_summary[state], order_summary[region], order_summary[region_order] ),
+			        TREATAS ( states, item_flow[seller_state] ),
+			        REMOVEFILTERS ( dim_date ), DATESBETWEEN ( dim_date[date], s, e )
+			    )
+			RETURN DIVIDE ( cung - cau, cau )
+		formatString: +0.0%;-0.0%;0.0%
+		displayFolder: KPI Khu vực
+		lineageTag: dd738cf7-9599-4e0f-a3e2-e958060d4821
+
+	measure 'Inter-region Delivery %' =
+			// tỷ lệ dòng hàng (đơn hợp lệ) mà người bán ở vùng kinh tế khác vùng của khách
+			DIVIDE (
+			    COUNTROWS ( FILTER ( item_flow, item_flow[seller_region] <> RELATED ( order_summary[region] ) ) ),
+			    COUNTROWS ( item_flow )
+			)
+		formatString: 0.0%
+		displayFolder: KPI Khu vực
+		lineageTag: 0b44c877-754b-40e0-b2d2-84b141867583
+
+	measure 'Inter-region Delivery % (Kỳ này)' =
+			VAR s = [Period Start]
+			VAR e = [Period End]
+			RETURN CALCULATE ( [Inter-region Delivery %], REMOVEFILTERS ( dim_date ), DATESBETWEEN ( dim_date[date], s, e ) )
+		formatString: 0.0%
+		displayFolder: KPI Khu vực
+		lineageTag: 83bed174-dcf1-4121-ad66-ff6074a6fdc3
+
+	measure 'Avg Delivery Days (Kỳ này)' =
+			// số ngày giao thực tế trung bình (mua -> nhận), đơn hợp lệ đã giao
+			VAR s = [Period Start]
+			VAR e = [Period End]
+			RETURN CALCULATE (
+			    AVERAGE ( order_summary[delivery_days] ),
+			    order_summary[is_valid] = 1, NOT ISBLANK ( order_summary[is_late] ),
+			    REMOVEFILTERS ( dim_date ), DATESBETWEEN ( dim_date[date], s, e )
+			)
+		formatString: 0.0
+		displayFolder: KPI Khu vực
+		lineageTag: 23b3266d-9a8c-432b-b890-51b8405e74e3
+
+	measure 'Avg Promised Days (Kỳ này)' =
+			// số ngày cam kết (SLA) trung bình (mua -> ngày hẹn giao), đơn hợp lệ đã giao
+			VAR s = [Period Start]
+			VAR e = [Period End]
+			RETURN CALCULATE (
+			    AVERAGE ( order_summary[estimated_delivery_days] ),
+			    order_summary[is_valid] = 1, NOT ISBLANK ( order_summary[is_late] ),
+			    REMOVEFILTERS ( dim_date ), DATESBETWEEN ( dim_date[date], s, e )
+			)
+		formatString: 0.0
+		displayFolder: KPI Khu vực
+		lineageTag: 97ee9d7b-86bb-4259-a96c-cdb0213c6729
+
+	measure 'SLA Display (Kỳ này)' =
+			// thẻ SLA: thời gian giao thực tế TB / thời gian cam kết TB
+			VAR a = [Avg Delivery Days (Kỳ này)]
+			VAR p = [Avg Promised Days (Kỳ này)]
+			RETURN IF ( NOT ISBLANK ( a ), FORMAT ( a, "0.0" ) & " / " & FORMAT ( p, "0.0" ) & " ngày" )
+		displayFolder: KPI Khu vực
+		lineageTag: ddfe2795-36ab-48ab-a2b8-306391b851e4
+
+	measure 'Region Category Gap' =
+			// ma trận lệch pha cung – cầu: dòng = vùng của khách, cột = ngành hàng (item_flow[category])
+			// (GMV người bán ĐẶT TẠI vùng bán ra trong ngành - GMV khách vùng đó mua trong ngành) / GMV khách vùng đó mua
+			// âm = thiếu nguồn cung nội vùng (phải nhập từ vùng khác), dương = dư cung (xuất sang vùng khác)
+			// bỏ qua slicer Vùng/Bang của khách để luôn so sánh đủ 5 vùng; vùng lấy theo dòng ma trận (dim_state[region])
+			VAR regions = VALUES ( dim_state[region] )
+			VAR cau =
+			    CALCULATE (
+			        SUM ( item_flow[item_gmv] ),
+			        REMOVEFILTERS ( dim_state ),
+			        REMOVEFILTERS ( order_summary[state], order_summary[region], order_summary[region_order] ),
+			        TREATAS ( regions, order_summary[region] )
+			    )
+			VAR cung =
+			    CALCULATE (
+			        SUM ( item_flow[item_gmv] ),
+			        REMOVEFILTERS ( dim_state ),
+			        REMOVEFILTERS ( order_summary[state], order_summary[region], order_summary[region_order] ),
+			        TREATAS ( regions, item_flow[seller_region] )
+			    )
+			RETURN IF ( NOT ISBLANK ( cau ), DIVIDE ( cung - cau, cau ) )
+		formatString: +0%;-0%;0%
+		displayFolder: KPI Khu vực
+		lineageTag: e1328ab9-2397-4088-8de7-58b28d267589
+
 	column state
 		dataType: string
 		lineageTag: 966baaab-38ea-4d48-8a85-326437354c21

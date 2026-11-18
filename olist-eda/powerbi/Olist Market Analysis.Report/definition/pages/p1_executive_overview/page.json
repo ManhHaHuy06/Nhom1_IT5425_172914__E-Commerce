@@ -25,6 +25,136 @@
       "source": "quality_trend",
       "target": "kpi_7_val",
       "type": "NoFilter"
+    },
+    {
+      "source": "rfm_segments",
+      "target": "f38423cbe0b4018452e3",
+      "type": "NoFilter"
+    },
+    {
+      "source": "rfm_segments",
+      "target": "gmv_same_month",
+      "type": "NoFilter"
+    },
+    {
+      "source": "rfm_segments",
+      "target": "gmv_trend",
+      "type": "NoFilter"
+    },
+    {
+      "source": "rfm_segments",
+      "target": "kpi_1_bg",
+      "type": "NoFilter"
+    },
+    {
+      "source": "rfm_segments",
+      "target": "kpi_1_val",
+      "type": "NoFilter"
+    },
+    {
+      "source": "rfm_segments",
+      "target": "kpi_2_bg",
+      "type": "NoFilter"
+    },
+    {
+      "source": "rfm_segments",
+      "target": "kpi_2_val",
+      "type": "NoFilter"
+    },
+    {
+      "source": "rfm_segments",
+      "target": "kpi_3_bg",
+      "type": "NoFilter"
+    },
+    {
+      "source": "rfm_segments",
+      "target": "kpi_3_val",
+      "type": "NoFilter"
+    },
+    {
+      "source": "rfm_segments",
+      "target": "kpi_4_bg",
+      "type": "NoFilter"
+    },
+    {
+      "source": "rfm_segments",
+      "target": "kpi_5_bg",
+      "type": "NoFilter"
+    },
+    {
+      "source": "rfm_segments",
+      "target": "kpi_5_val",
+      "type": "NoFilter"
+    },
+    {
+      "source": "rfm_segments",
+      "target": "kpi_6_bg",
+      "type": "NoFilter"
+    },
+    {
+      "source": "rfm_segments",
+      "target": "kpi_6_val",
+      "type": "NoFilter"
+    },
+    {
+      "source": "rfm_segments",
+      "target": "kpi_7_bg",
+      "type": "NoFilter"
+    },
+    {
+      "source": "rfm_segments",
+      "target": "kpi_8_bg",
+      "type": "NoFilter"
+    },
+    {
+      "source": "rfm_segments",
+      "target": "kpi_8_val",
+      "type": "NoFilter"
+    },
+    {
+      "source": "rfm_segments",
+      "target": "page_nav",
+      "type": "NoFilter"
+    },
+    {
+      "source": "rfm_segments",
+      "target": "panel_bg",
+      "type": "NoFilter"
+    },
+    {
+      "source": "rfm_segments",
+      "target": "panel_brand",
+      "type": "NoFilter"
+    },
+    {
+      "source": "rfm_segments",
+      "target": "quality_trend",
+      "type": "NoFilter"
+    },
+    {
+      "source": "rfm_segments",
+      "target": "slicer_main_category",
+      "type": "NoFilter"
+    },
+    {
+      "source": "rfm_segments",
+      "target": "slicer_payment_type",
+      "type": "NoFilter"
+    },
+    {
+      "source": "rfm_segments",
+      "target": "slicer_region",
+      "type": "NoFilter"
+    },
+    {
+      "source": "rfm_segments",
+      "target": "slicer_state",
+      "type": "NoFilter"
+    },
+    {
+      "source": "rfm_segments",
+      "target": "slicer_year_month",
+      "type": "NoFilter"
     }
   ]
 }

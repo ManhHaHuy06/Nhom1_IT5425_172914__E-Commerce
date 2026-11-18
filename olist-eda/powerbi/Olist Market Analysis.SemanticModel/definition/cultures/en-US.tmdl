@@ -1723,7 +1723,7 @@ cultureInfo en-US
 			          }
 			        },
 			        {
-			          "Tỷ lệ đơn không hài lòng": {
+			          "% không hài lòng": {
 			            "State": "Suggested",
 			            "Source": {
 			              "Type": "External",
@@ -1733,7 +1733,7 @@ cultureInfo en-US
 			          }
 			        },
 			        {
-			          "% không hài lòng": {
+			          "Tỷ lệ đơn không hài lòng": {
 			            "State": "Suggested",
 			            "Source": {
 			              "Type": "External",
@@ -3080,6 +3080,16 @@ cultureInfo en-US
 			            },
 			            "Weight": 0.714
 			          }
+			        },
+			        {
+			          "Ngành hàng": {
+			            "State": "Suggested",
+			            "Source": {
+			              "Type": "External",
+			              "Agent": "PowerBI.VisualColumnRename"
+			            },
+			            "Weight": 0.9
+			          }
 			        }
 			      ]
 			    },
@@ -3665,6 +3675,16 @@ cultureInfo en-US
 			              "Agent": "Thesaurus"
 			            },
 			            "Weight": 0.714
+			          }
+			        },
+			        {
+			          "Vùng khách hàng": {
+			            "State": "Suggested",
+			            "Source": {
+			              "Type": "External",
+			              "Agent": "PowerBI.VisualColumnRename"
+			            },
+			            "Weight": 0.9
 			          }
 			        }
 			      ]
@@ -8745,6 +8765,9 @@ cultureInfo en-US
 			        }
 			      },
 			      "State": "Generated",
+			      "Visibility": {
+			        "Value": "Hidden"
+			      },
 			      "Terms": [
 			        {
 			          "customer key": {
@@ -12647,16 +12670,6 @@ cultureInfo en-US
 			            "State": "Generated",
 			            "Weight": 0.75
 			          }
-			        },
-			        {
-			          "% GMV TỪ NGƯỜI BÁN MỚI": {
-			            "State": "Suggested",
-			            "Source": {
-			              "Type": "External",
-			              "Agent": "PowerBI.VisualColumnRename"
-			            },
-			            "Weight": 0.9
-			          }
 			        }
 			      ]
 			    },
@@ -12779,16 +12792,6 @@ cultureInfo en-US
 			            },
 			            "Weight": 0.5
 			          }
-			        },
-			        {
-			          "Người bán hoạt động": {
-			            "State": "Suggested",
-			            "Source": {
-			              "Type": "External",
-			              "Agent": "PowerBI.VisualColumnRename"
-			            },
-			            "Weight": 0.9
-			          }
 			        }
 			      ]
 			    },
@@ -12844,16 +12847,6 @@ cultureInfo en-US
 			              "Agent": "Thesaurus"
 			            },
 			            "Weight": 0.599
-			          }
-			        },
-			        {
-			          "GMV / người bán": {
-			            "State": "Suggested",
-			            "Source": {
-			              "Type": "External",
-			              "Agent": "PowerBI.VisualColumnRename"
-			            },
-			            "Weight": 0.9
 			          }
 			        }
 			      ]
@@ -13880,6 +13873,16 @@ cultureInfo en-US
 			            },
 			            "Weight": 0.9
 			          }
+			        },
+			        {
+			          "Phân khúc khách hàng": {
+			            "State": "Suggested",
+			            "Source": {
+			              "Type": "External",
+			              "Agent": "PowerBI.VisualColumnRename"
+			            },
+			            "Weight": 0.9
+			          }
 			        }
 			      ]
 			    },
@@ -14806,6 +14809,16 @@ cultureInfo en-US
 			              "Agent": "Thesaurus"
 			            },
 			            "Weight": 0.491
+			          }
+			        },
+			        {
+			          "Người bán": {
+			            "State": "Suggested",
+			            "Source": {
+			              "Type": "External",
+			              "Agent": "PowerBI.VisualColumnRename"
+			            },
+			            "Weight": 0.9
 			          }
 			        }
 			      ],
@@ -19448,16 +19461,6 @@ cultureInfo en-US
 			            "State": "Generated",
 			            "Weight": 0.75
 			          }
-			        },
-			        {
-			          "GMV / NGƯỜI BÁN kỳ này": {
-			            "State": "Suggested",
-			            "Source": {
-			              "Type": "External",
-			              "Agent": "PowerBI.VisualColumnRename"
-			            },
-			            "Weight": 0.9
-			          }
 			        }
 			      ]
 			    },
@@ -19935,16 +19938,6 @@ cultureInfo en-US
 			            },
 			            "Weight": 0.571
 			          }
-			        },
-			        {
-			          "Điểm review TB": {
-			            "State": "Suggested",
-			            "Source": {
-			              "Type": "External",
-			              "Agent": "PowerBI.VisualColumnRename"
-			            },
-			            "Weight": 0.9
-			          }
 			        }
 			      ]
 			    },
@@ -20078,16 +20071,6 @@ cultureInfo en-US
 			              "Agent": "Thesaurus"
 			            },
 			            "Weight": 0.514
-			          }
-			        },
-			        {
-			          "Số người bán": {
-			            "State": "Suggested",
-			            "Source": {
-			              "Type": "External",
-			              "Agent": "PowerBI.VisualColumnRename"
-			            },
-			            "Weight": 0.9
 			          }
 			        }
 			      ]
@@ -21314,16 +21297,6 @@ cultureInfo en-US
 			            },
 			            "Weight": 0.485
 			          }
-			        },
-			        {
-			          "Số ngành hàng người bán kinh doanh": {
-			            "State": "Suggested",
-			            "Source": {
-			              "Type": "External",
-			              "Agent": "PowerBI.VisualColumnRename"
-			            },
-			            "Weight": 0.9
-			          }
 			        }
 			      ]
 			    },
@@ -21451,16 +21424,6 @@ cultureInfo en-US
 			              "Agent": "Thesaurus"
 			            },
 			            "Weight": 0.475
-			          }
-			        },
-			        {
-			          "GMV trung vị / người bán": {
-			            "State": "Suggested",
-			            "Source": {
-			              "Type": "External",
-			              "Agent": "PowerBI.VisualColumnRename"
-			            },
-			            "Weight": 0.9
 			          }
 			        }
 			      ]
@@ -21596,16 +21559,6 @@ cultureInfo en-US
 			            },
 			            "Weight": 0.605
 			          }
-			        },
-			        {
-			          "% người bán": {
-			            "State": "Suggested",
-			            "Source": {
-			              "Type": "External",
-			              "Agent": "PowerBI.VisualColumnRename"
-			            },
-			            "Weight": 0.9
-			          }
 			        }
 			      ]
 			    },
@@ -21739,16 +21692,6 @@ cultureInfo en-US
 			              "Agent": "Thesaurus"
 			            },
 			            "Weight": 0.605
-			          }
-			        },
-			        {
-			          "% GMV": {
-			            "State": "Suggested",
-			            "Source": {
-			              "Type": "External",
-			              "Agent": "PowerBI.VisualColumnRename"
-			            },
-			            "Weight": 0.9
 			          }
 			        }
 			      ]
@@ -22121,16 +22064,6 @@ cultureInfo en-US
 			            "State": "Generated",
 			            "Weight": 0.97
 			          }
-			        },
-			        {
-			          "% GIAO ĐÚNG HẠN kỳ này": {
-			            "State": "Suggested",
-			            "Source": {
-			              "Type": "External",
-			              "Agent": "PowerBI.VisualColumnRename"
-			            },
-			            "Weight": 0.9
-			          }
 			        }
 			      ]
 			    },
@@ -22152,16 +22085,6 @@ cultureInfo en-US
 			          "top 10 seller GMV share": {
 			            "State": "Generated",
 			            "Weight": 0.75
-			          }
-			        },
-			        {
-			          "% GMV TOP 10 NGƯỜI BÁN kỳ này": {
-			            "State": "Suggested",
-			            "Source": {
-			              "Type": "External",
-			              "Agent": "PowerBI.VisualColumnRename"
-			            },
-			            "Weight": 0.9
 			          }
 			        }
 			      ]
@@ -24142,6 +24065,12 @@ cultureInfo en-US
 			          }
 			        },
 			        {
+			          "category GMV": {
+			            "State": "Generated",
+			            "Weight": 0.75
+			          }
+			        },
+			        {
 			          "GMV": {
 			            "State": "Suggested",
 			            "Source": {
@@ -24390,6 +24319,12 @@ cultureInfo en-US
 			          }
 			        },
 			        {
+			          "category avg review score": {
+			            "State": "Generated",
+			            "Weight": 0.75
+			          }
+			        },
+			        {
 			          "Điểm review TB": {
 			            "State": "Suggested",
 			            "Source": {
@@ -24413,6 +24348,12 @@ cultureInfo en-US
 			        {
 			          "category cancel rate (kỳ này)": {
 			            "State": "Generated"
+			          }
+			        },
+			        {
+			          "category cancel rate": {
+			            "State": "Generated",
+			            "Weight": 0.75
 			          }
 			        },
 			        {
@@ -24456,6 +24397,12 @@ cultureInfo en-US
 			          "category GMV (quý này)": {
 			            "State": "Generated"
 			          }
+			        },
+			        {
+			          "category GMV": {
+			            "State": "Generated",
+			            "Weight": 0.75
+			          }
 			        }
 			      ]
 			    },
@@ -24472,6 +24419,12 @@ cultureInfo en-US
 			          "category avg review score (quý này)": {
 			            "State": "Generated"
 			          }
+			        },
+			        {
+			          "category avg review score": {
+			            "State": "Generated",
+			            "Weight": 0.75
+			          }
 			        }
 			      ]
 			    },
@@ -24485,20 +24438,16 @@ cultureInfo en-US
 			      "State": "Generated",
 			      "Terms": [
 			        {
-			          "Tỷ lệ hủy": {
-			            "State": "Generated",
-			            "Weight": 0.9
-			          }
-			        },
-			        {
 			          "category cancel rate pct (quý này)": {
 			            "State": "Generated"
 			          }
+			        },
+			        {
+			          "category cancel rate pct": {
+			            "State": "Generated",
+			            "Weight": 0.75
+			          }
 			        }
-			      ],
-			      "Units": [
-			        "percentage",
-			        "%"
 			      ]
 			    },
 			    "order_summary.cancel_rate": {
@@ -25205,7 +25154,7 @@ cultureInfo en-US
 			        }
 			      ]
 			    },
-			    "item_sales.top_3_seller_share_kỳ_này": {
+			    "item_sale.top_3_seller_share_kỳ_này": {
 			      "Definition": {
 			        "Binding": {
 			          "ConceptualEntity": "item_sales",
@@ -25214,6 +25163,17 @@ cultureInfo en-US
 			      },
 			      "State": "Generated",
 			      "Terms": [
+			        {
+			          "top 3 seller share (kỳ này)": {
+			            "State": "Generated"
+			          }
+			        },
+			        {
+			          "top 3 seller share": {
+			            "State": "Generated",
+			            "Weight": 0.75
+			          }
+			        },
 			        {
 			          "Top 3 người bán": {
 			            "State": "Suggested",
@@ -25226,7 +25186,7 @@ cultureInfo en-US
 			        }
 			      ]
 			    },
-			    "item_sales.units__kỳ_này": {
+			    "item_sale.units__kỳ_này": {
 			      "Definition": {
 			        "Binding": {
 			          "ConceptualEntity": "item_sales",
@@ -25235,6 +25195,17 @@ cultureInfo en-US
 			      },
 			      "State": "Generated",
 			      "Terms": [
+			        {
+			          "units % (kỳ này)": {
+			            "State": "Generated"
+			          }
+			        },
+			        {
+			          "units %": {
+			            "State": "Generated",
+			            "Weight": 0.75
+			          }
+			        },
 			        {
 			          "% số sản phẩm bán": {
 			            "State": "Suggested",
@@ -25247,7 +25218,7 @@ cultureInfo en-US
 			        }
 			      ]
 			    },
-			    "item_sales.product_gmv__kỳ_này": {
+			    "item_sale.product_GMV__kỳ_này": {
 			      "Definition": {
 			        "Binding": {
 			          "ConceptualEntity": "item_sales",
@@ -25256,6 +25227,17 @@ cultureInfo en-US
 			      },
 			      "State": "Generated",
 			      "Terms": [
+			        {
+			          "product GMV % (kỳ này)": {
+			            "State": "Generated"
+			          }
+			        },
+			        {
+			          "product GMV %": {
+			            "State": "Generated",
+			            "Weight": 0.75
+			          }
+			        },
 			        {
 			          "% GMV": {
 			            "State": "Suggested",
@@ -25268,23 +25250,49 @@ cultureInfo en-US
 			        }
 			      ]
 			    },
-			    "item_sales.sku__by_band_kỳ_này": {
+			    "item_sale.SKU__by_band_kỳ_này": {
 			      "Definition": {
 			        "Binding": {
 			          "ConceptualEntity": "item_sales",
 			          "ConceptualProperty": "SKU % by Band (Kỳ này)"
 			        }
 			      },
-			      "State": "Generated"
+			      "State": "Generated",
+			      "Terms": [
+			        {
+			          "SKU % by band (kỳ này)": {
+			            "State": "Generated"
+			          }
+			        },
+			        {
+			          "SKU % by band": {
+			            "State": "Generated",
+			            "Weight": 0.75
+			          }
+			        }
+			      ]
 			    },
-			    "item_sales.product_gmv__by_band_kỳ_này": {
+			    "item_sale.product_GMV__by_band_kỳ_này": {
 			      "Definition": {
 			        "Binding": {
 			          "ConceptualEntity": "item_sales",
 			          "ConceptualProperty": "Product GMV % by Band (Kỳ này)"
 			        }
 			      },
-			      "State": "Generated"
+			      "State": "Generated",
+			      "Terms": [
+			        {
+			          "product GMV % by band (kỳ này)": {
+			            "State": "Generated"
+			          }
+			        },
+			        {
+			          "product GMV % by band": {
+			            "State": "Generated",
+			            "Weight": 0.75
+			          }
+			        }
+			      ]
 			    },
 			    "order_summary.category_cancel_rate_pct_kỳ_này": {
 			      "Definition": {
@@ -25295,6 +25303,17 @@ cultureInfo en-US
 			      },
 			      "State": "Generated",
 			      "Terms": [
+			        {
+			          "category cancel rate pct (kỳ này)": {
+			            "State": "Generated"
+			          }
+			        },
+			        {
+			          "category cancel rate pct": {
+			            "State": "Generated",
+			            "Weight": 0.75
+			          }
+			        },
 			        {
 			          "Tỷ lệ hủy (%)": {
 			            "State": "Suggested",
@@ -25307,16 +25326,23 @@ cultureInfo en-US
 			        }
 			      ]
 			    },
-			    "sku_band.nhóm_sku": {
+			    "SKU_band.nhóm_SKU": {
 			      "Definition": {
 			        "Binding": {
 			          "ConceptualEntity": "SKU Band",
 			          "ConceptualProperty": "Nhóm SKU"
 			        }
 			      },
-			      "State": "Generated"
+			      "State": "Generated",
+			      "Terms": [
+			        {
+			          "nhóm SKU": {
+			            "State": "Generated"
+			          }
+			        }
+			      ]
 			    },
-			    "item_sales.category_price_share_kỳ_này": {
+			    "item_sale.category_price_share_kỳ_này": {
 			      "Definition": {
 			        "Binding": {
 			          "ConceptualEntity": "item_sales",
@@ -25325,6 +25351,17 @@ cultureInfo en-US
 			      },
 			      "State": "Generated",
 			      "Terms": [
+			        {
+			          "category price share (kỳ này)": {
+			            "State": "Generated"
+			          }
+			        },
+			        {
+			          "category price share": {
+			            "State": "Generated",
+			            "Weight": 0.75
+			          }
+			        },
 			        {
 			          "Giá sản phẩm": {
 			            "State": "Suggested",
@@ -25337,7 +25374,7 @@ cultureInfo en-US
 			        }
 			      ]
 			    },
-			    "item_sales.category_freight_share_kỳ_này": {
+			    "item_sale.category_freight_share_kỳ_này": {
 			      "Definition": {
 			        "Binding": {
 			          "ConceptualEntity": "item_sales",
@@ -25346,6 +25383,17 @@ cultureInfo en-US
 			      },
 			      "State": "Generated",
 			      "Terms": [
+			        {
+			          "category freight share (kỳ này)": {
+			            "State": "Generated"
+			          }
+			        },
+			        {
+			          "category freight share": {
+			            "State": "Generated",
+			            "Weight": 0.75
+			          }
+			        },
 			        {
 			          "Phí ship": {
 			            "State": "Suggested",
@@ -25358,7 +25406,7 @@ cultureInfo en-US
 			        }
 			      ]
 			    },
-			    "item_sales.category_product_value_kỳ_này": {
+			    "item_sale.category_product_value_kỳ_này": {
 			      "Definition": {
 			        "Binding": {
 			          "ConceptualEntity": "item_sales",
@@ -25367,6 +25415,17 @@ cultureInfo en-US
 			      },
 			      "State": "Generated",
 			      "Terms": [
+			        {
+			          "category product value (kỳ này)": {
+			            "State": "Generated"
+			          }
+			        },
+			        {
+			          "category product value": {
+			            "State": "Generated",
+			            "Weight": 0.75
+			          }
+			        },
 			        {
 			          "Tiền hàng": {
 			            "State": "Suggested",
@@ -25379,7 +25438,7 @@ cultureInfo en-US
 			        }
 			      ]
 			    },
-			    "item_sales.category_freight_value_kỳ_này": {
+			    "item_sale.category_freight_value_kỳ_này": {
 			      "Definition": {
 			        "Binding": {
 			          "ConceptualEntity": "item_sales",
@@ -25388,6 +25447,17 @@ cultureInfo en-US
 			      },
 			      "State": "Generated",
 			      "Terms": [
+			        {
+			          "category freight value (kỳ này)": {
+			            "State": "Generated"
+			          }
+			        },
+			        {
+			          "category freight value": {
+			            "State": "Generated",
+			            "Weight": 0.75
+			          }
+			        },
 			        {
 			          "Phí ship (R$)": {
 			            "State": "Suggested",
@@ -25399,9 +25469,3587 @@ cultureInfo en-US
 			          }
 			        }
 			      ]
+			    },
+			    "dim_state.interregion_delivery__kỳ_này": {
+			      "Definition": {
+			        "Binding": {
+			          "ConceptualEntity": "dim_state",
+			          "ConceptualProperty": "Inter-region Delivery % (Kỳ này)"
+			        }
+			      },
+			      "State": "Generated",
+			      "Terms": [
+			        {
+			          "inter-region delivery % (kỳ này)": {
+			            "State": "Generated"
+			          }
+			        },
+			        {
+			          "inter-region delivery %": {
+			            "State": "Generated",
+			            "Weight": 0.75
+			          }
+			        },
+			        {
+			          "inter region delivery % (kỳ này)": {
+			            "State": "Generated",
+			            "Weight": 0.97
+			          }
+			        },
+			        {
+			          "TỶ LỆ GIAO LIÊN VÙNG": {
+			            "State": "Suggested",
+			            "Source": {
+			              "Type": "External",
+			              "Agent": "PowerBI.VisualColumnRename"
+			            },
+			            "Weight": 0.9
+			          }
+			        }
+			      ]
+			    },
+			    "dim_state.seller_density_kỳ_này": {
+			      "Definition": {
+			        "Binding": {
+			          "ConceptualEntity": "dim_state",
+			          "ConceptualProperty": "Seller Density (Kỳ này)"
+			        }
+			      },
+			      "State": "Generated",
+			      "Terms": [
+			        {
+			          "seller density (kỳ này)": {
+			            "State": "Generated"
+			          }
+			        },
+			        {
+			          "seller density": {
+			            "State": "Generated",
+			            "Weight": 0.75
+			          }
+			        },
+			        {
+			          "người / 1.000 KH": {
+			            "State": "Suggested",
+			            "Source": {
+			              "Type": "External",
+			              "Agent": "PowerBI.VisualColumnRename"
+			            },
+			            "Weight": 0.9
+			          }
+			        }
+			      ]
+			    },
+			    "dim_state.SLA_display_kỳ_này": {
+			      "Definition": {
+			        "Binding": {
+			          "ConceptualEntity": "dim_state",
+			          "ConceptualProperty": "SLA Display (Kỳ này)"
+			        }
+			      },
+			      "State": "Generated",
+			      "Terms": [
+			        {
+			          "SLA display (kỳ này)": {
+			            "State": "Generated"
+			          }
+			        },
+			        {
+			          "SLA display": {
+			            "State": "Generated",
+			            "Weight": 0.75
+			          }
+			        },
+			        {
+			          "SLA: GIAO THỰC TẾ / CAM KẾT": {
+			            "State": "Suggested",
+			            "Source": {
+			              "Type": "External",
+			              "Agent": "PowerBI.VisualColumnRename"
+			            },
+			            "Weight": 0.9
+			          }
+			        }
+			      ]
+			    },
+			    "dim_state.supplydemand_gap_kỳ_này": {
+			      "Definition": {
+			        "Binding": {
+			          "ConceptualEntity": "dim_state",
+			          "ConceptualProperty": "Supply-Demand Gap (Kỳ này)"
+			        }
+			      },
+			      "State": "Generated",
+			      "Terms": [
+			        {
+			          "supply-demand gap (kỳ này)": {
+			            "State": "Generated"
+			          }
+			        },
+			        {
+			          "supply-demand gap": {
+			            "State": "Generated",
+			            "Weight": 0.75
+			          }
+			        },
+			        {
+			          "supply demand gap (kỳ này)": {
+			            "State": "Generated",
+			            "Weight": 0.97
+			          }
+			        },
+			        {
+			          "CHÊNH LỆCH CUNG – CẦU": {
+			            "State": "Suggested",
+			            "Source": {
+			              "Type": "External",
+			              "Agent": "PowerBI.VisualColumnRename"
+			            },
+			            "Weight": 0.9
+			          }
+			        }
+			      ]
+			    },
+			    "dim_state.interregion_delivery_": {
+			      "Definition": {
+			        "Binding": {
+			          "ConceptualEntity": "dim_state",
+			          "ConceptualProperty": "Inter-region Delivery %"
+			        }
+			      },
+			      "State": "Generated",
+			      "Terms": [
+			        {
+			          "inter-region delivery %": {
+			            "State": "Generated"
+			          }
+			        },
+			        {
+			          "inter region delivery %": {
+			            "State": "Generated",
+			            "Weight": 0.97
+			          }
+			        },
+			        {
+			          "inter-location delivery %": {
+			            "Type": "Noun",
+			            "State": "Suggested",
+			            "Source": {
+			              "Agent": "Thesaurus"
+			            },
+			            "Weight": 0.867
+			          }
+			        },
+			        {
+			          "inter location delivery %": {
+			            "Type": "Noun",
+			            "State": "Suggested",
+			            "Source": {
+			              "Agent": "Thesaurus"
+			            },
+			            "Weight": 0.857
+			          }
+			        },
+			        {
+			          "inter-province delivery %": {
+			            "Type": "Noun",
+			            "State": "Suggested",
+			            "Source": {
+			              "Agent": "Thesaurus"
+			            },
+			            "Weight": 0.78
+			          }
+			        },
+			        {
+			          "inter-region delivery percentage": {
+			            "Type": "Noun",
+			            "State": "Suggested",
+			            "Source": {
+			              "Agent": "Thesaurus"
+			            },
+			            "Weight": 0.78
+			          }
+			        },
+			        {
+			          "inter province delivery %": {
+			            "Type": "Noun",
+			            "State": "Suggested",
+			            "Source": {
+			              "Agent": "Thesaurus"
+			            },
+			            "Weight": 0.771
+			          }
+			        },
+			        {
+			          "inter region delivery percentage": {
+			            "Type": "Noun",
+			            "State": "Suggested",
+			            "Source": {
+			              "Agent": "Thesaurus"
+			            },
+			            "Weight": 0.771
+			          }
+			        },
+			        {
+			          "inter-area delivery %": {
+			            "Type": "Noun",
+			            "State": "Suggested",
+			            "Source": {
+			              "Agent": "Thesaurus"
+			            },
+			            "Weight": 0.757
+			          }
+			        },
+			        {
+			          "inter-district delivery %": {
+			            "Type": "Noun",
+			            "State": "Suggested",
+			            "Source": {
+			              "Agent": "Thesaurus"
+			            },
+			            "Weight": 0.757
+			          }
+			        },
+			        {
+			          "inter-section delivery %": {
+			            "Type": "Noun",
+			            "State": "Suggested",
+			            "Source": {
+			              "Agent": "Thesaurus"
+			            },
+			            "Weight": 0.757
+			          }
+			        },
+			        {
+			          "inter-zone delivery %": {
+			            "Type": "Noun",
+			            "State": "Suggested",
+			            "Source": {
+			              "Agent": "Thesaurus"
+			            },
+			            "Weight": 0.757
+			          }
+			        }
+			      ]
+			    },
+			    "dim_state.avg_delivery_days_kỳ_này": {
+			      "Definition": {
+			        "Binding": {
+			          "ConceptualEntity": "dim_state",
+			          "ConceptualProperty": "Avg Delivery Days (Kỳ này)"
+			        }
+			      },
+			      "State": "Generated",
+			      "Terms": [
+			        {
+			          "avg delivery days (kỳ này)": {
+			            "State": "Generated"
+			          }
+			        },
+			        {
+			          "avg delivery days": {
+			            "State": "Generated",
+			            "Weight": 0.75
+			          }
+			        }
+			      ]
+			    },
+			    "dim_state.avg_promised_days_kỳ_này": {
+			      "Definition": {
+			        "Binding": {
+			          "ConceptualEntity": "dim_state",
+			          "ConceptualProperty": "Avg Promised Days (Kỳ này)"
+			        }
+			      },
+			      "State": "Generated",
+			      "Terms": [
+			        {
+			          "avg promised days (kỳ này)": {
+			            "State": "Generated"
+			          }
+			        },
+			        {
+			          "avg promised days": {
+			            "State": "Generated",
+			            "Weight": 0.75
+			          }
+			        }
+			      ]
+			    },
+			    "item_sale.top_15_category_kỳ_này": {
+			      "Definition": {
+			        "Binding": {
+			          "ConceptualEntity": "item_sales",
+			          "ConceptualProperty": "Top 15 Category (Kỳ này)"
+			        }
+			      },
+			      "State": "Generated",
+			      "Terms": [
+			        {
+			          "top 15 category (kỳ này)": {
+			            "State": "Generated"
+			          }
+			        },
+			        {
+			          "top 15 category": {
+			            "State": "Generated",
+			            "Weight": 0.75
+			          }
+			        }
+			      ]
+			    },
+			    "item_sale.category_product_value": {
+			      "Definition": {
+			        "Binding": {
+			          "ConceptualEntity": "item_sales",
+			          "ConceptualProperty": "Category Product Value"
+			        }
+			      },
+			      "State": "Generated",
+			      "Terms": [
+			        {
+			          "category product value": {
+			            "State": "Generated"
+			          }
+			        },
+			        {
+			          "value": {
+			            "State": "Generated",
+			            "Weight": 0.97
+			          }
+			        },
+			        {
+			          "classification product value": {
+			            "Type": "Noun",
+			            "State": "Suggested",
+			            "Source": {
+			              "Agent": "Thesaurus"
+			            },
+			            "Weight": 0.609
+			          }
+			        },
+			        {
+			          "category artifact value": {
+			            "Type": "Noun",
+			            "State": "Suggested",
+			            "Source": {
+			              "Agent": "Thesaurus"
+			            },
+			            "Weight": 0.609
+			          }
+			        },
+			        {
+			          "class product value": {
+			            "Type": "Noun",
+			            "State": "Suggested",
+			            "Source": {
+			              "Agent": "Thesaurus"
+			            },
+			            "Weight": 0.591
+			          }
+			        },
+			        {
+			          "group product value": {
+			            "Type": "Noun",
+			            "State": "Suggested",
+			            "Source": {
+			              "Agent": "Thesaurus"
+			            },
+			            "Weight": 0.591
+			          }
+			        },
+			        {
+			          "type product value": {
+			            "Type": "Noun",
+			            "State": "Suggested",
+			            "Source": {
+			              "Agent": "Thesaurus"
+			            },
+			            "Weight": 0.591
+			          }
+			        },
+			        {
+			          "grouping product value": {
+			            "Type": "Noun",
+			            "State": "Suggested",
+			            "Source": {
+			              "Agent": "Thesaurus"
+			            },
+			            "Weight": 0.591
+			          }
+			        },
+			        {
+			          "kind product value": {
+			            "Type": "Noun",
+			            "State": "Suggested",
+			            "Source": {
+			              "Agent": "Thesaurus"
+			            },
+			            "Weight": 0.591
+			          }
+			        },
+			        {
+			          "category item value": {
+			            "Type": "Noun",
+			            "State": "Suggested",
+			            "Source": {
+			              "Agent": "Thesaurus"
+			            },
+			            "Weight": 0.591
+			          }
+			        },
+			        {
+			          "category merchandise value": {
+			            "Type": "Noun",
+			            "State": "Suggested",
+			            "Source": {
+			              "Agent": "Thesaurus"
+			            },
+			            "Weight": 0.591
+			          }
+			        },
+			        {
+			          "category produce value": {
+			            "Type": "Noun",
+			            "State": "Suggested",
+			            "Source": {
+			              "Agent": "Thesaurus"
+			            },
+			            "Weight": 0.591
+			          }
+			        }
+			      ]
+			    },
+			    "item_sale.category_freight_value": {
+			      "Definition": {
+			        "Binding": {
+			          "ConceptualEntity": "item_sales",
+			          "ConceptualProperty": "Category Freight Value"
+			        }
+			      },
+			      "State": "Generated",
+			      "Terms": [
+			        {
+			          "category freight value": {
+			            "State": "Generated"
+			          }
+			        },
+			        {
+			          "value": {
+			            "State": "Generated",
+			            "Weight": 0.97
+			          }
+			        },
+			        {
+			          "classification freight value": {
+			            "Type": "Noun",
+			            "State": "Suggested",
+			            "Source": {
+			              "Agent": "Thesaurus"
+			            },
+			            "Weight": 0.609
+			          }
+			        },
+			        {
+			          "class freight value": {
+			            "Type": "Noun",
+			            "State": "Suggested",
+			            "Source": {
+			              "Agent": "Thesaurus"
+			            },
+			            "Weight": 0.591
+			          }
+			        },
+			        {
+			          "group freight value": {
+			            "Type": "Noun",
+			            "State": "Suggested",
+			            "Source": {
+			              "Agent": "Thesaurus"
+			            },
+			            "Weight": 0.591
+			          }
+			        },
+			        {
+			          "type freight value": {
+			            "Type": "Noun",
+			            "State": "Suggested",
+			            "Source": {
+			              "Agent": "Thesaurus"
+			            },
+			            "Weight": 0.591
+			          }
+			        },
+			        {
+			          "grouping freight value": {
+			            "Type": "Noun",
+			            "State": "Suggested",
+			            "Source": {
+			              "Agent": "Thesaurus"
+			            },
+			            "Weight": 0.591
+			          }
+			        },
+			        {
+			          "kind freight value": {
+			            "Type": "Noun",
+			            "State": "Suggested",
+			            "Source": {
+			              "Agent": "Thesaurus"
+			            },
+			            "Weight": 0.591
+			          }
+			        },
+			        {
+			          "category freight assessment": {
+			            "Type": "Noun",
+			            "State": "Suggested",
+			            "Source": {
+			              "Agent": "Thesaurus"
+			            },
+			            "Weight": 0.508
+			          }
+			        },
+			        {
+			          "category freight worth": {
+			            "Type": "Noun",
+			            "State": "Suggested",
+			            "Source": {
+			              "Agent": "Thesaurus"
+			            },
+			            "Weight": 0.492
+			          }
+			        },
+			        {
+			          "category freight price": {
+			            "Type": "Noun",
+			            "State": "Suggested",
+			            "Source": {
+			              "Agent": "Thesaurus"
+			            },
+			            "Weight": 0.492
+			          }
+			        },
+			        {
+			          "category freight cost": {
+			            "Type": "Noun",
+			            "State": "Suggested",
+			            "Source": {
+			              "Agent": "Thesaurus"
+			            },
+			            "Weight": 0.492
+			          }
+			        }
+			      ]
+			    },
+			    "SKU_band": {
+			      "Definition": {
+			        "Binding": {
+			          "ConceptualEntity": "SKU Band"
+			        }
+			      },
+			      "State": "Generated",
+			      "Terms": [
+			        {
+			          "SKU band": {
+			            "State": "Generated"
+			          }
+			        },
+			        {
+			          "band": {
+			            "State": "Generated",
+			            "Weight": 0.97
+			          }
+			        },
+			        {
+			          "sku posse": {
+			            "Type": "Noun",
+			            "State": "Suggested",
+			            "Source": {
+			              "Agent": "Thesaurus"
+			            },
+			            "Weight": 0.5
+			          }
+			        },
+			        {
+			          "posse": {
+			            "Type": "Noun",
+			            "State": "Suggested",
+			            "Source": {
+			              "Agent": "Thesaurus"
+			            },
+			            "Weight": 0.491
+			          }
+			        },
+			        {
+			          "sku group": {
+			            "Type": "Noun",
+			            "State": "Suggested",
+			            "Source": {
+			              "Agent": "Thesaurus"
+			            },
+			            "Weight": 0.485
+			          }
+			        },
+			        {
+			          "sku gang": {
+			            "Type": "Noun",
+			            "State": "Suggested",
+			            "Source": {
+			              "Agent": "Thesaurus"
+			            },
+			            "Weight": 0.485
+			          }
+			        },
+			        {
+			          "sku crew": {
+			            "Type": "Noun",
+			            "State": "Suggested",
+			            "Source": {
+			              "Agent": "Thesaurus"
+			            },
+			            "Weight": 0.485
+			          }
+			        },
+			        {
+			          "sku crowd": {
+			            "Type": "Noun",
+			            "State": "Suggested",
+			            "Source": {
+			              "Agent": "Thesaurus"
+			            },
+			            "Weight": 0.485
+			          }
+			        },
+			        {
+			          "sku mob": {
+			            "Type": "Noun",
+			            "State": "Suggested",
+			            "Source": {
+			              "Agent": "Thesaurus"
+			            },
+			            "Weight": 0.485
+			          }
+			        },
+			        {
+			          "gang": {
+			            "Type": "Noun",
+			            "State": "Suggested",
+			            "Source": {
+			              "Agent": "Thesaurus"
+			            },
+			            "Weight": 0.476
+			          }
+			        },
+			        {
+			          "crew": {
+			            "Type": "Noun",
+			            "State": "Suggested",
+			            "Source": {
+			              "Agent": "Thesaurus"
+			            },
+			            "Weight": 0.476
+			          }
+			        },
+			        {
+			          "crowd": {
+			            "Type": "Noun",
+			            "State": "Suggested",
+			            "Source": {
+			              "Agent": "Thesaurus"
+			            },
+			            "Weight": 0.476
+			          }
+			        }
+			      ]
+			    },
+			    "SKU_band.thứ_tự": {
+			      "Definition": {
+			        "Binding": {
+			          "ConceptualEntity": "SKU Band",
+			          "ConceptualProperty": "Thứ tự"
+			        }
+			      },
+			      "State": "Generated",
+			      "Visibility": {
+			        "Value": "Hidden"
+			      },
+			      "Terms": [
+			        {
+			          "thứ tự": {
+			            "State": "Generated"
+			          }
+			        }
+			      ]
+			    },
+			    "SKU_band.từ": {
+			      "Definition": {
+			        "Binding": {
+			          "ConceptualEntity": "SKU Band",
+			          "ConceptualProperty": "Từ"
+			        }
+			      },
+			      "State": "Generated",
+			      "Visibility": {
+			        "Value": "Hidden"
+			      },
+			      "Terms": [
+			        {
+			          "từ": {
+			            "State": "Generated"
+			          }
+			        }
+			      ]
+			    },
+			    "SKU_band.đến": {
+			      "Definition": {
+			        "Binding": {
+			          "ConceptualEntity": "SKU Band",
+			          "ConceptualProperty": "Đến"
+			        }
+			      },
+			      "State": "Generated",
+			      "Visibility": {
+			        "Value": "Hidden"
+			      },
+			      "Terms": [
+			        {
+			          "đến": {
+			            "State": "Generated"
+			          }
+			        }
+			      ]
+			    },
+			    "dim_state.region_category_gap": {
+			      "Definition": {
+			        "Binding": {
+			          "ConceptualEntity": "dim_state",
+			          "ConceptualProperty": "Region Category Gap"
+			        }
+			      },
+			      "State": "Generated",
+			      "Terms": [
+			        {
+			          "region category gap": {
+			            "State": "Generated"
+			          }
+			        },
+			        {
+			          "gap": {
+			            "State": "Generated",
+			            "Weight": 0.97
+			          }
+			        },
+			        {
+			          "category gap": {
+			            "State": "Generated",
+			            "Weight": 0.97
+			          }
+			        },
+			        {
+			          "location category gap": {
+			            "Type": "Noun",
+			            "State": "Suggested",
+			            "Source": {
+			              "Agent": "Thesaurus"
+			            },
+			            "Weight": 0.677
+			          }
+			        },
+			        {
+			          "province category gap": {
+			            "Type": "Noun",
+			            "State": "Suggested",
+			            "Source": {
+			              "Agent": "Thesaurus"
+			            },
+			            "Weight": 0.609
+			          }
+			        },
+			        {
+			          "region classification gap": {
+			            "Type": "Noun",
+			            "State": "Suggested",
+			            "Source": {
+			              "Agent": "Thesaurus"
+			            },
+			            "Weight": 0.609
+			          }
+			        },
+			        {
+			          "classification gap": {
+			            "Type": "Noun",
+			            "State": "Suggested",
+			            "Source": {
+			              "Agent": "Thesaurus"
+			            },
+			            "Weight": 0.6
+			          }
+			        },
+			        {
+			          "area category gap": {
+			            "Type": "Noun",
+			            "State": "Suggested",
+			            "Source": {
+			              "Agent": "Thesaurus"
+			            },
+			            "Weight": 0.591
+			          }
+			        },
+			        {
+			          "district category gap": {
+			            "Type": "Noun",
+			            "State": "Suggested",
+			            "Source": {
+			              "Agent": "Thesaurus"
+			            },
+			            "Weight": 0.591
+			          }
+			        },
+			        {
+			          "section category gap": {
+			            "Type": "Noun",
+			            "State": "Suggested",
+			            "Source": {
+			              "Agent": "Thesaurus"
+			            },
+			            "Weight": 0.591
+			          }
+			        },
+			        {
+			          "zone category gap": {
+			            "Type": "Noun",
+			            "State": "Suggested",
+			            "Source": {
+			              "Agent": "Thesaurus"
+			            },
+			            "Weight": 0.591
+			          }
+			        },
+			        {
+			          "continent category gap": {
+			            "Type": "Noun",
+			            "State": "Suggested",
+			            "Source": {
+			              "Agent": "Thesaurus"
+			            },
+			            "Weight": 0.591
+			          }
+			        },
+			        {
+			          "region class gap": {
+			            "Type": "Noun",
+			            "State": "Suggested",
+			            "Source": {
+			              "Agent": "Thesaurus"
+			            },
+			            "Weight": 0.591
+			          }
+			        },
+			        {
+			          "Lệch cung – cầu": {
+			            "State": "Suggested",
+			            "Source": {
+			              "Type": "External",
+			              "Agent": "PowerBI.VisualColumnRename"
+			            },
+			            "Weight": 0.9
+			          }
+			        }
+			      ]
+			    },
+			    "item_sale.seller_quality_ontime_": {
+			      "Definition": {
+			        "Binding": {
+			          "ConceptualEntity": "item_sales",
+			          "ConceptualProperty": "Seller Quality On-time %"
+			        }
+			      },
+			      "State": "Generated",
+			      "Terms": [
+			        {
+			          "seller quality on-time %": {
+			            "State": "Generated"
+			          }
+			        },
+			        {
+			          "seller quality on time %": {
+			            "State": "Generated",
+			            "Weight": 0.97
+			          }
+			        },
+			        {
+			          "seller quality on duration %": {
+			            "Type": "Noun",
+			            "State": "Suggested",
+			            "Source": {
+			              "Agent": "Thesaurus"
+			            },
+			            "Weight": 0.624
+			          }
+			        },
+			        {
+			          "seller quality on interval %": {
+			            "Type": "Noun",
+			            "State": "Suggested",
+			            "Source": {
+			              "Agent": "Thesaurus"
+			            },
+			            "Weight": 0.624
+			          }
+			        },
+			        {
+			          "seller quality on moment %": {
+			            "Type": "Noun",
+			            "State": "Suggested",
+			            "Source": {
+			              "Agent": "Thesaurus"
+			            },
+			            "Weight": 0.624
+			          }
+			        },
+			        {
+			          "seller quality on time percentage": {
+			            "Type": "Noun",
+			            "State": "Suggested",
+			            "Source": {
+			              "Agent": "Thesaurus"
+			            },
+			            "Weight": 0.624
+			          }
+			        },
+			        {
+			          "seller quality on period %": {
+			            "Type": "Noun",
+			            "State": "Suggested",
+			            "Source": {
+			              "Agent": "Thesaurus"
+			            },
+			            "Weight": 0.605
+			          }
+			        },
+			        {
+			          "seller quality on timetable %": {
+			            "Type": "Noun",
+			            "State": "Suggested",
+			            "Source": {
+			              "Agent": "Thesaurus"
+			            },
+			            "Weight": 0.605
+			          }
+			        },
+			        {
+			          "seller quality on time pct": {
+			            "Type": "Noun",
+			            "State": "Suggested",
+			            "Source": {
+			              "Agent": "Thesaurus"
+			            },
+			            "Weight": 0.605
+			          }
+			        },
+			        {
+			          "seller excellence on time %": {
+			            "Type": "Noun",
+			            "State": "Suggested",
+			            "Source": {
+			              "Agent": "Thesaurus"
+			            },
+			            "Weight": 0.52
+			          }
+			        },
+			        {
+			          "seller superiority on time %": {
+			            "Type": "Noun",
+			            "State": "Suggested",
+			            "Source": {
+			              "Agent": "Thesaurus"
+			            },
+			            "Weight": 0.52
+			          }
+			        },
+			        {
+			          "seller eminence on time %": {
+			            "Type": "Noun",
+			            "State": "Suggested",
+			            "Source": {
+			              "Agent": "Thesaurus"
+			            },
+			            "Weight": 0.52
+			          }
+			        },
+			        {
+			          "Tỷ lệ giao đúng hạn": {
+			            "State": "Suggested",
+			            "Source": {
+			              "Type": "External",
+			              "Agent": "PowerBI.VisualColumnRename"
+			            },
+			            "Weight": 0.9
+			          }
+			        }
+			      ]
+			    },
+			    "item_sale.seller_quality_review": {
+			      "Definition": {
+			        "Binding": {
+			          "ConceptualEntity": "item_sales",
+			          "ConceptualProperty": "Seller Quality Review"
+			        }
+			      },
+			      "State": "Generated",
+			      "Terms": [
+			        {
+			          "seller quality review": {
+			            "State": "Generated"
+			          }
+			        },
+			        {
+			          "review": {
+			            "State": "Generated",
+			            "Weight": 0.97
+			          }
+			        },
+			        {
+			          "quality review": {
+			            "State": "Generated",
+			            "Weight": 0.97
+			          }
+			        },
+			        {
+			          "seller quality appraisal": {
+			            "Type": "Noun",
+			            "State": "Suggested",
+			            "Source": {
+			              "Agent": "Thesaurus"
+			            },
+			            "Weight": 0.508
+			          }
+			        },
+			        {
+			          "seller quality evaluation": {
+			            "Type": "Noun",
+			            "State": "Suggested",
+			            "Source": {
+			              "Agent": "Thesaurus"
+			            },
+			            "Weight": 0.508
+			          }
+			        },
+			        {
+			          "seller quality assessment": {
+			            "Type": "Noun",
+			            "State": "Suggested",
+			            "Source": {
+			              "Agent": "Thesaurus"
+			            },
+			            "Weight": 0.508
+			          }
+			        },
+			        {
+			          "seller quality examination": {
+			            "Type": "Noun",
+			            "State": "Suggested",
+			            "Source": {
+			              "Agent": "Thesaurus"
+			            },
+			            "Weight": 0.508
+			          }
+			        },
+			        {
+			          "seller quality analysis": {
+			            "Type": "Noun",
+			            "State": "Suggested",
+			            "Source": {
+			              "Agent": "Thesaurus"
+			            },
+			            "Weight": 0.508
+			          }
+			        },
+			        {
+			          "seller quality criticism": {
+			            "Type": "Noun",
+			            "State": "Suggested",
+			            "Source": {
+			              "Agent": "Thesaurus"
+			            },
+			            "Weight": 0.508
+			          }
+			        },
+			        {
+			          "quality appraisal": {
+			            "Type": "Noun",
+			            "State": "Suggested",
+			            "Source": {
+			              "Agent": "Thesaurus"
+			            },
+			            "Weight": 0.5
+			          }
+			        },
+			        {
+			          "quality evaluation": {
+			            "Type": "Noun",
+			            "State": "Suggested",
+			            "Source": {
+			              "Agent": "Thesaurus"
+			            },
+			            "Weight": 0.5
+			          }
+			        },
+			        {
+			          "quality assessment": {
+			            "Type": "Noun",
+			            "State": "Suggested",
+			            "Source": {
+			              "Agent": "Thesaurus"
+			            },
+			            "Weight": 0.5
+			          }
+			        },
+			        {
+			          "quality examination": {
+			            "Type": "Noun",
+			            "State": "Suggested",
+			            "Source": {
+			              "Agent": "Thesaurus"
+			            },
+			            "Weight": 0.5
+			          }
+			        },
+			        {
+			          "Điểm đánh giá TB": {
+			            "State": "Suggested",
+			            "Source": {
+			              "Type": "External",
+			              "Agent": "PowerBI.VisualColumnRename"
+			            },
+			            "Weight": 0.9
+			          }
+			        }
+			      ]
+			    },
+			    "item_sale.seller_orders_kỳ_này": {
+			      "Definition": {
+			        "Binding": {
+			          "ConceptualEntity": "item_sales",
+			          "ConceptualProperty": "Seller Orders (Kỳ này)"
+			        }
+			      },
+			      "State": "Generated",
+			      "Terms": [
+			        {
+			          "seller orders (kỳ này)": {
+			            "State": "Generated"
+			          }
+			        },
+			        {
+			          "seller orders": {
+			            "State": "Generated",
+			            "Weight": 0.75
+			          }
+			        }
+			      ]
+			    },
+			    "item_sale.seller_review_score_kỳ_này": {
+			      "Definition": {
+			        "Binding": {
+			          "ConceptualEntity": "item_sales",
+			          "ConceptualProperty": "Seller Review Score (Kỳ này)"
+			        }
+			      },
+			      "State": "Generated",
+			      "Terms": [
+			        {
+			          "seller review score (kỳ này)": {
+			            "State": "Generated"
+			          }
+			        },
+			        {
+			          "seller review score": {
+			            "State": "Generated",
+			            "Weight": 0.75
+			          }
+			        }
+			      ]
 			    }
 			  },
 			  "Relationships": {
+			    "item_sale_has_top_15_category_kỳ_này": {
+			      "Binding": {
+			        "ConceptualEntity": "item_sales"
+			      },
+			      "State": "Generated",
+			      "Roles": {
+			        "item_sale": {
+			          "Target": {
+			            "Entity": "item_sale"
+			          }
+			        },
+			        "item_sale.top_15_category_kỳ_này": {
+			          "Target": {
+			            "Entity": "item_sale.top_15_category_kỳ_này"
+			          }
+			        }
+			      },
+			      "Phrasings": [
+			        {
+			          "Attribute": {
+			            "Subject": {
+			              "Role": "item_sale"
+			            },
+			            "Object": {
+			              "Role": "item_sale.top_15_category_kỳ_này"
+			            }
+			          },
+			          "State": "Generated",
+			          "Weight": 0.99,
+			          "ID": "item_sales_have_top_15_category_kỳ_này"
+			        }
+			      ]
+			    },
+			    "dim_category_has_item_sale_top_15_category_kỳ_này": {
+			      "Binding": {
+			        "ConceptualEntity": "dim_category"
+			      },
+			      "State": "Generated",
+			      "Roles": {
+			        "dim_category": {
+			          "Target": {
+			            "Entity": "dim_category"
+			          }
+			        },
+			        "item_sale.top_15_category_kỳ_này": {
+			          "Target": {
+			            "Entity": "item_sale.top_15_category_kỳ_này"
+			          }
+			        }
+			      },
+			      "Phrasings": [
+			        {
+			          "Attribute": {
+			            "Subject": {
+			              "Role": "dim_category"
+			            },
+			            "Object": {
+			              "Role": "item_sale.top_15_category_kỳ_này"
+			            }
+			          },
+			          "State": "Generated",
+			          "Weight": 0.99,
+			          "ID": "dim_categories_have_top_15_category_kỳ_này"
+			        }
+			      ]
+			    },
+			    "order_summary_has_dim_state_avg_promised_days_kỳ_này": {
+			      "Binding": {
+			        "ConceptualEntity": "order_summary"
+			      },
+			      "State": "Generated",
+			      "Roles": {
+			        "order_summary": {
+			          "Target": {
+			            "Entity": "order_summary"
+			          }
+			        },
+			        "dim_state.avg_promised_days_kỳ_này": {
+			          "Target": {
+			            "Entity": "dim_state.avg_promised_days_kỳ_này"
+			          }
+			        }
+			      },
+			      "Phrasings": [
+			        {
+			          "Attribute": {
+			            "Subject": {
+			              "Role": "order_summary"
+			            },
+			            "Object": {
+			              "Role": "dim_state.avg_promised_days_kỳ_này"
+			            }
+			          },
+			          "State": "Generated",
+			          "Weight": 0.99,
+			          "ID": "order_summaries_have_avg_promised_days_kỳ_này"
+			        }
+			      ]
+			    },
+			    "order_summary_has_dim_state_avg_delivery_days_kỳ_này": {
+			      "Binding": {
+			        "ConceptualEntity": "order_summary"
+			      },
+			      "State": "Generated",
+			      "Roles": {
+			        "order_summary": {
+			          "Target": {
+			            "Entity": "order_summary"
+			          }
+			        },
+			        "dim_state.avg_delivery_days_kỳ_này": {
+			          "Target": {
+			            "Entity": "dim_state.avg_delivery_days_kỳ_này"
+			          }
+			        }
+			      },
+			      "Phrasings": [
+			        {
+			          "Attribute": {
+			            "Subject": {
+			              "Role": "order_summary"
+			            },
+			            "Object": {
+			              "Role": "dim_state.avg_delivery_days_kỳ_này"
+			            }
+			          },
+			          "State": "Generated",
+			          "Weight": 0.99,
+			          "ID": "order_summaries_have_avg_delivery_days_kỳ_này"
+			        }
+			      ]
+			    },
+			    "item_flow_has_dim_state_interregion_delivery_": {
+			      "Binding": {
+			        "ConceptualEntity": "item_flow"
+			      },
+			      "State": "Generated",
+			      "Roles": {
+			        "item_flow": {
+			          "Target": {
+			            "Entity": "item_flow"
+			          }
+			        },
+			        "dim_state.interregion_delivery_": {
+			          "Target": {
+			            "Entity": "dim_state.interregion_delivery_"
+			          }
+			        }
+			      },
+			      "Phrasings": [
+			        {
+			          "Attribute": {
+			            "Subject": {
+			              "Role": "item_flow"
+			            },
+			            "Object": {
+			              "Role": "dim_state.interregion_delivery_"
+			            }
+			          },
+			          "State": "Generated",
+			          "Weight": 0.99,
+			          "ID": "item_flows_have_interregion_delivery_"
+			        }
+			      ]
+			    },
+			    "item_flow_has_dim_state_supplydemand_gap_kỳ_này": {
+			      "Binding": {
+			        "ConceptualEntity": "item_flow"
+			      },
+			      "State": "Generated",
+			      "Roles": {
+			        "item_flow": {
+			          "Target": {
+			            "Entity": "item_flow"
+			          }
+			        },
+			        "dim_state.supplydemand_gap_kỳ_này": {
+			          "Target": {
+			            "Entity": "dim_state.supplydemand_gap_kỳ_này"
+			          }
+			        }
+			      },
+			      "Phrasings": [
+			        {
+			          "Attribute": {
+			            "Subject": {
+			              "Role": "item_flow"
+			            },
+			            "Object": {
+			              "Role": "dim_state.supplydemand_gap_kỳ_này"
+			            }
+			          },
+			          "State": "Generated",
+			          "Weight": 0.99,
+			          "ID": "item_flows_have_supplydemand_gap_kỳ_này"
+			        }
+			      ]
+			    },
+			    "order_summary_has_dim_state_SLA_display_kỳ_này": {
+			      "Binding": {
+			        "ConceptualEntity": "order_summary"
+			      },
+			      "State": "Generated",
+			      "Roles": {
+			        "order_summary": {
+			          "Target": {
+			            "Entity": "order_summary"
+			          }
+			        },
+			        "dim_state.SLA_display_kỳ_này": {
+			          "Target": {
+			            "Entity": "dim_state.SLA_display_kỳ_này"
+			          }
+			        }
+			      },
+			      "Phrasings": [
+			        {
+			          "Attribute": {
+			            "Subject": {
+			              "Role": "order_summary"
+			            },
+			            "Object": {
+			              "Role": "dim_state.SLA_display_kỳ_này"
+			            }
+			          },
+			          "State": "Generated",
+			          "Weight": 0.99,
+			          "ID": "order_summaries_have_SLA_display_kỳ_này"
+			        }
+			      ]
+			    },
+			    "order_summary_has_dim_state_seller_density_kỳ_này": {
+			      "Binding": {
+			        "ConceptualEntity": "order_summary"
+			      },
+			      "State": "Generated",
+			      "Roles": {
+			        "order_summary": {
+			          "Target": {
+			            "Entity": "order_summary"
+			          }
+			        },
+			        "dim_state.seller_density_kỳ_này": {
+			          "Target": {
+			            "Entity": "dim_state.seller_density_kỳ_này"
+			          }
+			        }
+			      },
+			      "Phrasings": [
+			        {
+			          "Attribute": {
+			            "Subject": {
+			              "Role": "order_summary"
+			            },
+			            "Object": {
+			              "Role": "dim_state.seller_density_kỳ_này"
+			            }
+			          },
+			          "State": "Generated",
+			          "Weight": 0.99,
+			          "ID": "order_summaries_have_seller_density_kỳ_này"
+			        }
+			      ]
+			    },
+			    "geo_seller_has_dim_state_seller_density_kỳ_này": {
+			      "Binding": {
+			        "ConceptualEntity": "geo_seller"
+			      },
+			      "State": "Generated",
+			      "Roles": {
+			        "geo_seller": {
+			          "Target": {
+			            "Entity": "geo_seller"
+			          }
+			        },
+			        "dim_state.seller_density_kỳ_này": {
+			          "Target": {
+			            "Entity": "dim_state.seller_density_kỳ_này"
+			          }
+			        }
+			      },
+			      "Phrasings": [
+			        {
+			          "Attribute": {
+			            "Subject": {
+			              "Role": "geo_seller"
+			            },
+			            "Object": {
+			              "Role": "dim_state.seller_density_kỳ_này"
+			            }
+			          },
+			          "State": "Generated",
+			          "Weight": 0.99,
+			          "ID": "geo_sellers_have_seller_density_kỳ_này"
+			        }
+			      ]
+			    },
+			    "item_flow_has_dim_state_interregion_delivery__kỳ_này": {
+			      "Binding": {
+			        "ConceptualEntity": "item_flow"
+			      },
+			      "State": "Generated",
+			      "Roles": {
+			        "item_flow": {
+			          "Target": {
+			            "Entity": "item_flow"
+			          }
+			        },
+			        "dim_state.interregion_delivery__kỳ_này": {
+			          "Target": {
+			            "Entity": "dim_state.interregion_delivery__kỳ_này"
+			          }
+			        }
+			      },
+			      "Phrasings": [
+			        {
+			          "Attribute": {
+			            "Subject": {
+			              "Role": "item_flow"
+			            },
+			            "Object": {
+			              "Role": "dim_state.interregion_delivery__kỳ_này"
+			            }
+			          },
+			          "State": "Generated",
+			          "Weight": 0.99,
+			          "ID": "item_flows_have_interregion_delivery__kỳ_này"
+			        }
+			      ]
+			    },
+			    "order_summary_has_item_sale_category_freight_value_kỳ_này": {
+			      "Binding": {
+			        "ConceptualEntity": "order_summary"
+			      },
+			      "State": "Generated",
+			      "Roles": {
+			        "order_summary": {
+			          "Target": {
+			            "Entity": "order_summary"
+			          }
+			        },
+			        "item_sale.category_freight_value_kỳ_này": {
+			          "Target": {
+			            "Entity": "item_sale.category_freight_value_kỳ_này"
+			          }
+			        }
+			      },
+			      "Phrasings": [
+			        {
+			          "Attribute": {
+			            "Subject": {
+			              "Role": "order_summary"
+			            },
+			            "Object": {
+			              "Role": "item_sale.category_freight_value_kỳ_này"
+			            }
+			          },
+			          "State": "Generated",
+			          "Weight": 0.99,
+			          "ID": "order_summaries_have_category_freight_value_kỳ_này"
+			        }
+			      ]
+			    },
+			    "item_sale_has_category_freight_value_kỳ_này": {
+			      "Binding": {
+			        "ConceptualEntity": "item_sales"
+			      },
+			      "State": "Generated",
+			      "Roles": {
+			        "item_sale": {
+			          "Target": {
+			            "Entity": "item_sale"
+			          }
+			        },
+			        "item_sale.category_freight_value_kỳ_này": {
+			          "Target": {
+			            "Entity": "item_sale.category_freight_value_kỳ_này"
+			          }
+			        }
+			      },
+			      "Phrasings": [
+			        {
+			          "Attribute": {
+			            "Subject": {
+			              "Role": "item_sale"
+			            },
+			            "Object": {
+			              "Role": "item_sale.category_freight_value_kỳ_này"
+			            }
+			          },
+			          "State": "Generated",
+			          "Weight": 0.99,
+			          "ID": "item_sales_have_category_freight_value_kỳ_này"
+			        }
+			      ]
+			    },
+			    "order_summary_has_item_sale_category_product_value_kỳ_này": {
+			      "Binding": {
+			        "ConceptualEntity": "order_summary"
+			      },
+			      "State": "Generated",
+			      "Roles": {
+			        "order_summary": {
+			          "Target": {
+			            "Entity": "order_summary"
+			          }
+			        },
+			        "item_sale.category_product_value_kỳ_này": {
+			          "Target": {
+			            "Entity": "item_sale.category_product_value_kỳ_này"
+			          }
+			        }
+			      },
+			      "Phrasings": [
+			        {
+			          "Attribute": {
+			            "Subject": {
+			              "Role": "order_summary"
+			            },
+			            "Object": {
+			              "Role": "item_sale.category_product_value_kỳ_này"
+			            }
+			          },
+			          "State": "Generated",
+			          "Weight": 0.99,
+			          "ID": "order_summaries_have_category_product_value_kỳ_này"
+			        }
+			      ]
+			    },
+			    "item_sale_has_category_product_value_kỳ_này": {
+			      "Binding": {
+			        "ConceptualEntity": "item_sales"
+			      },
+			      "State": "Generated",
+			      "Roles": {
+			        "item_sale": {
+			          "Target": {
+			            "Entity": "item_sale"
+			          }
+			        },
+			        "item_sale.category_product_value_kỳ_này": {
+			          "Target": {
+			            "Entity": "item_sale.category_product_value_kỳ_này"
+			          }
+			        }
+			      },
+			      "Phrasings": [
+			        {
+			          "Attribute": {
+			            "Subject": {
+			              "Role": "item_sale"
+			            },
+			            "Object": {
+			              "Role": "item_sale.category_product_value_kỳ_này"
+			            }
+			          },
+			          "State": "Generated",
+			          "Weight": 0.99,
+			          "ID": "item_sales_have_category_product_value_kỳ_này"
+			        }
+			      ]
+			    },
+			    "order_summary_has_item_sale_category_freight_share_kỳ_này": {
+			      "Binding": {
+			        "ConceptualEntity": "order_summary"
+			      },
+			      "State": "Generated",
+			      "Roles": {
+			        "order_summary": {
+			          "Target": {
+			            "Entity": "order_summary"
+			          }
+			        },
+			        "item_sale.category_freight_share_kỳ_này": {
+			          "Target": {
+			            "Entity": "item_sale.category_freight_share_kỳ_này"
+			          }
+			        }
+			      },
+			      "Phrasings": [
+			        {
+			          "Attribute": {
+			            "Subject": {
+			              "Role": "order_summary"
+			            },
+			            "Object": {
+			              "Role": "item_sale.category_freight_share_kỳ_này"
+			            }
+			          },
+			          "State": "Generated",
+			          "Weight": 0.99,
+			          "ID": "order_summaries_have_category_freight_share_kỳ_này"
+			        }
+			      ]
+			    },
+			    "item_sale_has_category_freight_share_kỳ_này": {
+			      "Binding": {
+			        "ConceptualEntity": "item_sales"
+			      },
+			      "State": "Generated",
+			      "Roles": {
+			        "item_sale": {
+			          "Target": {
+			            "Entity": "item_sale"
+			          }
+			        },
+			        "item_sale.category_freight_share_kỳ_này": {
+			          "Target": {
+			            "Entity": "item_sale.category_freight_share_kỳ_này"
+			          }
+			        }
+			      },
+			      "Phrasings": [
+			        {
+			          "Attribute": {
+			            "Subject": {
+			              "Role": "item_sale"
+			            },
+			            "Object": {
+			              "Role": "item_sale.category_freight_share_kỳ_này"
+			            }
+			          },
+			          "State": "Generated",
+			          "Weight": 0.99,
+			          "ID": "item_sales_have_category_freight_share_kỳ_này"
+			        }
+			      ]
+			    },
+			    "order_summary_has_item_sale_category_price_share_kỳ_này": {
+			      "Binding": {
+			        "ConceptualEntity": "order_summary"
+			      },
+			      "State": "Generated",
+			      "Roles": {
+			        "order_summary": {
+			          "Target": {
+			            "Entity": "order_summary"
+			          }
+			        },
+			        "item_sale.category_price_share_kỳ_này": {
+			          "Target": {
+			            "Entity": "item_sale.category_price_share_kỳ_này"
+			          }
+			        }
+			      },
+			      "Phrasings": [
+			        {
+			          "Attribute": {
+			            "Subject": {
+			              "Role": "order_summary"
+			            },
+			            "Object": {
+			              "Role": "item_sale.category_price_share_kỳ_này"
+			            }
+			          },
+			          "State": "Generated",
+			          "Weight": 0.99,
+			          "ID": "order_summaries_have_category_price_share_kỳ_này"
+			        }
+			      ]
+			    },
+			    "item_sale_has_category_price_share_kỳ_này": {
+			      "Binding": {
+			        "ConceptualEntity": "item_sales"
+			      },
+			      "State": "Generated",
+			      "Roles": {
+			        "item_sale": {
+			          "Target": {
+			            "Entity": "item_sale"
+			          }
+			        },
+			        "item_sale.category_price_share_kỳ_này": {
+			          "Target": {
+			            "Entity": "item_sale.category_price_share_kỳ_này"
+			          }
+			        }
+			      },
+			      "Phrasings": [
+			        {
+			          "Attribute": {
+			            "Subject": {
+			              "Role": "item_sale"
+			            },
+			            "Object": {
+			              "Role": "item_sale.category_price_share_kỳ_này"
+			            }
+			          },
+			          "State": "Generated",
+			          "Weight": 0.99,
+			          "ID": "item_sales_have_category_price_share_kỳ_này"
+			        }
+			      ]
+			    },
+			    "SKU_band_has_nhóm_SKU": {
+			      "Binding": {
+			        "ConceptualEntity": "SKU Band"
+			      },
+			      "State": "Generated",
+			      "Roles": {
+			        "SKU_band": {
+			          "Target": {
+			            "Entity": "SKU_band"
+			          }
+			        },
+			        "SKU_band.nhóm_SKU": {
+			          "Target": {
+			            "Entity": "SKU_band.nhóm_SKU"
+			          }
+			        }
+			      },
+			      "Phrasings": [
+			        {
+			          "Attribute": {
+			            "Subject": {
+			              "Role": "SKU_band"
+			            },
+			            "Object": {
+			              "Role": "SKU_band.nhóm_SKU"
+			            }
+			          },
+			          "State": "Generated",
+			          "Weight": 0.99,
+			          "ID": "SKU_bands_have_nhóm_SKUs"
+			        }
+			      ]
+			    },
+			    "order_summary_has_category_cancel_rate_pct_kỳ_này": {
+			      "Binding": {
+			        "ConceptualEntity": "order_summary"
+			      },
+			      "State": "Generated",
+			      "Roles": {
+			        "order_summary": {
+			          "Target": {
+			            "Entity": "order_summary"
+			          }
+			        },
+			        "order_summary.category_cancel_rate_pct_kỳ_này": {
+			          "Target": {
+			            "Entity": "order_summary.category_cancel_rate_pct_kỳ_này"
+			          }
+			        }
+			      },
+			      "Phrasings": [
+			        {
+			          "Attribute": {
+			            "Subject": {
+			              "Role": "order_summary"
+			            },
+			            "Object": {
+			              "Role": "order_summary.category_cancel_rate_pct_kỳ_này"
+			            }
+			          },
+			          "State": "Generated",
+			          "Weight": 0.99,
+			          "ID": "order_summaries_have_category_cancel_rate_pct_kỳ_này"
+			        }
+			      ]
+			    },
+			    "dim_category_has_order_summary_category_cancel_rate_pct_kỳ_này": {
+			      "Binding": {
+			        "ConceptualEntity": "dim_category"
+			      },
+			      "State": "Generated",
+			      "Roles": {
+			        "dim_category": {
+			          "Target": {
+			            "Entity": "dim_category"
+			          }
+			        },
+			        "order_summary.category_cancel_rate_pct_kỳ_này": {
+			          "Target": {
+			            "Entity": "order_summary.category_cancel_rate_pct_kỳ_này"
+			          }
+			        }
+			      },
+			      "Phrasings": [
+			        {
+			          "Attribute": {
+			            "Subject": {
+			              "Role": "dim_category"
+			            },
+			            "Object": {
+			              "Role": "order_summary.category_cancel_rate_pct_kỳ_này"
+			            }
+			          },
+			          "State": "Generated",
+			          "Weight": 0.99,
+			          "ID": "dim_categories_have_category_cancel_rate_pct_kỳ_này"
+			        }
+			      ]
+			    },
+			    "item_sale_has_product_GMV__by_band_kỳ_này": {
+			      "Binding": {
+			        "ConceptualEntity": "item_sales"
+			      },
+			      "State": "Generated",
+			      "Roles": {
+			        "item_sale": {
+			          "Target": {
+			            "Entity": "item_sale"
+			          }
+			        },
+			        "item_sale.product_GMV__by_band_kỳ_này": {
+			          "Target": {
+			            "Entity": "item_sale.product_GMV__by_band_kỳ_này"
+			          }
+			        }
+			      },
+			      "Phrasings": [
+			        {
+			          "Attribute": {
+			            "Subject": {
+			              "Role": "item_sale"
+			            },
+			            "Object": {
+			              "Role": "item_sale.product_GMV__by_band_kỳ_này"
+			            }
+			          },
+			          "State": "Generated",
+			          "Weight": 0.99,
+			          "ID": "item_sales_have_product_GMV__by_band_kỳ_này"
+			        }
+			      ]
+			    },
+			    "item_sale_has_SKU__by_band_kỳ_này": {
+			      "Binding": {
+			        "ConceptualEntity": "item_sales"
+			      },
+			      "State": "Generated",
+			      "Roles": {
+			        "item_sale": {
+			          "Target": {
+			            "Entity": "item_sale"
+			          }
+			        },
+			        "item_sale.SKU__by_band_kỳ_này": {
+			          "Target": {
+			            "Entity": "item_sale.SKU__by_band_kỳ_này"
+			          }
+			        }
+			      },
+			      "Phrasings": [
+			        {
+			          "Attribute": {
+			            "Subject": {
+			              "Role": "item_sale"
+			            },
+			            "Object": {
+			              "Role": "item_sale.SKU__by_band_kỳ_này"
+			            }
+			          },
+			          "State": "Generated",
+			          "Weight": 0.99,
+			          "ID": "item_sales_have_SKU__by_band_kỳ_này"
+			        }
+			      ]
+			    },
+			    "SKU_band_has_item_sale_SKU__by_band_kỳ_này": {
+			      "Binding": {
+			        "ConceptualEntity": "SKU Band"
+			      },
+			      "State": "Generated",
+			      "Roles": {
+			        "SKU_band": {
+			          "Target": {
+			            "Entity": "SKU_band"
+			          }
+			        },
+			        "item_sale.SKU__by_band_kỳ_này": {
+			          "Target": {
+			            "Entity": "item_sale.SKU__by_band_kỳ_này"
+			          }
+			        }
+			      },
+			      "Phrasings": [
+			        {
+			          "Attribute": {
+			            "Subject": {
+			              "Role": "SKU_band"
+			            },
+			            "Object": {
+			              "Role": "item_sale.SKU__by_band_kỳ_này"
+			            }
+			          },
+			          "State": "Generated",
+			          "Weight": 0.99,
+			          "ID": "SKU_bands_have_SKU__by_band_kỳ_này"
+			        }
+			      ]
+			    },
+			    "item_sale_has_product_GMV__kỳ_này": {
+			      "Binding": {
+			        "ConceptualEntity": "item_sales"
+			      },
+			      "State": "Generated",
+			      "Roles": {
+			        "item_sale": {
+			          "Target": {
+			            "Entity": "item_sale"
+			          }
+			        },
+			        "item_sale.product_GMV__kỳ_này": {
+			          "Target": {
+			            "Entity": "item_sale.product_GMV__kỳ_này"
+			          }
+			        }
+			      },
+			      "Phrasings": [
+			        {
+			          "Attribute": {
+			            "Subject": {
+			              "Role": "item_sale"
+			            },
+			            "Object": {
+			              "Role": "item_sale.product_GMV__kỳ_này"
+			            }
+			          },
+			          "State": "Generated",
+			          "Weight": 0.99,
+			          "ID": "item_sales_have_product_GMV__kỳ_này"
+			        }
+			      ]
+			    },
+			    "item_sale_has_units__kỳ_này": {
+			      "Binding": {
+			        "ConceptualEntity": "item_sales"
+			      },
+			      "State": "Generated",
+			      "Roles": {
+			        "item_sale": {
+			          "Target": {
+			            "Entity": "item_sale"
+			          }
+			        },
+			        "item_sale.units__kỳ_này": {
+			          "Target": {
+			            "Entity": "item_sale.units__kỳ_này"
+			          }
+			        }
+			      },
+			      "Phrasings": [
+			        {
+			          "Attribute": {
+			            "Subject": {
+			              "Role": "item_sale"
+			            },
+			            "Object": {
+			              "Role": "item_sale.units__kỳ_này"
+			            }
+			          },
+			          "State": "Generated",
+			          "Weight": 0.99,
+			          "ID": "item_sales_have_units__kỳ_này"
+			        }
+			      ]
+			    },
+			    "item_sale_has_top_3_seller_share_kỳ_này": {
+			      "Binding": {
+			        "ConceptualEntity": "item_sales"
+			      },
+			      "State": "Generated",
+			      "Roles": {
+			        "item_sale": {
+			          "Target": {
+			            "Entity": "item_sale"
+			          }
+			        },
+			        "item_sale.top_3_seller_share_kỳ_này": {
+			          "Target": {
+			            "Entity": "item_sale.top_3_seller_share_kỳ_này"
+			          }
+			        }
+			      },
+			      "Phrasings": [
+			        {
+			          "Attribute": {
+			            "Subject": {
+			              "Role": "item_sale"
+			            },
+			            "Object": {
+			              "Role": "item_sale.top_3_seller_share_kỳ_này"
+			            }
+			          },
+			          "State": "Generated",
+			          "Weight": 0.99,
+			          "ID": "item_sales_have_top_3_seller_share_kỳ_này"
+			        }
+			      ]
+			    },
+			    "order_summary_has_item_sale_top_15_category_quý_này": {
+			      "Binding": {
+			        "ConceptualEntity": "order_summary"
+			      },
+			      "State": "Generated",
+			      "Roles": {
+			        "order_summary": {
+			          "Target": {
+			            "Entity": "order_summary"
+			          }
+			        },
+			        "item_sale.top_15_category_quý_này": {
+			          "Target": {
+			            "Entity": "item_sale.top_15_category_quý_này"
+			          }
+			        }
+			      },
+			      "Phrasings": [
+			        {
+			          "Attribute": {
+			            "Subject": {
+			              "Role": "order_summary"
+			            },
+			            "Object": {
+			              "Role": "item_sale.top_15_category_quý_này"
+			            }
+			          },
+			          "State": "Generated",
+			          "Weight": 0.99,
+			          "ID": "order_summaries_have_top_15_category_quý_này"
+			        }
+			      ]
+			    },
+			    "item_sale_has_top_15_category_quý_này": {
+			      "Binding": {
+			        "ConceptualEntity": "item_sales"
+			      },
+			      "State": "Generated",
+			      "Roles": {
+			        "item_sale": {
+			          "Target": {
+			            "Entity": "item_sale"
+			          }
+			        },
+			        "item_sale.top_15_category_quý_này": {
+			          "Target": {
+			            "Entity": "item_sale.top_15_category_quý_này"
+			          }
+			        }
+			      },
+			      "Phrasings": [
+			        {
+			          "Attribute": {
+			            "Subject": {
+			              "Role": "item_sale"
+			            },
+			            "Object": {
+			              "Role": "item_sale.top_15_category_quý_này"
+			            }
+			          },
+			          "State": "Generated",
+			          "Weight": 0.99,
+			          "ID": "item_sales_have_top_15_category_quý_này"
+			        }
+			      ]
+			    },
+			    "dim_category_has_item_sale_top_15_category_quý_này": {
+			      "Binding": {
+			        "ConceptualEntity": "dim_category"
+			      },
+			      "State": "Generated",
+			      "Roles": {
+			        "dim_category": {
+			          "Target": {
+			            "Entity": "dim_category"
+			          }
+			        },
+			        "item_sale.top_15_category_quý_này": {
+			          "Target": {
+			            "Entity": "item_sale.top_15_category_quý_này"
+			          }
+			        }
+			      },
+			      "Phrasings": [
+			        {
+			          "Attribute": {
+			            "Subject": {
+			              "Role": "dim_category"
+			            },
+			            "Object": {
+			              "Role": "item_sale.top_15_category_quý_này"
+			            }
+			          },
+			          "State": "Generated",
+			          "Weight": 0.99,
+			          "ID": "dim_categories_have_top_15_category_quý_này"
+			        }
+			      ]
+			    },
+			    "item_sale_has_category_quadrant_match": {
+			      "Binding": {
+			        "ConceptualEntity": "item_sales"
+			      },
+			      "State": "Generated",
+			      "Roles": {
+			        "item_sale": {
+			          "Target": {
+			            "Entity": "item_sale"
+			          }
+			        },
+			        "item_sale.category_quadrant_match": {
+			          "Target": {
+			            "Entity": "item_sale.category_quadrant_match"
+			          }
+			        }
+			      },
+			      "Phrasings": [
+			        {
+			          "Attribute": {
+			            "Subject": {
+			              "Role": "item_sale"
+			            },
+			            "Object": {
+			              "Role": "item_sale.category_quadrant_match"
+			            }
+			          },
+			          "State": "Generated",
+			          "Weight": 0.99,
+			          "ID": "item_sales_have_category_quadrant_match"
+			        }
+			      ]
+			    },
+			    "dim_category_has_item_sale_category_quadrant_match": {
+			      "Binding": {
+			        "ConceptualEntity": "dim_category"
+			      },
+			      "State": "Generated",
+			      "Roles": {
+			        "dim_category": {
+			          "Target": {
+			            "Entity": "dim_category"
+			          }
+			        },
+			        "item_sale.category_quadrant_match": {
+			          "Target": {
+			            "Entity": "item_sale.category_quadrant_match"
+			          }
+			        }
+			      },
+			      "Phrasings": [
+			        {
+			          "Attribute": {
+			            "Subject": {
+			              "Role": "dim_category"
+			            },
+			            "Object": {
+			              "Role": "item_sale.category_quadrant_match"
+			            }
+			          },
+			          "State": "Generated",
+			          "Weight": 0.99,
+			          "ID": "dim_categories_have_category_quadrant_match"
+			        }
+			      ]
+			    },
+			    "category_quadrant_has_item_sale_category_quadrant_match": {
+			      "Binding": {
+			        "ConceptualEntity": "Category Quadrant"
+			      },
+			      "State": "Generated",
+			      "Roles": {
+			        "category_quadrant": {
+			          "Target": {
+			            "Entity": "category_quadrant"
+			          }
+			        },
+			        "item_sale.category_quadrant_match": {
+			          "Target": {
+			            "Entity": "item_sale.category_quadrant_match"
+			          }
+			        }
+			      },
+			      "Phrasings": [
+			        {
+			          "Attribute": {
+			            "Subject": {
+			              "Role": "category_quadrant"
+			            },
+			            "Object": {
+			              "Role": "item_sale.category_quadrant_match"
+			            }
+			          },
+			          "State": "Generated",
+			          "Weight": 0.99,
+			          "ID": "category_quadrants_have_category_quadrant_match"
+			        }
+			      ]
+			    },
+			    "item_sale_has_category_quadrant_kỳ_này": {
+			      "Binding": {
+			        "ConceptualEntity": "item_sales"
+			      },
+			      "State": "Generated",
+			      "Roles": {
+			        "item_sale": {
+			          "Target": {
+			            "Entity": "item_sale"
+			          }
+			        },
+			        "item_sale.category_quadrant_kỳ_này": {
+			          "Target": {
+			            "Entity": "item_sale.category_quadrant_kỳ_này"
+			          }
+			        }
+			      },
+			      "Phrasings": [
+			        {
+			          "Attribute": {
+			            "Subject": {
+			              "Role": "item_sale"
+			            },
+			            "Object": {
+			              "Role": "item_sale.category_quadrant_kỳ_này"
+			            }
+			          },
+			          "State": "Generated",
+			          "Weight": 0.99,
+			          "ID": "item_sales_have_category_quadrant_kỳ_này"
+			        }
+			      ]
+			    },
+			    "dim_category_has_item_sale_category_quadrant_kỳ_này": {
+			      "Binding": {
+			        "ConceptualEntity": "dim_category"
+			      },
+			      "State": "Generated",
+			      "Roles": {
+			        "dim_category": {
+			          "Target": {
+			            "Entity": "dim_category"
+			          }
+			        },
+			        "item_sale.category_quadrant_kỳ_này": {
+			          "Target": {
+			            "Entity": "item_sale.category_quadrant_kỳ_này"
+			          }
+			        }
+			      },
+			      "Phrasings": [
+			        {
+			          "Attribute": {
+			            "Subject": {
+			              "Role": "dim_category"
+			            },
+			            "Object": {
+			              "Role": "item_sale.category_quadrant_kỳ_này"
+			            }
+			          },
+			          "State": "Generated",
+			          "Weight": 0.99,
+			          "ID": "dim_categories_have_category_quadrant_kỳ_này"
+			        }
+			      ]
+			    },
+			    "item_sale_has_category_share_median_kỳ_này": {
+			      "Binding": {
+			        "ConceptualEntity": "item_sales"
+			      },
+			      "State": "Generated",
+			      "Roles": {
+			        "item_sale": {
+			          "Target": {
+			            "Entity": "item_sale"
+			          }
+			        },
+			        "item_sale.category_share_median_kỳ_này": {
+			          "Target": {
+			            "Entity": "item_sale.category_share_median_kỳ_này"
+			          }
+			        }
+			      },
+			      "Phrasings": [
+			        {
+			          "Attribute": {
+			            "Subject": {
+			              "Role": "item_sale"
+			            },
+			            "Object": {
+			              "Role": "item_sale.category_share_median_kỳ_này"
+			            }
+			          },
+			          "State": "Generated",
+			          "Weight": 0.99,
+			          "ID": "item_sales_have_category_share_median_kỳ_này"
+			        }
+			      ]
+			    },
+			    "item_sale_has_category_in_matrix_kỳ_này": {
+			      "Binding": {
+			        "ConceptualEntity": "item_sales"
+			      },
+			      "State": "Generated",
+			      "Roles": {
+			        "item_sale": {
+			          "Target": {
+			            "Entity": "item_sale"
+			          }
+			        },
+			        "item_sale.category_in_matrix_kỳ_này": {
+			          "Target": {
+			            "Entity": "item_sale.category_in_matrix_kỳ_này"
+			          }
+			        }
+			      },
+			      "Phrasings": [
+			        {
+			          "Attribute": {
+			            "Subject": {
+			              "Role": "item_sale"
+			            },
+			            "Object": {
+			              "Role": "item_sale.category_in_matrix_kỳ_này"
+			            }
+			          },
+			          "State": "Generated",
+			          "Weight": 0.99,
+			          "ID": "item_sales_have_category_in_matrix_kỳ_này"
+			        }
+			      ]
+			    },
+			    "order_summary_has_item_sale_KPI_color_category_YoY": {
+			      "Binding": {
+			        "ConceptualEntity": "order_summary"
+			      },
+			      "State": "Generated",
+			      "Roles": {
+			        "order_summary": {
+			          "Target": {
+			            "Entity": "order_summary"
+			          }
+			        },
+			        "item_sale.KPI_color_category_YoY": {
+			          "Target": {
+			            "Entity": "item_sale.KPI_color_category_YoY"
+			          }
+			        }
+			      },
+			      "Phrasings": [
+			        {
+			          "Attribute": {
+			            "Subject": {
+			              "Role": "order_summary"
+			            },
+			            "Object": {
+			              "Role": "item_sale.KPI_color_category_YoY"
+			            }
+			          },
+			          "State": "Generated",
+			          "Weight": 0.99,
+			          "ID": "order_summaries_have_KPI_color_category_YoY"
+			        }
+			      ]
+			    },
+			    "item_sale_has_KPI_color_category_YoY": {
+			      "Binding": {
+			        "ConceptualEntity": "item_sales"
+			      },
+			      "State": "Generated",
+			      "Roles": {
+			        "item_sale": {
+			          "Target": {
+			            "Entity": "item_sale"
+			          }
+			        },
+			        "item_sale.KPI_color_category_YoY": {
+			          "Target": {
+			            "Entity": "item_sale.KPI_color_category_YoY"
+			          }
+			        }
+			      },
+			      "Phrasings": [
+			        {
+			          "Attribute": {
+			            "Subject": {
+			              "Role": "item_sale"
+			            },
+			            "Object": {
+			              "Role": "item_sale.KPI_color_category_YoY"
+			            }
+			          },
+			          "State": "Generated",
+			          "Weight": 0.99,
+			          "ID": "item_sales_have_KPI_color_category_YoY"
+			        }
+			      ]
+			    },
+			    "order_summary_has_item_sale_KPI_color_category_QoQ": {
+			      "Binding": {
+			        "ConceptualEntity": "order_summary"
+			      },
+			      "State": "Generated",
+			      "Roles": {
+			        "order_summary": {
+			          "Target": {
+			            "Entity": "order_summary"
+			          }
+			        },
+			        "item_sale.KPI_color_category_QoQ": {
+			          "Target": {
+			            "Entity": "item_sale.KPI_color_category_QoQ"
+			          }
+			        }
+			      },
+			      "Phrasings": [
+			        {
+			          "Attribute": {
+			            "Subject": {
+			              "Role": "order_summary"
+			            },
+			            "Object": {
+			              "Role": "item_sale.KPI_color_category_QoQ"
+			            }
+			          },
+			          "State": "Generated",
+			          "Weight": 0.99,
+			          "ID": "order_summaries_have_KPI_color_category_QoQ"
+			        }
+			      ]
+			    },
+			    "item_sale_has_KPI_color_category_QoQ": {
+			      "Binding": {
+			        "ConceptualEntity": "item_sales"
+			      },
+			      "State": "Generated",
+			      "Roles": {
+			        "item_sale": {
+			          "Target": {
+			            "Entity": "item_sale"
+			          }
+			        },
+			        "item_sale.KPI_color_category_QoQ": {
+			          "Target": {
+			            "Entity": "item_sale.KPI_color_category_QoQ"
+			          }
+			        }
+			      },
+			      "Phrasings": [
+			        {
+			          "Attribute": {
+			            "Subject": {
+			              "Role": "item_sale"
+			            },
+			            "Object": {
+			              "Role": "item_sale.KPI_color_category_QoQ"
+			            }
+			          },
+			          "State": "Generated",
+			          "Weight": 0.99,
+			          "ID": "item_sales_have_KPI_color_category_QoQ"
+			        }
+			      ]
+			    },
+			    "order_summary_has_item_sale_category_GMV_quý_trước": {
+			      "Binding": {
+			        "ConceptualEntity": "order_summary"
+			      },
+			      "State": "Generated",
+			      "Roles": {
+			        "order_summary": {
+			          "Target": {
+			            "Entity": "order_summary"
+			          }
+			        },
+			        "item_sale.category_GMV_quý_trước": {
+			          "Target": {
+			            "Entity": "item_sale.category_GMV_quý_trước"
+			          }
+			        }
+			      },
+			      "Phrasings": [
+			        {
+			          "Attribute": {
+			            "Subject": {
+			              "Role": "order_summary"
+			            },
+			            "Object": {
+			              "Role": "item_sale.category_GMV_quý_trước"
+			            }
+			          },
+			          "State": "Generated",
+			          "Weight": 0.99,
+			          "ID": "order_summaries_have_category_GMV_quý_trước"
+			        }
+			      ]
+			    },
+			    "item_sale_has_category_GMV_quý_trước": {
+			      "Binding": {
+			        "ConceptualEntity": "item_sales"
+			      },
+			      "State": "Generated",
+			      "Roles": {
+			        "item_sale": {
+			          "Target": {
+			            "Entity": "item_sale"
+			          }
+			        },
+			        "item_sale.category_GMV_quý_trước": {
+			          "Target": {
+			            "Entity": "item_sale.category_GMV_quý_trước"
+			          }
+			        }
+			      },
+			      "Phrasings": [
+			        {
+			          "Attribute": {
+			            "Subject": {
+			              "Role": "item_sale"
+			            },
+			            "Object": {
+			              "Role": "item_sale.category_GMV_quý_trước"
+			            }
+			          },
+			          "State": "Generated",
+			          "Weight": 0.99,
+			          "ID": "item_sales_have_category_GMV_quý_trước"
+			        }
+			      ]
+			    },
+			    "order_summary_has_item_sale_category_GMV_cùng_kỳ": {
+			      "Binding": {
+			        "ConceptualEntity": "order_summary"
+			      },
+			      "State": "Generated",
+			      "Roles": {
+			        "order_summary": {
+			          "Target": {
+			            "Entity": "order_summary"
+			          }
+			        },
+			        "item_sale.category_GMV_cùng_kỳ": {
+			          "Target": {
+			            "Entity": "item_sale.category_GMV_cùng_kỳ"
+			          }
+			        }
+			      },
+			      "Phrasings": [
+			        {
+			          "Attribute": {
+			            "Subject": {
+			              "Role": "order_summary"
+			            },
+			            "Object": {
+			              "Role": "item_sale.category_GMV_cùng_kỳ"
+			            }
+			          },
+			          "State": "Generated",
+			          "Weight": 0.99,
+			          "ID": "order_summaries_have_category_GMV_cùng_kỳ"
+			        }
+			      ]
+			    },
+			    "item_sale_has_category_GMV_cùng_kỳ": {
+			      "Binding": {
+			        "ConceptualEntity": "item_sales"
+			      },
+			      "State": "Generated",
+			      "Roles": {
+			        "item_sale": {
+			          "Target": {
+			            "Entity": "item_sale"
+			          }
+			        },
+			        "item_sale.category_GMV_cùng_kỳ": {
+			          "Target": {
+			            "Entity": "item_sale.category_GMV_cùng_kỳ"
+			          }
+			        }
+			      },
+			      "Phrasings": [
+			        {
+			          "Attribute": {
+			            "Subject": {
+			              "Role": "item_sale"
+			            },
+			            "Object": {
+			              "Role": "item_sale.category_GMV_cùng_kỳ"
+			            }
+			          },
+			          "State": "Generated",
+			          "Weight": 0.99,
+			          "ID": "item_sales_have_category_GMV_cùng_kỳ"
+			        }
+			      ]
+			    },
+			    "order_summary_has_item_sale_category_GMV": {
+			      "Binding": {
+			        "ConceptualEntity": "order_summary"
+			      },
+			      "State": "Generated",
+			      "Roles": {
+			        "order_summary": {
+			          "Target": {
+			            "Entity": "order_summary"
+			          }
+			        },
+			        "item_sale.category_GMV": {
+			          "Target": {
+			            "Entity": "item_sale.category_GMV"
+			          }
+			        }
+			      },
+			      "Phrasings": [
+			        {
+			          "Attribute": {
+			            "Subject": {
+			              "Role": "order_summary"
+			            },
+			            "Object": {
+			              "Role": "item_sale.category_GMV"
+			            }
+			          },
+			          "State": "Generated",
+			          "Weight": 0.99,
+			          "ID": "order_summaries_have_category_GMV"
+			        }
+			      ]
+			    },
+			    "item_sale_has_category_GMV": {
+			      "Binding": {
+			        "ConceptualEntity": "item_sales"
+			      },
+			      "State": "Generated",
+			      "Roles": {
+			        "item_sale": {
+			          "Target": {
+			            "Entity": "item_sale"
+			          }
+			        },
+			        "item_sale.category_GMV": {
+			          "Target": {
+			            "Entity": "item_sale.category_GMV"
+			          }
+			        }
+			      },
+			      "Phrasings": [
+			        {
+			          "Attribute": {
+			            "Subject": {
+			              "Role": "item_sale"
+			            },
+			            "Object": {
+			              "Role": "item_sale.category_GMV"
+			            }
+			          },
+			          "State": "Generated",
+			          "Weight": 0.99,
+			          "ID": "item_sales_have_category_GMV"
+			        }
+			      ]
+			    },
+			    "order_summary_has_cancel_rate": {
+			      "Binding": {
+			        "ConceptualEntity": "order_summary"
+			      },
+			      "State": "Generated",
+			      "Roles": {
+			        "order_summary": {
+			          "Target": {
+			            "Entity": "order_summary"
+			          }
+			        },
+			        "order_summary.cancel_rate": {
+			          "Target": {
+			            "Entity": "order_summary.cancel_rate"
+			          }
+			        }
+			      },
+			      "Phrasings": [
+			        {
+			          "Attribute": {
+			            "Subject": {
+			              "Role": "order_summary"
+			            },
+			            "Object": {
+			              "Role": "order_summary.cancel_rate"
+			            }
+			          },
+			          "State": "Generated",
+			          "Weight": 0.99,
+			          "ID": "order_summaries_have_cancel_rate"
+			        }
+			      ]
+			    },
+			    "order_summary_has_category_cancel_rate_pct_quý_này": {
+			      "Binding": {
+			        "ConceptualEntity": "order_summary"
+			      },
+			      "State": "Generated",
+			      "Roles": {
+			        "order_summary": {
+			          "Target": {
+			            "Entity": "order_summary"
+			          }
+			        },
+			        "order_summary.category_cancel_rate_pct_quý_này": {
+			          "Target": {
+			            "Entity": "order_summary.category_cancel_rate_pct_quý_này"
+			          }
+			        }
+			      },
+			      "Phrasings": [
+			        {
+			          "Attribute": {
+			            "Subject": {
+			              "Role": "order_summary"
+			            },
+			            "Object": {
+			              "Role": "order_summary.category_cancel_rate_pct_quý_này"
+			            }
+			          },
+			          "State": "Generated",
+			          "Weight": 0.99,
+			          "ID": "order_summaries_have_category_cancel_rate_pct_quý_này"
+			        }
+			      ]
+			    },
+			    "dim_category_has_order_summary_category_cancel_rate_pct_quý_này": {
+			      "Binding": {
+			        "ConceptualEntity": "dim_category"
+			      },
+			      "State": "Generated",
+			      "Roles": {
+			        "dim_category": {
+			          "Target": {
+			            "Entity": "dim_category"
+			          }
+			        },
+			        "order_summary.category_cancel_rate_pct_quý_này": {
+			          "Target": {
+			            "Entity": "order_summary.category_cancel_rate_pct_quý_này"
+			          }
+			        }
+			      },
+			      "Phrasings": [
+			        {
+			          "Attribute": {
+			            "Subject": {
+			              "Role": "dim_category"
+			            },
+			            "Object": {
+			              "Role": "order_summary.category_cancel_rate_pct_quý_này"
+			            }
+			          },
+			          "State": "Generated",
+			          "Weight": 0.99,
+			          "ID": "dim_categories_have_category_cancel_rate_pct_quý_này"
+			        }
+			      ]
+			    },
+			    "order_summary_has_category_avg_review_score_quý_này": {
+			      "Binding": {
+			        "ConceptualEntity": "order_summary"
+			      },
+			      "State": "Generated",
+			      "Roles": {
+			        "order_summary": {
+			          "Target": {
+			            "Entity": "order_summary"
+			          }
+			        },
+			        "order_summary.category_avg_review_score_quý_này": {
+			          "Target": {
+			            "Entity": "order_summary.category_avg_review_score_quý_này"
+			          }
+			        }
+			      },
+			      "Phrasings": [
+			        {
+			          "Attribute": {
+			            "Subject": {
+			              "Role": "order_summary"
+			            },
+			            "Object": {
+			              "Role": "order_summary.category_avg_review_score_quý_này"
+			            }
+			          },
+			          "State": "Generated",
+			          "Weight": 0.99,
+			          "ID": "order_summaries_have_category_avg_review_score_quý_này"
+			        }
+			      ]
+			    },
+			    "dim_category_has_order_summary_category_avg_review_score_quý_này": {
+			      "Binding": {
+			        "ConceptualEntity": "dim_category"
+			      },
+			      "State": "Generated",
+			      "Roles": {
+			        "dim_category": {
+			          "Target": {
+			            "Entity": "dim_category"
+			          }
+			        },
+			        "order_summary.category_avg_review_score_quý_này": {
+			          "Target": {
+			            "Entity": "order_summary.category_avg_review_score_quý_này"
+			          }
+			        }
+			      },
+			      "Phrasings": [
+			        {
+			          "Attribute": {
+			            "Subject": {
+			              "Role": "dim_category"
+			            },
+			            "Object": {
+			              "Role": "order_summary.category_avg_review_score_quý_này"
+			            }
+			          },
+			          "State": "Generated",
+			          "Weight": 0.99,
+			          "ID": "dim_categories_have_category_avg_review_score_quý_này"
+			        }
+			      ]
+			    },
+			    "order_summary_has_item_sale_category_GMV_quý_này": {
+			      "Binding": {
+			        "ConceptualEntity": "order_summary"
+			      },
+			      "State": "Generated",
+			      "Roles": {
+			        "order_summary": {
+			          "Target": {
+			            "Entity": "order_summary"
+			          }
+			        },
+			        "item_sale.category_GMV_quý_này": {
+			          "Target": {
+			            "Entity": "item_sale.category_GMV_quý_này"
+			          }
+			        }
+			      },
+			      "Phrasings": [
+			        {
+			          "Attribute": {
+			            "Subject": {
+			              "Role": "order_summary"
+			            },
+			            "Object": {
+			              "Role": "item_sale.category_GMV_quý_này"
+			            }
+			          },
+			          "State": "Generated",
+			          "Weight": 0.99,
+			          "ID": "order_summaries_have_category_GMV_quý_này"
+			        }
+			      ]
+			    },
+			    "item_sale_has_category_GMV_quý_này": {
+			      "Binding": {
+			        "ConceptualEntity": "item_sales"
+			      },
+			      "State": "Generated",
+			      "Roles": {
+			        "item_sale": {
+			          "Target": {
+			            "Entity": "item_sale"
+			          }
+			        },
+			        "item_sale.category_GMV_quý_này": {
+			          "Target": {
+			            "Entity": "item_sale.category_GMV_quý_này"
+			          }
+			        }
+			      },
+			      "Phrasings": [
+			        {
+			          "Attribute": {
+			            "Subject": {
+			              "Role": "item_sale"
+			            },
+			            "Object": {
+			              "Role": "item_sale.category_GMV_quý_này"
+			            }
+			          },
+			          "State": "Generated",
+			          "Weight": 0.99,
+			          "ID": "item_sales_have_category_GMV_quý_này"
+			        }
+			      ]
+			    },
+			    "category_quadrant_has_nhóm": {
+			      "Binding": {
+			        "ConceptualEntity": "Category Quadrant"
+			      },
+			      "State": "Generated",
+			      "Roles": {
+			        "category_quadrant": {
+			          "Target": {
+			            "Entity": "category_quadrant"
+			          }
+			        },
+			        "category_quadrant.nhóm": {
+			          "Target": {
+			            "Entity": "category_quadrant.nhóm"
+			          }
+			        }
+			      },
+			      "Phrasings": [
+			        {
+			          "Attribute": {
+			            "Subject": {
+			              "Role": "category_quadrant"
+			            },
+			            "Object": {
+			              "Role": "category_quadrant.nhóm"
+			            }
+			          },
+			          "State": "Generated",
+			          "Weight": 0.99,
+			          "ID": "category_quadrants_have_nhóms"
+			        }
+			      ]
+			    },
+			    "order_summary_has_category_cancel_rate_kỳ_này": {
+			      "Binding": {
+			        "ConceptualEntity": "order_summary"
+			      },
+			      "State": "Generated",
+			      "Roles": {
+			        "order_summary": {
+			          "Target": {
+			            "Entity": "order_summary"
+			          }
+			        },
+			        "order_summary.category_cancel_rate_kỳ_này": {
+			          "Target": {
+			            "Entity": "order_summary.category_cancel_rate_kỳ_này"
+			          }
+			        }
+			      },
+			      "Phrasings": [
+			        {
+			          "Attribute": {
+			            "Subject": {
+			              "Role": "order_summary"
+			            },
+			            "Object": {
+			              "Role": "order_summary.category_cancel_rate_kỳ_này"
+			            }
+			          },
+			          "State": "Generated",
+			          "Weight": 0.99,
+			          "ID": "order_summaries_have_category_cancel_rate_kỳ_này"
+			        }
+			      ]
+			    },
+			    "dim_category_has_order_summary_category_cancel_rate_kỳ_này": {
+			      "Binding": {
+			        "ConceptualEntity": "dim_category"
+			      },
+			      "State": "Generated",
+			      "Roles": {
+			        "dim_category": {
+			          "Target": {
+			            "Entity": "dim_category"
+			          }
+			        },
+			        "order_summary.category_cancel_rate_kỳ_này": {
+			          "Target": {
+			            "Entity": "order_summary.category_cancel_rate_kỳ_này"
+			          }
+			        }
+			      },
+			      "Phrasings": [
+			        {
+			          "Attribute": {
+			            "Subject": {
+			              "Role": "dim_category"
+			            },
+			            "Object": {
+			              "Role": "order_summary.category_cancel_rate_kỳ_này"
+			            }
+			          },
+			          "State": "Generated",
+			          "Weight": 0.99,
+			          "ID": "dim_categories_have_category_cancel_rate_kỳ_này"
+			        }
+			      ]
+			    },
+			    "order_summary_has_category_avg_review_score_kỳ_này": {
+			      "Binding": {
+			        "ConceptualEntity": "order_summary"
+			      },
+			      "State": "Generated",
+			      "Roles": {
+			        "order_summary": {
+			          "Target": {
+			            "Entity": "order_summary"
+			          }
+			        },
+			        "order_summary.category_avg_review_score_kỳ_này": {
+			          "Target": {
+			            "Entity": "order_summary.category_avg_review_score_kỳ_này"
+			          }
+			        }
+			      },
+			      "Phrasings": [
+			        {
+			          "Attribute": {
+			            "Subject": {
+			              "Role": "order_summary"
+			            },
+			            "Object": {
+			              "Role": "order_summary.category_avg_review_score_kỳ_này"
+			            }
+			          },
+			          "State": "Generated",
+			          "Weight": 0.99,
+			          "ID": "order_summaries_have_category_avg_review_score_kỳ_này"
+			        }
+			      ]
+			    },
+			    "dim_category_has_order_summary_category_avg_review_score_kỳ_này": {
+			      "Binding": {
+			        "ConceptualEntity": "dim_category"
+			      },
+			      "State": "Generated",
+			      "Roles": {
+			        "dim_category": {
+			          "Target": {
+			            "Entity": "dim_category"
+			          }
+			        },
+			        "order_summary.category_avg_review_score_kỳ_này": {
+			          "Target": {
+			            "Entity": "order_summary.category_avg_review_score_kỳ_này"
+			          }
+			        }
+			      },
+			      "Phrasings": [
+			        {
+			          "Attribute": {
+			            "Subject": {
+			              "Role": "dim_category"
+			            },
+			            "Object": {
+			              "Role": "order_summary.category_avg_review_score_kỳ_này"
+			            }
+			          },
+			          "State": "Generated",
+			          "Weight": 0.99,
+			          "ID": "dim_categories_have_category_avg_review_score_kỳ_này"
+			        }
+			      ]
+			    },
+			    "order_summary_has_item_sale_category_GMV_YoY_": {
+			      "Binding": {
+			        "ConceptualEntity": "order_summary"
+			      },
+			      "State": "Generated",
+			      "Roles": {
+			        "order_summary": {
+			          "Target": {
+			            "Entity": "order_summary"
+			          }
+			        },
+			        "item_sale.category_GMV_YoY_": {
+			          "Target": {
+			            "Entity": "item_sale.category_GMV_YoY_"
+			          }
+			        }
+			      },
+			      "Phrasings": [
+			        {
+			          "Attribute": {
+			            "Subject": {
+			              "Role": "order_summary"
+			            },
+			            "Object": {
+			              "Role": "item_sale.category_GMV_YoY_"
+			            }
+			          },
+			          "State": "Generated",
+			          "Weight": 0.99,
+			          "ID": "order_summaries_have_category_GMV_YoY_"
+			        }
+			      ]
+			    },
+			    "item_sale_has_category_GMV_YoY_": {
+			      "Binding": {
+			        "ConceptualEntity": "item_sales"
+			      },
+			      "State": "Generated",
+			      "Roles": {
+			        "item_sale": {
+			          "Target": {
+			            "Entity": "item_sale"
+			          }
+			        },
+			        "item_sale.category_GMV_YoY_": {
+			          "Target": {
+			            "Entity": "item_sale.category_GMV_YoY_"
+			          }
+			        }
+			      },
+			      "Phrasings": [
+			        {
+			          "Attribute": {
+			            "Subject": {
+			              "Role": "item_sale"
+			            },
+			            "Object": {
+			              "Role": "item_sale.category_GMV_YoY_"
+			            }
+			          },
+			          "State": "Generated",
+			          "Weight": 0.99,
+			          "ID": "item_sales_have_category_GMV_YoY_"
+			        }
+			      ]
+			    },
+			    "order_summary_has_item_sale_category_GMV_QoQ_": {
+			      "Binding": {
+			        "ConceptualEntity": "order_summary"
+			      },
+			      "State": "Generated",
+			      "Roles": {
+			        "order_summary": {
+			          "Target": {
+			            "Entity": "order_summary"
+			          }
+			        },
+			        "item_sale.category_GMV_QoQ_": {
+			          "Target": {
+			            "Entity": "item_sale.category_GMV_QoQ_"
+			          }
+			        }
+			      },
+			      "Phrasings": [
+			        {
+			          "Attribute": {
+			            "Subject": {
+			              "Role": "order_summary"
+			            },
+			            "Object": {
+			              "Role": "item_sale.category_GMV_QoQ_"
+			            }
+			          },
+			          "State": "Generated",
+			          "Weight": 0.99,
+			          "ID": "order_summaries_have_category_GMV_QoQ_"
+			        }
+			      ]
+			    },
+			    "item_sale_has_category_GMV_QoQ_": {
+			      "Binding": {
+			        "ConceptualEntity": "item_sales"
+			      },
+			      "State": "Generated",
+			      "Roles": {
+			        "item_sale": {
+			          "Target": {
+			            "Entity": "item_sale"
+			          }
+			        },
+			        "item_sale.category_GMV_QoQ_": {
+			          "Target": {
+			            "Entity": "item_sale.category_GMV_QoQ_"
+			          }
+			        }
+			      },
+			      "Phrasings": [
+			        {
+			          "Attribute": {
+			            "Subject": {
+			              "Role": "item_sale"
+			            },
+			            "Object": {
+			              "Role": "item_sale.category_GMV_QoQ_"
+			            }
+			          },
+			          "State": "Generated",
+			          "Weight": 0.99,
+			          "ID": "item_sales_have_category_GMV_QoQ_"
+			        }
+			      ]
+			    },
+			    "order_summary_has_item_sale_category_GMV_kỳ_này": {
+			      "Binding": {
+			        "ConceptualEntity": "order_summary"
+			      },
+			      "State": "Generated",
+			      "Roles": {
+			        "order_summary": {
+			          "Target": {
+			            "Entity": "order_summary"
+			          }
+			        },
+			        "item_sale.category_GMV_kỳ_này": {
+			          "Target": {
+			            "Entity": "item_sale.category_GMV_kỳ_này"
+			          }
+			        }
+			      },
+			      "Phrasings": [
+			        {
+			          "Attribute": {
+			            "Subject": {
+			              "Role": "order_summary"
+			            },
+			            "Object": {
+			              "Role": "item_sale.category_GMV_kỳ_này"
+			            }
+			          },
+			          "State": "Generated",
+			          "Weight": 0.99,
+			          "ID": "order_summaries_have_category_GMV_kỳ_này"
+			        }
+			      ]
+			    },
+			    "item_sale_has_category_GMV_kỳ_này": {
+			      "Binding": {
+			        "ConceptualEntity": "item_sales"
+			      },
+			      "State": "Generated",
+			      "Roles": {
+			        "item_sale": {
+			          "Target": {
+			            "Entity": "item_sale"
+			          }
+			        },
+			        "item_sale.category_GMV_kỳ_này": {
+			          "Target": {
+			            "Entity": "item_sale.category_GMV_kỳ_này"
+			          }
+			        }
+			      },
+			      "Phrasings": [
+			        {
+			          "Attribute": {
+			            "Subject": {
+			              "Role": "item_sale"
+			            },
+			            "Object": {
+			              "Role": "item_sale.category_GMV_kỳ_này"
+			            }
+			          },
+			          "State": "Generated",
+			          "Weight": 0.99,
+			          "ID": "item_sales_have_category_GMV_kỳ_này"
+			        }
+			      ]
+			    },
+			    "order_summary_has_freight_ratio": {
+			      "Binding": {
+			        "ConceptualEntity": "order_summary"
+			      },
+			      "State": "Generated",
+			      "Roles": {
+			        "order_summary": {
+			          "Target": {
+			            "Entity": "order_summary"
+			          }
+			        },
+			        "order_summary.freight_ratio": {
+			          "Target": {
+			            "Entity": "order_summary.freight_ratio"
+			          }
+			        }
+			      },
+			      "Phrasings": [
+			        {
+			          "Attribute": {
+			            "Subject": {
+			              "Role": "order_summary"
+			            },
+			            "Object": {
+			              "Role": "order_summary.freight_ratio"
+			            }
+			          },
+			          "State": "Generated",
+			          "Weight": 0.99,
+			          "ID": "order_summaries_have_freight_ratio"
+			        }
+			      ]
+			    },
+			    "order_summary_has_KPI_color_YoY": {
+			      "Binding": {
+			        "ConceptualEntity": "order_summary"
+			      },
+			      "State": "Generated",
+			      "Roles": {
+			        "order_summary": {
+			          "Target": {
+			            "Entity": "order_summary"
+			          }
+			        },
+			        "order_summary.KPI_color_YoY": {
+			          "Target": {
+			            "Entity": "order_summary.KPI_color_YoY"
+			          }
+			        }
+			      },
+			      "Phrasings": [
+			        {
+			          "Attribute": {
+			            "Subject": {
+			              "Role": "order_summary"
+			            },
+			            "Object": {
+			              "Role": "order_summary.KPI_color_YoY"
+			            }
+			          },
+			          "State": "Generated",
+			          "Weight": 0.99,
+			          "ID": "order_summaries_have_KPI_color_YoY"
+			        }
+			      ]
+			    },
+			    "order_summary_has_KPI_color_QoQ": {
+			      "Binding": {
+			        "ConceptualEntity": "order_summary"
+			      },
+			      "State": "Generated",
+			      "Roles": {
+			        "order_summary": {
+			          "Target": {
+			            "Entity": "order_summary"
+			          }
+			        },
+			        "order_summary.KPI_color_QoQ": {
+			          "Target": {
+			            "Entity": "order_summary.KPI_color_QoQ"
+			          }
+			        }
+			      },
+			      "Phrasings": [
+			        {
+			          "Attribute": {
+			            "Subject": {
+			              "Role": "order_summary"
+			            },
+			            "Object": {
+			              "Role": "order_summary.KPI_color_QoQ"
+			            }
+			          },
+			          "State": "Generated",
+			          "Weight": 0.99,
+			          "ID": "order_summaries_have_KPI_color_QoQ"
+			        }
+			      ]
+			    },
+			    "order_summary_has_GMV_quý_trước": {
+			      "Binding": {
+			        "ConceptualEntity": "order_summary"
+			      },
+			      "State": "Generated",
+			      "Roles": {
+			        "order_summary": {
+			          "Target": {
+			            "Entity": "order_summary"
+			          }
+			        },
+			        "order_summary.GMV_quý_trước": {
+			          "Target": {
+			            "Entity": "order_summary.GMV_quý_trước"
+			          }
+			        }
+			      },
+			      "Phrasings": [
+			        {
+			          "Attribute": {
+			            "Subject": {
+			              "Role": "order_summary"
+			            },
+			            "Object": {
+			              "Role": "order_summary.GMV_quý_trước"
+			            }
+			          },
+			          "State": "Generated",
+			          "Weight": 0.99,
+			          "ID": "order_summaries_have_GMV_quý_trước"
+			        }
+			      ]
+			    },
+			    "order_summary_has_GMV_quý_này": {
+			      "Binding": {
+			        "ConceptualEntity": "order_summary"
+			      },
+			      "State": "Generated",
+			      "Roles": {
+			        "order_summary": {
+			          "Target": {
+			            "Entity": "order_summary"
+			          }
+			        },
+			        "order_summary.GMV_quý_này": {
+			          "Target": {
+			            "Entity": "order_summary.GMV_quý_này"
+			          }
+			        }
+			      },
+			      "Phrasings": [
+			        {
+			          "Attribute": {
+			            "Subject": {
+			              "Role": "order_summary"
+			            },
+			            "Object": {
+			              "Role": "order_summary.GMV_quý_này"
+			            }
+			          },
+			          "State": "Generated",
+			          "Weight": 0.99,
+			          "ID": "order_summaries_have_GMV_quý_này"
+			        }
+			      ]
+			    },
+			    "geo_seller_has_dim_state_sellers_in_state": {
+			      "Binding": {
+			        "ConceptualEntity": "geo_seller"
+			      },
+			      "State": "Generated",
+			      "Roles": {
+			        "geo_seller": {
+			          "Target": {
+			            "Entity": "geo_seller"
+			          }
+			        },
+			        "dim_state.sellers_in_state": {
+			          "Target": {
+			            "Entity": "dim_state.sellers_in_state"
+			          }
+			        }
+			      },
+			      "Phrasings": [
+			        {
+			          "Attribute": {
+			            "Subject": {
+			              "Role": "geo_seller"
+			            },
+			            "Object": {
+			              "Role": "dim_state.sellers_in_state"
+			            }
+			          },
+			          "State": "Generated",
+			          "Weight": 0.99,
+			          "ID": "geo_sellers_have_sellers_in_state"
+			        }
+			      ]
+			    },
+			    "map_metric_has_dim_state_map_title": {
+			      "Binding": {
+			        "ConceptualEntity": "Map Metric"
+			      },
+			      "State": "Generated",
+			      "Roles": {
+			        "map_metric": {
+			          "Target": {
+			            "Entity": "map_metric"
+			          }
+			        },
+			        "dim_state.map_title": {
+			          "Target": {
+			            "Entity": "dim_state.map_title"
+			          }
+			        }
+			      },
+			      "Phrasings": [
+			        {
+			          "Attribute": {
+			            "Subject": {
+			              "Role": "map_metric"
+			            },
+			            "Object": {
+			              "Role": "dim_state.map_title"
+			            }
+			          },
+			          "State": "Generated",
+			          "Weight": 0.99,
+			          "ID": "map_metrics_have_map_title"
+			        }
+			      ]
+			    },
 			    "map_level_has_dim_state_map_title": {
 			      "Binding": {
 			        "ConceptualEntity": "Map Level"
@@ -30045,7 +33693,7 @@ cultureInfo en-US
 			          },
 			          "State": "Generated",
 			          "Weight": 0.99,
-			          "ID": "item_sales_have_sku_bands"
+			          "ID": "item_sales_have_SKU_bands"
 			        }
 			      ]
 			    },
@@ -31252,39 +34900,6 @@ cultureInfo en-US
 			          "State": "Generated",
 			          "Weight": 0.99,
 			          "ID": "cust_2nd_gaps_have_day_to_2nd"
-			        }
-			      ]
-			    },
-			    "cust_2nd_gap_has_customer_key": {
-			      "Binding": {
-			        "ConceptualEntity": "cust_2nd_gap"
-			      },
-			      "State": "Generated",
-			      "Roles": {
-			        "cust_2nd_gap": {
-			          "Target": {
-			            "Entity": "cust_2nd_gap"
-			          }
-			        },
-			        "cust_2nd_gap.customer_key": {
-			          "Target": {
-			            "Entity": "cust_2nd_gap.customer_key"
-			          }
-			        }
-			      },
-			      "Phrasings": [
-			        {
-			          "Attribute": {
-			            "Subject": {
-			              "Role": "cust_2nd_gap"
-			            },
-			            "Object": {
-			              "Role": "cust_2nd_gap.customer_key"
-			            }
-			          },
-			          "State": "Generated",
-			          "Weight": 0.99,
-			          "ID": "cust_2nd_gaps_have_customer_keys"
 			        }
 			      ]
 			    },
@@ -34896,73 +38511,7 @@ cultureInfo en-US
 			        }
 			      ]
 			    },
-			    "map_metric_has_dim_state_map_title": {
-			      "Binding": {
-			        "ConceptualEntity": "Map Metric"
-			      },
-			      "State": "Generated",
-			      "Roles": {
-			        "map_metric": {
-			          "Target": {
-			            "Entity": "map_metric"
-			          }
-			        },
-			        "dim_state.map_title": {
-			          "Target": {
-			            "Entity": "dim_state.map_title"
-			          }
-			        }
-			      },
-			      "Phrasings": [
-			        {
-			          "Attribute": {
-			            "Subject": {
-			              "Role": "map_metric"
-			            },
-			            "Object": {
-			              "Role": "dim_state.map_title"
-			            }
-			          },
-			          "State": "Generated",
-			          "Weight": 0.99,
-			          "ID": "map_metrics_have_map_title"
-			        }
-			      ]
-			    },
-			    "geo_seller_has_dim_state_sellers_in_state": {
-			      "Binding": {
-			        "ConceptualEntity": "geo_seller"
-			      },
-			      "State": "Generated",
-			      "Roles": {
-			        "geo_seller": {
-			          "Target": {
-			            "Entity": "geo_seller"
-			          }
-			        },
-			        "dim_state.sellers_in_state": {
-			          "Target": {
-			            "Entity": "dim_state.sellers_in_state"
-			          }
-			        }
-			      },
-			      "Phrasings": [
-			        {
-			          "Attribute": {
-			            "Subject": {
-			              "Role": "geo_seller"
-			            },
-			            "Object": {
-			              "Role": "dim_state.sellers_in_state"
-			            }
-			          },
-			          "State": "Generated",
-			          "Weight": 0.99,
-			          "ID": "geo_sellers_have_sellers_in_state"
-			        }
-			      ]
-			    },
-			    "order_summary_has_GMV_quý_này": {
+			    "order_summary_has_item_sale_top_15_category_kỳ_này": {
 			      "Binding": {
 			        "ConceptualEntity": "order_summary"
 			      },
@@ -34973,9 +38522,9 @@ cultureInfo en-US
 			            "Entity": "order_summary"
 			          }
 			        },
-			        "order_summary.GMV_quý_này": {
+			        "item_sale.top_15_category_kỳ_này": {
 			          "Target": {
-			            "Entity": "order_summary.GMV_quý_này"
+			            "Entity": "item_sale.top_15_category_kỳ_này"
 			          }
 			        }
 			      },
@@ -34986,148 +38535,16 @@ cultureInfo en-US
 			              "Role": "order_summary"
 			            },
 			            "Object": {
-			              "Role": "order_summary.GMV_quý_này"
+			              "Role": "item_sale.top_15_category_kỳ_này"
 			            }
 			          },
 			          "State": "Generated",
 			          "Weight": 0.99,
-			          "ID": "order_summaries_have_GMV_quý_này"
+			          "ID": "order_summaries_have_top_15_category_kỳ_này"
 			        }
 			      ]
 			    },
-			    "order_summary_has_GMV_quý_trước": {
-			      "Binding": {
-			        "ConceptualEntity": "order_summary"
-			      },
-			      "State": "Generated",
-			      "Roles": {
-			        "order_summary": {
-			          "Target": {
-			            "Entity": "order_summary"
-			          }
-			        },
-			        "order_summary.GMV_quý_trước": {
-			          "Target": {
-			            "Entity": "order_summary.GMV_quý_trước"
-			          }
-			        }
-			      },
-			      "Phrasings": [
-			        {
-			          "Attribute": {
-			            "Subject": {
-			              "Role": "order_summary"
-			            },
-			            "Object": {
-			              "Role": "order_summary.GMV_quý_trước"
-			            }
-			          },
-			          "State": "Generated",
-			          "Weight": 0.99,
-			          "ID": "order_summaries_have_GMV_quý_trước"
-			        }
-			      ]
-			    },
-			    "order_summary_has_KPI_color_QoQ": {
-			      "Binding": {
-			        "ConceptualEntity": "order_summary"
-			      },
-			      "State": "Generated",
-			      "Roles": {
-			        "order_summary": {
-			          "Target": {
-			            "Entity": "order_summary"
-			          }
-			        },
-			        "order_summary.KPI_color_QoQ": {
-			          "Target": {
-			            "Entity": "order_summary.KPI_color_QoQ"
-			          }
-			        }
-			      },
-			      "Phrasings": [
-			        {
-			          "Attribute": {
-			            "Subject": {
-			              "Role": "order_summary"
-			            },
-			            "Object": {
-			              "Role": "order_summary.KPI_color_QoQ"
-			            }
-			          },
-			          "State": "Generated",
-			          "Weight": 0.99,
-			          "ID": "order_summaries_have_KPI_color_QoQ"
-			        }
-			      ]
-			    },
-			    "order_summary_has_KPI_color_YoY": {
-			      "Binding": {
-			        "ConceptualEntity": "order_summary"
-			      },
-			      "State": "Generated",
-			      "Roles": {
-			        "order_summary": {
-			          "Target": {
-			            "Entity": "order_summary"
-			          }
-			        },
-			        "order_summary.KPI_color_YoY": {
-			          "Target": {
-			            "Entity": "order_summary.KPI_color_YoY"
-			          }
-			        }
-			      },
-			      "Phrasings": [
-			        {
-			          "Attribute": {
-			            "Subject": {
-			              "Role": "order_summary"
-			            },
-			            "Object": {
-			              "Role": "order_summary.KPI_color_YoY"
-			            }
-			          },
-			          "State": "Generated",
-			          "Weight": 0.99,
-			          "ID": "order_summaries_have_KPI_color_YoY"
-			        }
-			      ]
-			    },
-			    "order_summary_has_freight_ratio": {
-			      "Binding": {
-			        "ConceptualEntity": "order_summary"
-			      },
-			      "State": "Generated",
-			      "Roles": {
-			        "order_summary": {
-			          "Target": {
-			            "Entity": "order_summary"
-			          }
-			        },
-			        "order_summary.freight_ratio": {
-			          "Target": {
-			            "Entity": "order_summary.freight_ratio"
-			          }
-			        }
-			      },
-			      "Phrasings": [
-			        {
-			          "Attribute": {
-			            "Subject": {
-			              "Role": "order_summary"
-			            },
-			            "Object": {
-			              "Role": "order_summary.freight_ratio"
-			            }
-			          },
-			          "State": "Generated",
-			          "Weight": 0.99,
-			          "ID": "order_summaries_have_freight_ratio"
-			        }
-			      ]
-			    },
-			    "item_sale_has_category_GMV_kỳ_này": {
+			    "item_sale_has_category_product_value": {
 			      "Binding": {
 			        "ConceptualEntity": "item_sales"
 			      },
@@ -35138,9 +38555,9 @@ cultureInfo en-US
 			            "Entity": "item_sale"
 			          }
 			        },
-			        "item_sale.category_GMV_kỳ_này": {
+			        "item_sale.category_product_value": {
 			          "Target": {
-			            "Entity": "item_sale.category_GMV_kỳ_này"
+			            "Entity": "item_sale.category_product_value"
 			          }
 			        }
 			      },
@@ -35151,16 +38568,16 @@ cultureInfo en-US
 			              "Role": "item_sale"
 			            },
 			            "Object": {
-			              "Role": "item_sale.category_GMV_kỳ_này"
+			              "Role": "item_sale.category_product_value"
 			            }
 			          },
 			          "State": "Generated",
 			          "Weight": 0.99,
-			          "ID": "item_sales_have_category_GMV_kỳ_này"
+			          "ID": "item_sales_have_category_product_value"
 			        }
 			      ]
 			    },
-			    "order_summary_has_item_sale_category_GMV_kỳ_này": {
+			    "order_summary_has_item_sale_category_product_value": {
 			      "Binding": {
 			        "ConceptualEntity": "order_summary"
 			      },
@@ -35171,9 +38588,9 @@ cultureInfo en-US
 			            "Entity": "order_summary"
 			          }
 			        },
-			        "item_sale.category_GMV_kỳ_này": {
+			        "item_sale.category_product_value": {
 			          "Target": {
-			            "Entity": "item_sale.category_GMV_kỳ_này"
+			            "Entity": "item_sale.category_product_value"
 			          }
 			        }
 			      },
@@ -35184,16 +38601,16 @@ cultureInfo en-US
 			              "Role": "order_summary"
 			            },
 			            "Object": {
-			              "Role": "item_sale.category_GMV_kỳ_này"
+			              "Role": "item_sale.category_product_value"
 			            }
 			          },
 			          "State": "Generated",
 			          "Weight": 0.99,
-			          "ID": "order_summaries_have_category_GMV_kỳ_này"
+			          "ID": "order_summaries_have_category_product_value"
 			        }
 			      ]
 			    },
-			    "item_sale_has_category_GMV_QoQ_": {
+			    "item_sale_has_category_freight_value": {
 			      "Binding": {
 			        "ConceptualEntity": "item_sales"
 			      },
@@ -35204,9 +38621,9 @@ cultureInfo en-US
 			            "Entity": "item_sale"
 			          }
 			        },
-			        "item_sale.category_GMV_QoQ_": {
+			        "item_sale.category_freight_value": {
 			          "Target": {
-			            "Entity": "item_sale.category_GMV_QoQ_"
+			            "Entity": "item_sale.category_freight_value"
 			          }
 			        }
 			      },
@@ -35217,16 +38634,16 @@ cultureInfo en-US
 			              "Role": "item_sale"
 			            },
 			            "Object": {
-			              "Role": "item_sale.category_GMV_QoQ_"
+			              "Role": "item_sale.category_freight_value"
 			            }
 			          },
 			          "State": "Generated",
 			          "Weight": 0.99,
-			          "ID": "item_sales_have_category_GMV_QoQ_"
+			          "ID": "item_sales_have_category_freight_value"
 			        }
 			      ]
 			    },
-			    "order_summary_has_item_sale_category_GMV_QoQ_": {
+			    "order_summary_has_item_sale_category_freight_value": {
 			      "Binding": {
 			        "ConceptualEntity": "order_summary"
 			      },
@@ -35237,9 +38654,9 @@ cultureInfo en-US
 			            "Entity": "order_summary"
 			          }
 			        },
-			        "item_sale.category_GMV_QoQ_": {
+			        "item_sale.category_freight_value": {
 			          "Target": {
-			            "Entity": "item_sale.category_GMV_QoQ_"
+			            "Entity": "item_sale.category_freight_value"
 			          }
 			        }
 			      },
@@ -35250,16 +38667,49 @@ cultureInfo en-US
 			              "Role": "order_summary"
 			            },
 			            "Object": {
-			              "Role": "item_sale.category_GMV_QoQ_"
+			              "Role": "item_sale.category_freight_value"
 			            }
 			          },
 			          "State": "Generated",
 			          "Weight": 0.99,
-			          "ID": "order_summaries_have_category_GMV_QoQ_"
+			          "ID": "order_summaries_have_category_freight_value"
 			        }
 			      ]
 			    },
-			    "item_sale_has_category_GMV_YoY_": {
+			    "item_flow_has_dim_state_region_category_gap": {
+			      "Binding": {
+			        "ConceptualEntity": "item_flow"
+			      },
+			      "State": "Generated",
+			      "Roles": {
+			        "item_flow": {
+			          "Target": {
+			            "Entity": "item_flow"
+			          }
+			        },
+			        "dim_state.region_category_gap": {
+			          "Target": {
+			            "Entity": "dim_state.region_category_gap"
+			          }
+			        }
+			      },
+			      "Phrasings": [
+			        {
+			          "Attribute": {
+			            "Subject": {
+			              "Role": "item_flow"
+			            },
+			            "Object": {
+			              "Role": "dim_state.region_category_gap"
+			            }
+			          },
+			          "State": "Generated",
+			          "Weight": 0.99,
+			          "ID": "item_flows_have_region_category_gap"
+			        }
+			      ]
+			    },
+			    "item_sale_has_seller_quality_ontime_": {
 			      "Binding": {
 			        "ConceptualEntity": "item_sales"
 			      },
@@ -35270,9 +38720,9 @@ cultureInfo en-US
 			            "Entity": "item_sale"
 			          }
 			        },
-			        "item_sale.category_GMV_YoY_": {
+			        "item_sale.seller_quality_ontime_": {
 			          "Target": {
-			            "Entity": "item_sale.category_GMV_YoY_"
+			            "Entity": "item_sale.seller_quality_ontime_"
 			          }
 			        }
 			      },
@@ -35283,16 +38733,16 @@ cultureInfo en-US
 			              "Role": "item_sale"
 			            },
 			            "Object": {
-			              "Role": "item_sale.category_GMV_YoY_"
+			              "Role": "item_sale.seller_quality_ontime_"
 			            }
 			          },
 			          "State": "Generated",
 			          "Weight": 0.99,
-			          "ID": "item_sales_have_category_GMV_YoY_"
+			          "ID": "item_sales_have_seller_quality_ontime_"
 			        }
 			      ]
 			    },
-			    "order_summary_has_item_sale_category_GMV_YoY_": {
+			    "order_summary_has_item_sale_seller_quality_ontime_": {
 			      "Binding": {
 			        "ConceptualEntity": "order_summary"
 			      },
@@ -35303,9 +38753,9 @@ cultureInfo en-US
 			            "Entity": "order_summary"
 			          }
 			        },
-			        "item_sale.category_GMV_YoY_": {
+			        "item_sale.seller_quality_ontime_": {
 			          "Target": {
-			            "Entity": "item_sale.category_GMV_YoY_"
+			            "Entity": "item_sale.seller_quality_ontime_"
 			          }
 			        }
 			      },
@@ -35316,181 +38766,16 @@ cultureInfo en-US
 			              "Role": "order_summary"
 			            },
 			            "Object": {
-			              "Role": "item_sale.category_GMV_YoY_"
+			              "Role": "item_sale.seller_quality_ontime_"
 			            }
 			          },
 			          "State": "Generated",
 			          "Weight": 0.99,
-			          "ID": "order_summaries_have_category_GMV_YoY_"
+			          "ID": "order_summaries_have_seller_quality_ontime_"
 			        }
 			      ]
 			    },
-			    "dim_category_has_order_summary_category_avg_review_score_kỳ_này": {
-			      "Binding": {
-			        "ConceptualEntity": "dim_category"
-			      },
-			      "State": "Generated",
-			      "Roles": {
-			        "dim_category": {
-			          "Target": {
-			            "Entity": "dim_category"
-			          }
-			        },
-			        "order_summary.category_avg_review_score_kỳ_này": {
-			          "Target": {
-			            "Entity": "order_summary.category_avg_review_score_kỳ_này"
-			          }
-			        }
-			      },
-			      "Phrasings": [
-			        {
-			          "Attribute": {
-			            "Subject": {
-			              "Role": "dim_category"
-			            },
-			            "Object": {
-			              "Role": "order_summary.category_avg_review_score_kỳ_này"
-			            }
-			          },
-			          "State": "Generated",
-			          "Weight": 0.99,
-			          "ID": "dim_categories_have_category_avg_review_score_kỳ_này"
-			        }
-			      ]
-			    },
-			    "order_summary_has_category_avg_review_score_kỳ_này": {
-			      "Binding": {
-			        "ConceptualEntity": "order_summary"
-			      },
-			      "State": "Generated",
-			      "Roles": {
-			        "order_summary": {
-			          "Target": {
-			            "Entity": "order_summary"
-			          }
-			        },
-			        "order_summary.category_avg_review_score_kỳ_này": {
-			          "Target": {
-			            "Entity": "order_summary.category_avg_review_score_kỳ_này"
-			          }
-			        }
-			      },
-			      "Phrasings": [
-			        {
-			          "Attribute": {
-			            "Subject": {
-			              "Role": "order_summary"
-			            },
-			            "Object": {
-			              "Role": "order_summary.category_avg_review_score_kỳ_này"
-			            }
-			          },
-			          "State": "Generated",
-			          "Weight": 0.99,
-			          "ID": "order_summaries_have_category_avg_review_score_kỳ_này"
-			        }
-			      ]
-			    },
-			    "dim_category_has_order_summary_category_cancel_rate_kỳ_này": {
-			      "Binding": {
-			        "ConceptualEntity": "dim_category"
-			      },
-			      "State": "Generated",
-			      "Roles": {
-			        "dim_category": {
-			          "Target": {
-			            "Entity": "dim_category"
-			          }
-			        },
-			        "order_summary.category_cancel_rate_kỳ_này": {
-			          "Target": {
-			            "Entity": "order_summary.category_cancel_rate_kỳ_này"
-			          }
-			        }
-			      },
-			      "Phrasings": [
-			        {
-			          "Attribute": {
-			            "Subject": {
-			              "Role": "dim_category"
-			            },
-			            "Object": {
-			              "Role": "order_summary.category_cancel_rate_kỳ_này"
-			            }
-			          },
-			          "State": "Generated",
-			          "Weight": 0.99,
-			          "ID": "dim_categories_have_category_cancel_rate_kỳ_này"
-			        }
-			      ]
-			    },
-			    "order_summary_has_category_cancel_rate_kỳ_này": {
-			      "Binding": {
-			        "ConceptualEntity": "order_summary"
-			      },
-			      "State": "Generated",
-			      "Roles": {
-			        "order_summary": {
-			          "Target": {
-			            "Entity": "order_summary"
-			          }
-			        },
-			        "order_summary.category_cancel_rate_kỳ_này": {
-			          "Target": {
-			            "Entity": "order_summary.category_cancel_rate_kỳ_này"
-			          }
-			        }
-			      },
-			      "Phrasings": [
-			        {
-			          "Attribute": {
-			            "Subject": {
-			              "Role": "order_summary"
-			            },
-			            "Object": {
-			              "Role": "order_summary.category_cancel_rate_kỳ_này"
-			            }
-			          },
-			          "State": "Generated",
-			          "Weight": 0.99,
-			          "ID": "order_summaries_have_category_cancel_rate_kỳ_này"
-			        }
-			      ]
-			    },
-			    "category_quadrant_has_nhóm": {
-			      "Binding": {
-			        "ConceptualEntity": "Category Quadrant"
-			      },
-			      "State": "Generated",
-			      "Roles": {
-			        "category_quadrant": {
-			          "Target": {
-			            "Entity": "category_quadrant"
-			          }
-			        },
-			        "category_quadrant.nhóm": {
-			          "Target": {
-			            "Entity": "category_quadrant.nhóm"
-			          }
-			        }
-			      },
-			      "Phrasings": [
-			        {
-			          "Attribute": {
-			            "Subject": {
-			              "Role": "category_quadrant"
-			            },
-			            "Object": {
-			              "Role": "category_quadrant.nhóm"
-			            }
-			          },
-			          "State": "Generated",
-			          "Weight": 0.99,
-			          "ID": "category_quadrants_have_nhóms"
-			        }
-			      ]
-			    },
-			    "item_sale_has_category_GMV_quý_này": {
+			    "item_sale_has_seller_quality_review": {
 			      "Binding": {
 			        "ConceptualEntity": "item_sales"
 			      },
@@ -35501,9 +38786,9 @@ cultureInfo en-US
 			            "Entity": "item_sale"
 			          }
 			        },
-			        "item_sale.category_GMV_quý_này": {
+			        "item_sale.seller_quality_review": {
 			          "Target": {
-			            "Entity": "item_sale.category_GMV_quý_này"
+			            "Entity": "item_sale.seller_quality_review"
 			          }
 			        }
 			      },
@@ -35514,16 +38799,16 @@ cultureInfo en-US
 			              "Role": "item_sale"
 			            },
 			            "Object": {
-			              "Role": "item_sale.category_GMV_quý_này"
+			              "Role": "item_sale.seller_quality_review"
 			            }
 			          },
 			          "State": "Generated",
 			          "Weight": 0.99,
-			          "ID": "item_sales_have_category_GMV_quý_này"
+			          "ID": "item_sales_have_seller_quality_review"
 			        }
 			      ]
 			    },
-			    "order_summary_has_item_sale_category_GMV_quý_này": {
+			    "order_summary_has_item_sale_seller_quality_review": {
 			      "Binding": {
 			        "ConceptualEntity": "order_summary"
 			      },
@@ -35534,9 +38819,9 @@ cultureInfo en-US
 			            "Entity": "order_summary"
 			          }
 			        },
-			        "item_sale.category_GMV_quý_này": {
+			        "item_sale.seller_quality_review": {
 			          "Target": {
-			            "Entity": "item_sale.category_GMV_quý_này"
+			            "Entity": "item_sale.seller_quality_review"
 			          }
 			        }
 			      },
@@ -35547,29 +38832,29 @@ cultureInfo en-US
 			              "Role": "order_summary"
 			            },
 			            "Object": {
-			              "Role": "item_sale.category_GMV_quý_này"
+			              "Role": "item_sale.seller_quality_review"
 			            }
 			          },
 			          "State": "Generated",
 			          "Weight": 0.99,
-			          "ID": "order_summaries_have_category_GMV_quý_này"
+			          "ID": "order_summaries_have_seller_quality_review"
 			        }
 			      ]
 			    },
-			    "dim_category_has_order_summary_category_avg_review_score_quý_này": {
+			    "item_sale_has_seller_orders_kỳ_này": {
 			      "Binding": {
-			        "ConceptualEntity": "dim_category"
+			        "ConceptualEntity": "item_sales"
 			      },
 			      "State": "Generated",
 			      "Roles": {
-			        "dim_category": {
+			        "item_sale": {
 			          "Target": {
-			            "Entity": "dim_category"
+			            "Entity": "item_sale"
 			          }
 			        },
-			        "order_summary.category_avg_review_score_quý_này": {
+			        "item_sale.seller_orders_kỳ_này": {
 			          "Target": {
-			            "Entity": "order_summary.category_avg_review_score_quý_này"
+			            "Entity": "item_sale.seller_orders_kỳ_này"
 			          }
 			        }
 			      },
@@ -35577,19 +38862,19 @@ cultureInfo en-US
 			        {
 			          "Attribute": {
 			            "Subject": {
-			              "Role": "dim_category"
+			              "Role": "item_sale"
 			            },
 			            "Object": {
-			              "Role": "order_summary.category_avg_review_score_quý_này"
+			              "Role": "item_sale.seller_orders_kỳ_này"
 			            }
 			          },
 			          "State": "Generated",
 			          "Weight": 0.99,
-			          "ID": "dim_categories_have_category_avg_review_score_quý_này"
+			          "ID": "item_sales_have_seller_orders_kỳ_này"
 			        }
 			      ]
 			    },
-			    "order_summary_has_category_avg_review_score_quý_này": {
+			    "order_summary_has_item_sale_seller_review_score_kỳ_này": {
 			      "Binding": {
 			        "ConceptualEntity": "order_summary"
 			      },
@@ -35600,9 +38885,9 @@ cultureInfo en-US
 			            "Entity": "order_summary"
 			          }
 			        },
-			        "order_summary.category_avg_review_score_quý_này": {
+			        "item_sale.seller_review_score_kỳ_này": {
 			          "Target": {
-			            "Entity": "order_summary.category_avg_review_score_quý_này"
+			            "Entity": "item_sale.seller_review_score_kỳ_này"
 			          }
 			        }
 			      },
@@ -35613,771 +38898,12 @@ cultureInfo en-US
 			              "Role": "order_summary"
 			            },
 			            "Object": {
-			              "Role": "order_summary.category_avg_review_score_quý_này"
+			              "Role": "item_sale.seller_review_score_kỳ_này"
 			            }
 			          },
 			          "State": "Generated",
 			          "Weight": 0.99,
-			          "ID": "order_summaries_have_category_avg_review_score_quý_này"
-			        }
-			      ]
-			    },
-			    "dim_category_has_order_summary_category_cancel_rate_pct_quý_này": {
-			      "Binding": {
-			        "ConceptualEntity": "dim_category"
-			      },
-			      "State": "Generated",
-			      "Roles": {
-			        "dim_category": {
-			          "Target": {
-			            "Entity": "dim_category"
-			          }
-			        },
-			        "order_summary.category_cancel_rate_pct_quý_này": {
-			          "Target": {
-			            "Entity": "order_summary.category_cancel_rate_pct_quý_này"
-			          }
-			        }
-			      },
-			      "Phrasings": [
-			        {
-			          "Attribute": {
-			            "Subject": {
-			              "Role": "dim_category"
-			            },
-			            "Object": {
-			              "Role": "order_summary.category_cancel_rate_pct_quý_này"
-			            }
-			          },
-			          "State": "Generated",
-			          "Weight": 0.99,
-			          "ID": "dim_categories_have_Tỷ_lệ_hủy"
-			        }
-			      ]
-			    },
-			    "order_summary_has_category_cancel_rate_pct_quý_này": {
-			      "Binding": {
-			        "ConceptualEntity": "order_summary"
-			      },
-			      "State": "Generated",
-			      "Roles": {
-			        "order_summary": {
-			          "Target": {
-			            "Entity": "order_summary"
-			          }
-			        },
-			        "order_summary.category_cancel_rate_pct_quý_này": {
-			          "Target": {
-			            "Entity": "order_summary.category_cancel_rate_pct_quý_này"
-			          }
-			        }
-			      },
-			      "Phrasings": [
-			        {
-			          "Attribute": {
-			            "Subject": {
-			              "Role": "order_summary"
-			            },
-			            "Object": {
-			              "Role": "order_summary.category_cancel_rate_pct_quý_này"
-			            }
-			          },
-			          "State": "Generated",
-			          "Weight": 0.99,
-			          "ID": "order_summaries_have_Tỷ_lệ_hủy"
-			        }
-			      ]
-			    },
-			    "order_summary_has_cancel_rate": {
-			      "Binding": {
-			        "ConceptualEntity": "order_summary"
-			      },
-			      "State": "Generated",
-			      "Roles": {
-			        "order_summary": {
-			          "Target": {
-			            "Entity": "order_summary"
-			          }
-			        },
-			        "order_summary.cancel_rate": {
-			          "Target": {
-			            "Entity": "order_summary.cancel_rate"
-			          }
-			        }
-			      },
-			      "Phrasings": [
-			        {
-			          "Attribute": {
-			            "Subject": {
-			              "Role": "order_summary"
-			            },
-			            "Object": {
-			              "Role": "order_summary.cancel_rate"
-			            }
-			          },
-			          "State": "Generated",
-			          "Weight": 0.99,
-			          "ID": "order_summaries_have_cancel_rate"
-			        }
-			      ]
-			    },
-			    "item_sale_has_category_GMV": {
-			      "Binding": {
-			        "ConceptualEntity": "item_sales"
-			      },
-			      "State": "Generated",
-			      "Roles": {
-			        "item_sale": {
-			          "Target": {
-			            "Entity": "item_sale"
-			          }
-			        },
-			        "item_sale.category_GMV": {
-			          "Target": {
-			            "Entity": "item_sale.category_GMV"
-			          }
-			        }
-			      },
-			      "Phrasings": [
-			        {
-			          "Attribute": {
-			            "Subject": {
-			              "Role": "item_sale"
-			            },
-			            "Object": {
-			              "Role": "item_sale.category_GMV"
-			            }
-			          },
-			          "State": "Generated",
-			          "Weight": 0.99,
-			          "ID": "item_sales_have_category_GMV"
-			        }
-			      ]
-			    },
-			    "order_summary_has_item_sale_category_GMV": {
-			      "Binding": {
-			        "ConceptualEntity": "order_summary"
-			      },
-			      "State": "Generated",
-			      "Roles": {
-			        "order_summary": {
-			          "Target": {
-			            "Entity": "order_summary"
-			          }
-			        },
-			        "item_sale.category_GMV": {
-			          "Target": {
-			            "Entity": "item_sale.category_GMV"
-			          }
-			        }
-			      },
-			      "Phrasings": [
-			        {
-			          "Attribute": {
-			            "Subject": {
-			              "Role": "order_summary"
-			            },
-			            "Object": {
-			              "Role": "item_sale.category_GMV"
-			            }
-			          },
-			          "State": "Generated",
-			          "Weight": 0.99,
-			          "ID": "order_summaries_have_category_GMV"
-			        }
-			      ]
-			    },
-			    "item_sale_has_category_GMV_cùng_kỳ": {
-			      "Binding": {
-			        "ConceptualEntity": "item_sales"
-			      },
-			      "State": "Generated",
-			      "Roles": {
-			        "item_sale": {
-			          "Target": {
-			            "Entity": "item_sale"
-			          }
-			        },
-			        "item_sale.category_GMV_cùng_kỳ": {
-			          "Target": {
-			            "Entity": "item_sale.category_GMV_cùng_kỳ"
-			          }
-			        }
-			      },
-			      "Phrasings": [
-			        {
-			          "Attribute": {
-			            "Subject": {
-			              "Role": "item_sale"
-			            },
-			            "Object": {
-			              "Role": "item_sale.category_GMV_cùng_kỳ"
-			            }
-			          },
-			          "State": "Generated",
-			          "Weight": 0.99,
-			          "ID": "item_sales_have_category_GMV_cùng_kỳ"
-			        }
-			      ]
-			    },
-			    "order_summary_has_item_sale_category_GMV_cùng_kỳ": {
-			      "Binding": {
-			        "ConceptualEntity": "order_summary"
-			      },
-			      "State": "Generated",
-			      "Roles": {
-			        "order_summary": {
-			          "Target": {
-			            "Entity": "order_summary"
-			          }
-			        },
-			        "item_sale.category_GMV_cùng_kỳ": {
-			          "Target": {
-			            "Entity": "item_sale.category_GMV_cùng_kỳ"
-			          }
-			        }
-			      },
-			      "Phrasings": [
-			        {
-			          "Attribute": {
-			            "Subject": {
-			              "Role": "order_summary"
-			            },
-			            "Object": {
-			              "Role": "item_sale.category_GMV_cùng_kỳ"
-			            }
-			          },
-			          "State": "Generated",
-			          "Weight": 0.99,
-			          "ID": "order_summaries_have_category_GMV_cùng_kỳ"
-			        }
-			      ]
-			    },
-			    "item_sale_has_category_GMV_quý_trước": {
-			      "Binding": {
-			        "ConceptualEntity": "item_sales"
-			      },
-			      "State": "Generated",
-			      "Roles": {
-			        "item_sale": {
-			          "Target": {
-			            "Entity": "item_sale"
-			          }
-			        },
-			        "item_sale.category_GMV_quý_trước": {
-			          "Target": {
-			            "Entity": "item_sale.category_GMV_quý_trước"
-			          }
-			        }
-			      },
-			      "Phrasings": [
-			        {
-			          "Attribute": {
-			            "Subject": {
-			              "Role": "item_sale"
-			            },
-			            "Object": {
-			              "Role": "item_sale.category_GMV_quý_trước"
-			            }
-			          },
-			          "State": "Generated",
-			          "Weight": 0.99,
-			          "ID": "item_sales_have_category_GMV_quý_trước"
-			        }
-			      ]
-			    },
-			    "order_summary_has_item_sale_category_GMV_quý_trước": {
-			      "Binding": {
-			        "ConceptualEntity": "order_summary"
-			      },
-			      "State": "Generated",
-			      "Roles": {
-			        "order_summary": {
-			          "Target": {
-			            "Entity": "order_summary"
-			          }
-			        },
-			        "item_sale.category_GMV_quý_trước": {
-			          "Target": {
-			            "Entity": "item_sale.category_GMV_quý_trước"
-			          }
-			        }
-			      },
-			      "Phrasings": [
-			        {
-			          "Attribute": {
-			            "Subject": {
-			              "Role": "order_summary"
-			            },
-			            "Object": {
-			              "Role": "item_sale.category_GMV_quý_trước"
-			            }
-			          },
-			          "State": "Generated",
-			          "Weight": 0.99,
-			          "ID": "order_summaries_have_category_GMV_quý_trước"
-			        }
-			      ]
-			    },
-			    "item_sale_has_KPI_color_category_QoQ": {
-			      "Binding": {
-			        "ConceptualEntity": "item_sales"
-			      },
-			      "State": "Generated",
-			      "Roles": {
-			        "item_sale": {
-			          "Target": {
-			            "Entity": "item_sale"
-			          }
-			        },
-			        "item_sale.KPI_color_category_QoQ": {
-			          "Target": {
-			            "Entity": "item_sale.KPI_color_category_QoQ"
-			          }
-			        }
-			      },
-			      "Phrasings": [
-			        {
-			          "Attribute": {
-			            "Subject": {
-			              "Role": "item_sale"
-			            },
-			            "Object": {
-			              "Role": "item_sale.KPI_color_category_QoQ"
-			            }
-			          },
-			          "State": "Generated",
-			          "Weight": 0.99,
-			          "ID": "item_sales_have_KPI_color_category_QoQ"
-			        }
-			      ]
-			    },
-			    "order_summary_has_item_sale_KPI_color_category_QoQ": {
-			      "Binding": {
-			        "ConceptualEntity": "order_summary"
-			      },
-			      "State": "Generated",
-			      "Roles": {
-			        "order_summary": {
-			          "Target": {
-			            "Entity": "order_summary"
-			          }
-			        },
-			        "item_sale.KPI_color_category_QoQ": {
-			          "Target": {
-			            "Entity": "item_sale.KPI_color_category_QoQ"
-			          }
-			        }
-			      },
-			      "Phrasings": [
-			        {
-			          "Attribute": {
-			            "Subject": {
-			              "Role": "order_summary"
-			            },
-			            "Object": {
-			              "Role": "item_sale.KPI_color_category_QoQ"
-			            }
-			          },
-			          "State": "Generated",
-			          "Weight": 0.99,
-			          "ID": "order_summaries_have_KPI_color_category_QoQ"
-			        }
-			      ]
-			    },
-			    "item_sale_has_KPI_color_category_YoY": {
-			      "Binding": {
-			        "ConceptualEntity": "item_sales"
-			      },
-			      "State": "Generated",
-			      "Roles": {
-			        "item_sale": {
-			          "Target": {
-			            "Entity": "item_sale"
-			          }
-			        },
-			        "item_sale.KPI_color_category_YoY": {
-			          "Target": {
-			            "Entity": "item_sale.KPI_color_category_YoY"
-			          }
-			        }
-			      },
-			      "Phrasings": [
-			        {
-			          "Attribute": {
-			            "Subject": {
-			              "Role": "item_sale"
-			            },
-			            "Object": {
-			              "Role": "item_sale.KPI_color_category_YoY"
-			            }
-			          },
-			          "State": "Generated",
-			          "Weight": 0.99,
-			          "ID": "item_sales_have_KPI_color_category_YoY"
-			        }
-			      ]
-			    },
-			    "order_summary_has_item_sale_KPI_color_category_YoY": {
-			      "Binding": {
-			        "ConceptualEntity": "order_summary"
-			      },
-			      "State": "Generated",
-			      "Roles": {
-			        "order_summary": {
-			          "Target": {
-			            "Entity": "order_summary"
-			          }
-			        },
-			        "item_sale.KPI_color_category_YoY": {
-			          "Target": {
-			            "Entity": "item_sale.KPI_color_category_YoY"
-			          }
-			        }
-			      },
-			      "Phrasings": [
-			        {
-			          "Attribute": {
-			            "Subject": {
-			              "Role": "order_summary"
-			            },
-			            "Object": {
-			              "Role": "item_sale.KPI_color_category_YoY"
-			            }
-			          },
-			          "State": "Generated",
-			          "Weight": 0.99,
-			          "ID": "order_summaries_have_KPI_color_category_YoY"
-			        }
-			      ]
-			    },
-			    "item_sale_has_category_in_matrix_kỳ_này": {
-			      "Binding": {
-			        "ConceptualEntity": "item_sales"
-			      },
-			      "State": "Generated",
-			      "Roles": {
-			        "item_sale": {
-			          "Target": {
-			            "Entity": "item_sale"
-			          }
-			        },
-			        "item_sale.category_in_matrix_kỳ_này": {
-			          "Target": {
-			            "Entity": "item_sale.category_in_matrix_kỳ_này"
-			          }
-			        }
-			      },
-			      "Phrasings": [
-			        {
-			          "Attribute": {
-			            "Subject": {
-			              "Role": "item_sale"
-			            },
-			            "Object": {
-			              "Role": "item_sale.category_in_matrix_kỳ_này"
-			            }
-			          },
-			          "State": "Generated",
-			          "Weight": 0.99,
-			          "ID": "item_sales_have_category_in_matrix_kỳ_này"
-			        }
-			      ]
-			    },
-			    "item_sale_has_category_share_median_kỳ_này": {
-			      "Binding": {
-			        "ConceptualEntity": "item_sales"
-			      },
-			      "State": "Generated",
-			      "Roles": {
-			        "item_sale": {
-			          "Target": {
-			            "Entity": "item_sale"
-			          }
-			        },
-			        "item_sale.category_share_median_kỳ_này": {
-			          "Target": {
-			            "Entity": "item_sale.category_share_median_kỳ_này"
-			          }
-			        }
-			      },
-			      "Phrasings": [
-			        {
-			          "Attribute": {
-			            "Subject": {
-			              "Role": "item_sale"
-			            },
-			            "Object": {
-			              "Role": "item_sale.category_share_median_kỳ_này"
-			            }
-			          },
-			          "State": "Generated",
-			          "Weight": 0.99,
-			          "ID": "item_sales_have_category_share_median_kỳ_này"
-			        }
-			      ]
-			    },
-			    "dim_category_has_item_sale_category_quadrant_kỳ_này": {
-			      "Binding": {
-			        "ConceptualEntity": "dim_category"
-			      },
-			      "State": "Generated",
-			      "Roles": {
-			        "dim_category": {
-			          "Target": {
-			            "Entity": "dim_category"
-			          }
-			        },
-			        "item_sale.category_quadrant_kỳ_này": {
-			          "Target": {
-			            "Entity": "item_sale.category_quadrant_kỳ_này"
-			          }
-			        }
-			      },
-			      "Phrasings": [
-			        {
-			          "Attribute": {
-			            "Subject": {
-			              "Role": "dim_category"
-			            },
-			            "Object": {
-			              "Role": "item_sale.category_quadrant_kỳ_này"
-			            }
-			          },
-			          "State": "Generated",
-			          "Weight": 0.99,
-			          "ID": "dim_categories_have_category_quadrant_kỳ_này"
-			        }
-			      ]
-			    },
-			    "item_sale_has_category_quadrant_kỳ_này": {
-			      "Binding": {
-			        "ConceptualEntity": "item_sales"
-			      },
-			      "State": "Generated",
-			      "Roles": {
-			        "item_sale": {
-			          "Target": {
-			            "Entity": "item_sale"
-			          }
-			        },
-			        "item_sale.category_quadrant_kỳ_này": {
-			          "Target": {
-			            "Entity": "item_sale.category_quadrant_kỳ_này"
-			          }
-			        }
-			      },
-			      "Phrasings": [
-			        {
-			          "Attribute": {
-			            "Subject": {
-			              "Role": "item_sale"
-			            },
-			            "Object": {
-			              "Role": "item_sale.category_quadrant_kỳ_này"
-			            }
-			          },
-			          "State": "Generated",
-			          "Weight": 0.99,
-			          "ID": "item_sales_have_category_quadrant_kỳ_này"
-			        }
-			      ]
-			    },
-			    "category_quadrant_has_item_sale_category_quadrant_match": {
-			      "Binding": {
-			        "ConceptualEntity": "Category Quadrant"
-			      },
-			      "State": "Generated",
-			      "Roles": {
-			        "category_quadrant": {
-			          "Target": {
-			            "Entity": "category_quadrant"
-			          }
-			        },
-			        "item_sale.category_quadrant_match": {
-			          "Target": {
-			            "Entity": "item_sale.category_quadrant_match"
-			          }
-			        }
-			      },
-			      "Phrasings": [
-			        {
-			          "Attribute": {
-			            "Subject": {
-			              "Role": "category_quadrant"
-			            },
-			            "Object": {
-			              "Role": "item_sale.category_quadrant_match"
-			            }
-			          },
-			          "State": "Generated",
-			          "Weight": 0.99,
-			          "ID": "category_quadrants_have_category_quadrant_match"
-			        }
-			      ]
-			    },
-			    "dim_category_has_item_sale_category_quadrant_match": {
-			      "Binding": {
-			        "ConceptualEntity": "dim_category"
-			      },
-			      "State": "Generated",
-			      "Roles": {
-			        "dim_category": {
-			          "Target": {
-			            "Entity": "dim_category"
-			          }
-			        },
-			        "item_sale.category_quadrant_match": {
-			          "Target": {
-			            "Entity": "item_sale.category_quadrant_match"
-			          }
-			        }
-			      },
-			      "Phrasings": [
-			        {
-			          "Attribute": {
-			            "Subject": {
-			              "Role": "dim_category"
-			            },
-			            "Object": {
-			              "Role": "item_sale.category_quadrant_match"
-			            }
-			          },
-			          "State": "Generated",
-			          "Weight": 0.99,
-			          "ID": "dim_categories_have_category_quadrant_match"
-			        }
-			      ]
-			    },
-			    "item_sale_has_category_quadrant_match": {
-			      "Binding": {
-			        "ConceptualEntity": "item_sales"
-			      },
-			      "State": "Generated",
-			      "Roles": {
-			        "item_sale": {
-			          "Target": {
-			            "Entity": "item_sale"
-			          }
-			        },
-			        "item_sale.category_quadrant_match": {
-			          "Target": {
-			            "Entity": "item_sale.category_quadrant_match"
-			          }
-			        }
-			      },
-			      "Phrasings": [
-			        {
-			          "Attribute": {
-			            "Subject": {
-			              "Role": "item_sale"
-			            },
-			            "Object": {
-			              "Role": "item_sale.category_quadrant_match"
-			            }
-			          },
-			          "State": "Generated",
-			          "Weight": 0.99,
-			          "ID": "item_sales_have_category_quadrant_match"
-			        }
-			      ]
-			    },
-			    "dim_category_has_item_sale_top_15_category_quý_này": {
-			      "Binding": {
-			        "ConceptualEntity": "dim_category"
-			      },
-			      "State": "Generated",
-			      "Roles": {
-			        "dim_category": {
-			          "Target": {
-			            "Entity": "dim_category"
-			          }
-			        },
-			        "item_sale.top_15_category_quý_này": {
-			          "Target": {
-			            "Entity": "item_sale.top_15_category_quý_này"
-			          }
-			        }
-			      },
-			      "Phrasings": [
-			        {
-			          "Attribute": {
-			            "Subject": {
-			              "Role": "dim_category"
-			            },
-			            "Object": {
-			              "Role": "item_sale.top_15_category_quý_này"
-			            }
-			          },
-			          "State": "Generated",
-			          "Weight": 0.99,
-			          "ID": "dim_categories_have_top_15_category_quý_này"
-			        }
-			      ]
-			    },
-			    "item_sale_has_top_15_category_quý_này": {
-			      "Binding": {
-			        "ConceptualEntity": "item_sales"
-			      },
-			      "State": "Generated",
-			      "Roles": {
-			        "item_sale": {
-			          "Target": {
-			            "Entity": "item_sale"
-			          }
-			        },
-			        "item_sale.top_15_category_quý_này": {
-			          "Target": {
-			            "Entity": "item_sale.top_15_category_quý_này"
-			          }
-			        }
-			      },
-			      "Phrasings": [
-			        {
-			          "Attribute": {
-			            "Subject": {
-			              "Role": "item_sale"
-			            },
-			            "Object": {
-			              "Role": "item_sale.top_15_category_quý_này"
-			            }
-			          },
-			          "State": "Generated",
-			          "Weight": 0.99,
-			          "ID": "item_sales_have_top_15_category_quý_này"
-			        }
-			      ]
-			    },
-			    "order_summary_has_item_sale_top_15_category_quý_này": {
-			      "Binding": {
-			        "ConceptualEntity": "order_summary"
-			      },
-			      "State": "Generated",
-			      "Roles": {
-			        "order_summary": {
-			          "Target": {
-			            "Entity": "order_summary"
-			          }
-			        },
-			        "item_sale.top_15_category_quý_này": {
-			          "Target": {
-			            "Entity": "item_sale.top_15_category_quý_này"
-			          }
-			        }
-			      },
-			      "Phrasings": [
-			        {
-			          "Attribute": {
-			            "Subject": {
-			              "Role": "order_summary"
-			            },
-			            "Object": {
-			              "Role": "item_sale.top_15_category_quý_này"
-			            }
-			          },
-			          "State": "Generated",
-			          "Weight": 0.99,
-			          "ID": "order_summaries_have_top_15_category_quý_này"
+			          "ID": "order_summaries_have_seller_review_score_kỳ_này"
 			        }
 			      ]
 			    },
@@ -36506,6 +39032,52 @@ cultureInfo en-US
 			        }
 			      ]
 			    },
+			    "order_summary_has_customer_rfm": {
+			      "Binding": {
+			        "ConceptualEntity": "order_summary"
+			      },
+			      "State": "Generated",
+			      "Roles": {
+			        "order_summary": {
+			          "Target": {
+			            "Entity": "order_summary"
+			          }
+			        },
+			        "customer_rfm": {
+			          "Target": {
+			            "Entity": "customer_rfm"
+			          }
+			        }
+			      },
+			      "Phrasings": [
+			        {
+			          "Attribute": {
+			            "Subject": {
+			              "Role": "order_summary"
+			            },
+			            "Object": {
+			              "Role": "customer_rfm"
+			            }
+			          },
+			          "State": "Generated",
+			          "Weight": 0.99,
+			          "ID": "order_summaries_have_customer_rfms"
+			        },
+			        {
+			          "Attribute": {
+			            "Subject": {
+			              "Role": "customer_rfm"
+			            },
+			            "Object": {
+			              "Role": "order_summary"
+			            }
+			          },
+			          "State": "Generated",
+			          "Weight": 0.99,
+			          "ID": "customer_rfms_have_order_summaries"
+			        }
+			      ]
+			    },
 			    "item_flow_has_order_summary": {
 			      "Binding": {
 			        "ConceptualEntity": "item_flow"
@@ -36549,6 +39121,52 @@ cultureInfo en-US
 			          "State": "Generated",
 			          "Weight": 0.99,
 			          "ID": "order_summaries_have_item_flows"
+			        }
+			      ]
+			    },
+			    "cust_2nd_gap_has_customer_rfm": {
+			      "Binding": {
+			        "ConceptualEntity": "cust_2nd_gap"
+			      },
+			      "State": "Generated",
+			      "Roles": {
+			        "cust_2nd_gap": {
+			          "Target": {
+			            "Entity": "cust_2nd_gap"
+			          }
+			        },
+			        "customer_rfm": {
+			          "Target": {
+			            "Entity": "customer_rfm"
+			          }
+			        }
+			      },
+			      "Phrasings": [
+			        {
+			          "Attribute": {
+			            "Subject": {
+			              "Role": "cust_2nd_gap"
+			            },
+			            "Object": {
+			              "Role": "customer_rfm"
+			            }
+			          },
+			          "State": "Generated",
+			          "Weight": 0.99,
+			          "ID": "cust_2nd_gaps_have_customer_rfms"
+			        },
+			        {
+			          "Attribute": {
+			            "Subject": {
+			              "Role": "customer_rfm"
+			            },
+			            "Object": {
+			              "Role": "cust_2nd_gap"
+			            }
+			          },
+			          "State": "Generated",
+			          "Weight": 0.99,
+			          "ID": "customer_rfms_have_cust_2nd_gaps"
 			        }
 			      ]
 			    },

@@ -32,3 +32,11 @@ relationship rel_item_sales_category
 	fromColumn: item_sales.category
 	toColumn: dim_category.category
 
+relationship rel_order_customer_rfm
+	fromColumn: order_summary.customer_key
+	toColumn: customer_rfm.customer_key
+
+relationship rel_cust_2nd_gap_customer_rfm
+	fromColumn: cust_2nd_gap.customer_key
+	toColumn: customer_rfm.customer_key
+

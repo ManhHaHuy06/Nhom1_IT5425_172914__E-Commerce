@@ -2,12 +2,12 @@
   "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.14.0/schema.json",
   "name": "slicer_map_level",
   "position": {
-    "x": 601.67321968460215,
-    "y": 176.42490436615532,
-    "z": 14000,
+    "x": 607.85056280251524,
+    "y": 175.4365445486934,
+    "z": 12000,
     "height": 53.125150814040964,
     "width": 148.25623482988175,
-    "tabOrder": 14000
+    "tabOrder": 12000
   },
   "visual": {
     "visualType": "slicer",

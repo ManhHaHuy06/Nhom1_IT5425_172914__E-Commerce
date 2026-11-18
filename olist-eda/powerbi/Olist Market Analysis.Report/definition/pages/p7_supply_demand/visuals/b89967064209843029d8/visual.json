@@ -4,10 +4,10 @@
   "position": {
     "x": 898.185689344367,
     "y": 380.52433606336319,
-    "z": 22001,
+    "z": 21000,
     "height": 331.10559112006928,
     "width": 446.00417311322764,
-    "tabOrder": 22001
+    "tabOrder": 21000
   },
   "visual": {
     "visualType": "scatterChart",
@@ -121,7 +121,7 @@
             "titleText": {
               "expr": {
                 "Literal": {
-                  "Value": "'Số đơn bình quân trên 100.000 người dân (thang log)'"
+                  "Value": "'Số đơn bình quân trên mỗi100.000 người dân (thang log)'"
                 }
               }
             },

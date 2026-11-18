@@ -472,6 +472,37 @@ table item_sales
 		displayFolder: Ngành hàng
 		lineageTag: ea7dcdfa-a027-4388-8a5e-55a76f7dbc85
 
+	measure 'Seller Orders (Kỳ này)' =
+			// số đơn hợp lệ có hàng của người bán đang xét trong kỳ báo cáo
+			VAR s = [Period Start]
+			VAR e = [Period End]
+			RETURN CALCULATE ( DISTINCTCOUNT ( item_sales[order_id] ), REMOVEFILTERS ( dim_date ), DATESBETWEEN ( dim_date[date], s, e ) )
+		formatString: #,0
+		displayFolder: Người bán
+		lineageTag: 59dda983-b5c8-477d-8871-3fb02f0524fe
+
+	measure 'Seller Review Score (Kỳ này)' =
+			// điểm đánh giá TB các đơn có hàng của người bán đang xét (kỳ báo cáo)
+			VAR sellerOrders = CALCULATETABLE ( VALUES ( item_sales[order_id] ), REMOVEFILTERS ( dim_date ) )
+			RETURN CALCULATE ( [Avg Review Score (Kỳ này)], TREATAS ( sellerOrders, order_summary[order_id] ) )
+		formatString: 0.00
+		displayFolder: Người bán
+		lineageTag: 919a2c61-ef49-4e08-acab-1580d3fedcc5
+
+	measure 'Seller Quality On-time %' =
+			// trục X scatter phân tầng chất lượng: chỉ tính người bán có ≥ 10 đơn trong kỳ (tránh nhiễu 1–2 đơn)
+			IF ( [Seller Orders (Kỳ này)] >= 10, [Seller On-time % (Kỳ này)] )
+		formatString: 0.0%
+		displayFolder: Người bán
+		lineageTag: e119cf6a-a648-42c9-80cf-fb4e38affe9a
+
+	measure 'Seller Quality Review' =
+			// trục Y scatter phân tầng chất lượng: chỉ tính người bán có ≥ 10 đơn trong kỳ
+			IF ( [Seller Orders (Kỳ này)] >= 10, [Seller Review Score (Kỳ này)] )
+		formatString: 0.00
+		displayFolder: Người bán
+		lineageTag: baf2a374-a789-4c16-9b90-b96a317ee67e
+
 	column order_id
 		dataType: string
 		isHidden
