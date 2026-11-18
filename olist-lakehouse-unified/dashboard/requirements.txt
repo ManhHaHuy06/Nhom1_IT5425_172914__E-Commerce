@@ -1,0 +1,7 @@
+streamlit==1.41.1
+pandas==2.2.3
+numpy==2.2.1
+plotly==5.24.1
+clickhouse-connect==0.8.15
+python-dotenv==1.0.1
+streamlit-autorefresh==1.0.1

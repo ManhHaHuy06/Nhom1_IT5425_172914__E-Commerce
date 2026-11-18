@@ -1,0 +1,15 @@
+# Secrets and runtime state
+.env
+infrastructure/.env
+**/.env
+!.env.example
+!**/.env.example
+__pycache__/
+*.py[cod]
+logs/
+airflow/logs/
+airflow/work/
+data/
+source/data/
+*.parquet
+*.csv

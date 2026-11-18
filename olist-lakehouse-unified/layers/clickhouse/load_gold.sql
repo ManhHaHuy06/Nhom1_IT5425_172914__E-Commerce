@@ -1,0 +1,4 @@
+-- Automated ClickHouse serving refresh is owned by Airflow.
+-- See airflow/include/clickhouse_loader.py.
+-- It stages all 27 marts and exchanges tables only after successful loads.
+-- Do not add direct TRUNCATE statements here.
