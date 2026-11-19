@@ -507,7 +507,7 @@
             "text": {
               "expr": {
                 "Literal": {
-                  "Value": "'GMV theo tháng và phân nhóm người bán (dựa trên quý có đơn đầu tiên)'"
+                  "Value": "'GMV theo tháng và phân nhóm người bán '"
                 }
               }
             },
@@ -541,6 +541,26 @@
                       "Percent": 0.2
                     }
                   }
+                }
+              }
+            }
+          }
+        }
+      ],
+      "subTitle": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            },
+            "text": {
+              "expr": {
+                "Literal": {
+                  "Value": "'( dựa trên quý có đơn đầu tiên )'"
                 }
               }
             }
