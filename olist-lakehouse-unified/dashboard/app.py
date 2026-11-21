@@ -8,7 +8,6 @@ import numpy as np
 import pandas as pd
 import plotly.express as px
 import streamlit as st
-from streamlit_autorefresh import st_autorefresh
 
 warnings.filterwarnings("ignore")
 
@@ -17,8 +16,6 @@ st.set_page_config(
     page_icon="📊",
     layout="wide"
 )
-
-st_autorefresh(interval=60_000, key="gold-auto-refresh")
 
 DATA = Path(__file__).parent / "data"
 
@@ -29,13 +26,12 @@ DATA = Path(__file__).parent / "data"
 
 # Nạp biến môi trường từ file .env cạnh app.py (nếu có).
 # Khi chạy bằng Docker Compose, các biến môi trường đã được inject vẫn được ưu tiên.
-load_dotenv(
-    Path(__file__).parent / "infrastructure" / ".env",
-    override=False
-)
-
+load_dotenv()
 CLICKHOUSE_HOST = os.getenv("CLICKHOUSE_HOST", "localhost")
-CLICKHOUSE_PORT = int(os.getenv("CLICKHOUSE_HTTP_PORT", os.getenv("EXTERNAL_CLICKHOUSE_HTTP_PORT", os.getenv("CLICKHOUSE_PORT", "8123"))))
+CLICKHOUSE_PORT = int(os.getenv(
+    "CLICKHOUSE_HTTP_PORT",
+    os.getenv("EXTERNAL_CLICKHOUSE_HTTP_PORT", os.getenv("CLICKHOUSE_PORT", "8123"))
+))
 CLICKHOUSE_USER = os.getenv("CLICKHOUSE_USER", "default")
 CLICKHOUSE_PASSWORD = os.getenv("CLICKHOUSE_PASSWORD", "")
 CLICKHOUSE_DATABASE = os.getenv("CLICKHOUSE_DATABASE", "olist_gold")
@@ -71,7 +67,7 @@ def get_clickhouse_client():
     )
 
 
-@st.cache_data(show_spinner="Đang nạp dữ liệu từ ClickHouse...", ttl=55)
+@st.cache_data(show_spinner="Đang nạp dữ liệu từ ClickHouse...")
 def load_data():
     client = get_clickhouse_client()
 
@@ -143,7 +139,7 @@ except Exception as exc:
     st.stop()
 
 
-@st.cache_data(show_spinner=False, ttl=55)
+@st.cache_data(show_spinner=False)
 def load_gold_marts():
     """Lấy danh sách bảng Gold hiện có; không tải lại dữ liệu mart không cần thiết."""
     client = get_clickhouse_client()
@@ -157,6 +153,27 @@ def load_gold_marts():
 
 
 GOLD_MARTS = load_gold_marts()
+
+# Chỉ đơn giao thành công được đưa vào mọi phép phân tích kinh doanh.
+# Giữ bản gốc riêng cho biểu đồ trạng thái và tỷ lệ hủy (chỉ số trạng thái).
+all_sales_detail = d
+order_status_source = orders.copy()
+if "order_id" not in orders.columns or "order_status" not in orders.columns:
+    st.error("Bảng orders thiếu order_id hoặc order_status; không thể xác định đơn giao thành công.")
+    st.stop()
+valid_delivered_ids = set(
+    orders.loc[
+        orders["order_status"].astype(str).str.strip().str.lower().eq("delivered")
+        & pd.to_numeric(orders.get("is_delivered", pd.Series(1, index=orders.index)), errors="coerce").fillna(0).eq(1)
+        & pd.to_numeric(orders.get("is_canceled", pd.Series(0, index=orders.index)), errors="coerce").fillna(0).ne(1),
+        "order_id"
+    ].dropna()
+)
+d = d[d["order_id"].isin(valid_delivered_ids)].copy()
+orders = orders[orders["order_id"].isin(valid_delivered_ids)].copy()
+# Danh sách shop vẫn lấy từ toàn bộ giao dịch để không làm biến mất shop chưa giao thành công.
+sellers = all_sales_detail[["seller_id"]].dropna().drop_duplicates().reset_index(drop=True)
+
 
 # ============================================================
 # 2. SIDEBAR AND COMMON HELPERS
@@ -180,12 +197,12 @@ page = st.sidebar.radio(
 st.sidebar.caption("Dữ liệu Olist · ClickHouse Gold")
 st.sidebar.caption(f"Đã kết nối {len(GOLD_MARTS):,} bảng Gold trên ClickHouse")
 
-if d.empty:
-    st.warning("Không có dòng dữ liệu nào sau khi kết nối fact_order_items và fact_orders.")
+if all_sales_detail.empty:
+    st.warning("Không có dữ liệu bán hàng trong ClickHouse.")
     st.stop()
 
-min_ts = d["order_purchase_timestamp"].min()
-max_ts = d["order_purchase_timestamp"].max()
+min_ts = all_sales_detail["order_purchase_timestamp"].min()
+max_ts = all_sales_detail["order_purchase_timestamp"].max()
 if pd.isna(min_ts) or pd.isna(max_ts):
     st.error("Không xác định được khoảng thời gian vì order_purchase_timestamp không hợp lệ.")
     st.stop()
@@ -218,6 +235,11 @@ selected_shop = st.sidebar.selectbox(
 
 # Dữ liệu đầy đủ của shop, không phụ thuộc bộ lọc ngày toàn cục.
 shop_all = d[d["seller_id"].astype(str) == selected_shop].copy()
+shop_all_status = all_sales_detail[all_sales_detail["seller_id"].astype(str) == selected_shop].copy()
+status_f = shop_all_status[
+    (shop_all_status["order_purchase_timestamp"].dt.date >= start) &
+    (shop_all_status["order_purchase_timestamp"].dt.date <= end)
+].copy()
 
 # Các trang phân tích thông thường vẫn sử dụng bộ lọc ngày chung.
 f = shop_all[
@@ -458,7 +480,7 @@ if page == "Tổng quan doanh thu & sản phẩm":
 
         st.markdown("#### Bảng sản phẩm nổi bật trong khoảng thời gian đã chọn")
         product_table = (
-            f.groupby(["product_key", "product_id"], as_index=False)
+            f.groupby(["product_key", "product_id", "product_category_name_english"], as_index=False, dropna=False)
             .agg(
                 so_luong=("item_key", "count"),
                 so_don=("order_id", "nunique"),
@@ -466,9 +488,10 @@ if page == "Tổng quan doanh thu & sản phẩm":
                 doanh_thu=("revenue", "sum")
             )
             .sort_values("doanh_thu", ascending=False)
-            [["product_id", "so_luong", "so_don", "gia_san_pham", "doanh_thu"]]
+            [["product_id", "product_category_name_english", "so_luong", "so_don", "gia_san_pham", "doanh_thu"]]
             .rename(columns={
                 "product_id": "Mã sản phẩm",
+                "product_category_name_english": "Danh mục sản phẩm",
                 "so_luong": "Số lượng bán",
                 "so_don": "Số đơn đặt hàng",
                 "gia_san_pham": "Giá sản phẩm trung bình (BRL)",
@@ -499,7 +522,7 @@ elif page == "Tình hình kinh doanh tháng":
         monthly_source = shop_all.iloc[0:0].copy()
     if not d["order_purchase_timestamp"].dropna().empty:
         # Lịch tháng lấy theo toàn bộ dataset, kể cả tháng shop không có đơn.
-        global_dates = d["order_purchase_timestamp"].dropna()
+        global_dates = all_sales_detail["order_purchase_timestamp"].dropna()
         global_min = global_dates.min().to_period("M")
         global_max = global_dates.max().to_period("M")
         available_months = list(pd.period_range(global_min, global_max, freq="M"))
@@ -572,11 +595,18 @@ elif page == "Tình hình kinh doanh tháng":
         ].drop_duplicates("order_id").copy()
 
         delivered_orders = month_orders[month_orders["is_delivered"] == 1]
-        canceled_orders = month_orders[month_orders["is_canceled"] == 1]
+        status_month_ids_for_cancel = shop_all_status.loc[
+            shop_all_status["order_purchase_timestamp"].dt.to_period("M") == selected_period,
+            "order_id"
+        ].dropna().unique()
+        all_month_orders_for_cancel = order_status_source[
+            order_status_source["order_id"].isin(status_month_ids_for_cancel)
+        ].drop_duplicates("order_id")
+        canceled_orders = all_month_orders_for_cancel[all_month_orders_for_cancel["is_canceled"] == 1]
         delivered_count = len(delivered_orders)
         canceled_count = len(canceled_orders)
         cancel_rate = (
-            canceled_count / len(month_orders) * 100
+            canceled_count / len(all_month_orders_for_cancel) * 100
             if len(month_orders) else 0
         )
         late_orders = delivered_orders[
@@ -818,8 +848,15 @@ elif page == "Tình hình kinh doanh tháng":
 
         st.divider()
         st.markdown("### Trạng thái đơn hàng và hiệu quả giao hàng")
+        status_month_order_ids = shop_all_status.loc[
+            shop_all_status["order_purchase_timestamp"].dt.to_period("M") == selected_period,
+            "order_id"
+        ].dropna().unique()
+        status_month_orders = order_status_source[
+            order_status_source["order_id"].isin(status_month_order_ids)
+        ].drop_duplicates("order_id")
         status_month = (
-            month_orders["order_status"]
+            status_month_orders["order_status"]
             .fillna("Không xác định")
             .value_counts()
             .rename_axis("Trạng thái")
@@ -1384,7 +1421,7 @@ elif page == "Tình hình kinh doanh ngày":
     daily_source = shop_all.dropna(
         subset=["order_purchase_timestamp"]
     ).copy()
-    global_dates_daily = d["order_purchase_timestamp"].dropna()
+    global_dates_daily = all_sales_detail["order_purchase_timestamp"].dropna()
 
     if global_dates_daily.empty:
         st.info("Không có ngày hợp lệ trong dữ liệu để lập báo cáo.")
@@ -1475,11 +1512,18 @@ elif page == "Tình hình kinh doanh ngày":
             orders["order_id"].isin(day_order_ids)
         ].drop_duplicates("order_id").copy()
         day_delivered = day_orders[day_orders["is_delivered"] == 1]
-        day_canceled = day_orders[day_orders["is_canceled"] == 1]
+        all_day_ids_for_cancel = shop_all_status.loc[
+            shop_all_status["order_purchase_timestamp"].dt.date == selected_daily_day,
+            "order_id"
+        ].dropna().unique()
+        all_day_orders_for_cancel = order_status_source[
+            order_status_source["order_id"].isin(all_day_ids_for_cancel)
+        ].drop_duplicates("order_id")
+        day_canceled = all_day_orders_for_cancel[all_day_orders_for_cancel["is_canceled"] == 1]
         day_late = day_delivered[
             pd.to_numeric(day_delivered["delivery_delay_days"], errors="coerce") > 0
         ]
-        day_cancel_rate = len(day_canceled) / len(day_orders) * 100 if len(day_orders) else 0.0
+        day_cancel_rate = len(day_canceled) / len(all_day_orders_for_cancel) * 100 if len(all_day_orders_for_cancel) else 0.0
         day_late_rate = len(day_late) / len(day_delivered) * 100 if len(day_delivered) else 0.0
         day_avg_delivery = (
             pd.to_numeric(day_delivered["delivery_days"], errors="coerce").mean()
@@ -1621,7 +1665,7 @@ elif page == "Tình hình kinh doanh ngày":
             st.info("Không có dữ liệu danh mục sản phẩm trong ngày này; doanh thu và số lượng đều bằng 0.")
 
         day_products = (
-            daily_data.groupby("product_id", as_index=False)
+            daily_data.groupby(["product_id", "product_category_name_english"], as_index=False, dropna=False)
             .agg(
                 so_luong=("item_key", "nunique"),
                 so_don=("order_id", "nunique"),
@@ -1632,7 +1676,7 @@ elif page == "Tình hình kinh doanh ngày":
         st.markdown("#### Bảng sản phẩm bán trong ngày")
         if not day_products.empty:
             day_products_display = day_products.rename(columns={
-                "product_id": "Mã sản phẩm", "so_luong": "Số lượng bán",
+                "product_id": "Mã sản phẩm", "product_category_name_english": "Danh mục sản phẩm", "so_luong": "Số lượng bán",
                 "so_don": "Số đơn hàng", "gia_trung_binh": "Giá sản phẩm trung bình (BRL)",
                 "doanh_thu": "Doanh thu (BRL)"
             })
@@ -1648,10 +1692,17 @@ elif page == "Tình hình kinh doanh ngày":
 
         st.divider()
         st.markdown("### Trạng thái đơn hàng và hiệu quả giao hàng")
+        status_day_order_ids = shop_all_status.loc[
+            shop_all_status["order_purchase_timestamp"].dt.date == selected_daily_day,
+            "order_id"
+        ].dropna().unique()
+        status_day_orders = order_status_source[
+            order_status_source["order_id"].isin(status_day_order_ids)
+        ].drop_duplicates("order_id")
         status_daily = (
-            day_orders["order_status"].fillna("Không xác định").value_counts()
+            status_day_orders["order_status"].fillna("Không xác định").value_counts()
             .rename_axis("Trạng thái").reset_index(name="Số đơn")
-        ) if not day_orders.empty else pd.DataFrame({"Trạng thái": [], "Số đơn": []})
+        ) if not status_day_orders.empty else pd.DataFrame({"Trạng thái": [], "Số đơn": []})
         status_cols = st.columns(2)
         if not status_daily.empty:
             status_cols[0].plotly_chart(
@@ -1781,18 +1832,9 @@ elif page == "Khách hàng và địa lý":
         subset=["customer_unique_id", "order_purchase_timestamp"]
     )
 
-    # Mặc định phân tích chi tiêu trên các đơn đã giao thành công.
-    delivered_only = st.checkbox(
-        "Chỉ tính các đơn đã giao thành công",
-        value=True,
-        help="Bỏ chọn để tính cả đơn chưa giao và đơn bị hủy. "
-             "Các đơn hủy không nên được hiểu là chi tiêu thực tế."
-    )
+    # Bộ lọc giao thành công bắt buộc trên toàn bộ dashboard.
     customer_base = customer_order_level.copy()
-    if delivered_only:
-        customer_base = customer_base[
-            customer_base["is_delivered"] == 1
-        ].copy()
+    st.caption("Chỉ thống kê khách hàng của các đơn đã giao thành công.")
 
     if customer_base.empty:
         st.info("Không phát sinh đơn hàng trong khoảng thời gian đã chọn. Các chỉ số khách hàng bằng 0.")
@@ -1861,6 +1903,34 @@ elif page == "Khách hàng và địa lý":
 
         st.divider()
         st.markdown("### 1. Tần suất đặt hàng và chi tiêu")
+
+        # Khách mua lần đầu tại shop so với khách đã từng mua trước kỳ lọc.
+        # Sử dụng lịch sử đơn giao thành công của shop, không chỉ các đơn trong kỳ.
+        first_delivered_purchase = (
+            shop_all.dropna(subset=["customer_unique_id", "order_purchase_timestamp"])
+            .groupby("customer_unique_id")["order_purchase_timestamp"]
+            .min()
+        )
+        first_purchase_in_period = customer_summary["customer_unique_id"].map(
+            first_delivered_purchase
+        )
+        first_time_count = int((first_purchase_in_period.dt.date >= start).sum())
+        existing_count = int(total_customers - first_time_count)
+        customer_origin = pd.DataFrame({
+            "Nhóm khách hàng": ["Khách mua lần đầu", "Khách hàng cũ"],
+            "Số khách hàng": [first_time_count, existing_count]
+        })
+        st.plotly_chart(
+            px.pie(
+                customer_origin,
+                names="Nhóm khách hàng",
+                values="Số khách hàng",
+                hole=0.5,
+                title="Tỷ lệ khách mua lần đầu và khách hàng cũ"
+            ),
+            use_container_width=True
+        )
+
 
         left, right = st.columns(2)
         frequency = (
@@ -2277,10 +2347,14 @@ elif page == "Đơn hàng và vận hành":
     # phát sinh trong kỳ vẫn xuất hiện với số lượng bằng 0.
     status_order = ["delivered", "shipped", "invoiced", "processing",
                     "created", "approved", "canceled", "unavailable"]
+    status_order_ids = status_f["order_id"].dropna().unique()
+    status_order_view = order_status_source[
+        order_status_source["order_id"].isin(status_order_ids)
+    ].drop_duplicates("order_id")
     status_counts = (
-        order_view["order_status"].fillna("unknown").astype(str)
+        status_order_view["order_status"].fillna("unknown").astype(str)
         .value_counts().to_dict()
-    ) if not order_view.empty else {}
+    ) if not status_order_view.empty else {}
     for status_name in status_order:
         status_counts.setdefault(status_name, 0)
     status_counts.setdefault("unknown", 0)
@@ -2396,7 +2470,7 @@ elif page == "Đơn hàng và vận hành":
     delivered = order_view[order_view["is_delivered"] == 1].copy()
     delivered_count = int(delivered["order_id"].nunique())
     late_count = int((pd.to_numeric(delivered["delivery_delay_days"], errors="coerce").fillna(0) > 0).sum())
-    cancel_rate = float(pd.to_numeric(order_view["is_canceled"], errors="coerce").fillna(0).mean() * 100) if not order_view.empty else 0.0
+    cancel_rate = float(pd.to_numeric(status_order_view["is_canceled"], errors="coerce").fillna(0).mean() * 100) if not status_order_view.empty else 0.0
     late_rate = late_count / delivered_count * 100 if delivered_count else 0.0
     avg_delivery = pd.to_numeric(delivered["delivery_days"], errors="coerce").mean() if delivered_count else 0.0
     ops_kpis = st.columns(4)
@@ -2636,7 +2710,4 @@ elif page == "Đơn hàng và vận hành":
         st.info("Không có đánh giá trong kỳ; số lượng đánh giá theo danh mục sản phẩm là 0.")
 
 st.divider()
-st.caption(
-    "Bản thử nghiệm BI · Dữ liệu Olist Gold · Đơn vị tiền tệ: BRL · "
-    "Kết quả phụ thuộc bộ lọc hiện tại."
-)
+
