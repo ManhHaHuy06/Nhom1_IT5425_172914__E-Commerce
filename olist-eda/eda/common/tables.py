@@ -51,8 +51,8 @@ def connect(tables: list = (), extra_state_cols: dict | None = None) -> tuple[db
 
     _create_order_base()
     period = _report_period()
-    print(f"Kỳ này {period.label_cur} | cùng kỳ {period.label_prev} | xu hướng {period.label_trend} | "
-          f"{scalar('SELECT count(*) FROM order_base'):,} đơn, {scalar('SELECT sum(is_valid) FROM order_base'):,} đơn hợp lệ")
+    print(f"{period} | {scalar('SELECT count(*) FROM order_base'):,} đơn, "
+          f"{scalar('SELECT sum(is_valid) FROM order_base'):,} đơn hợp lệ")
     return con, period
 
 
@@ -100,11 +100,11 @@ def _create_order_base():
 
 
 def _report_period() -> Period:
-    """Tháng báo cáo = tháng mới nhất có số đơn hợp lệ ≥ REPORT_MONTH_MIN_SHARE × tháng cao nhất (bỏ tháng cuối chưa đủ dữ liệu)."""
+    """Tháng báo cáo = tháng mới nhất có số đơn hợp lệ ≥ REPORT_MONTH_MIN_SHARE × tháng cao nhất (bỏ tháng cuối chưa đủ
+    dữ liệu); kỳ này = 01 → tháng đó, trừ khi ghi đè bằng REPORT_START / REPORT_END (xem `Period.resolve`)."""
     monthly = q("SELECT purchase_month, count(*) AS n FROM order_base WHERE is_valid = 1 GROUP BY 1")
     usable = monthly[monthly.n >= REPORT_MONTH_MIN_SHARE * monthly.n.max()]
-    report_month = pd.Timestamp(usable.purchase_month.max())
-    return Period(year_cur=report_month.year, last_mon=report_month.month)
+    return Period.resolve(usable.purchase_month.max())
 
 
 def create_item_ps():

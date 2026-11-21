@@ -97,3 +97,32 @@ def scalar(sql: str):
     """Giá trị đầu tiên của câu SELECT (giữ kiểu Python: date, list…)."""
     rows, _ = con.query(sql)
     return rows[0][0]
+
+
+GOLD_SCHEMA = "iceberg.gold"   # bảng Gold dùng để đối chiếu (nguồn của Power BI)
+
+
+def reconcile(checks: list, rel_tol: float = 0.005) -> pd.DataFrame:
+    """Đối chiếu chỉ số tính từ Silver với Gold (nguồn của Power BI) và `assert` sai lệch ≤ rel_tol.
+
+    checks = [(nhãn, giá_trị_EDA, câu_SQL_Gold_trả_về_1_giá_trị), ...] — câu SQL dùng tên đầy đủ `iceberg.gold.<bảng>`.
+    Sai lệch tương đối = |EDA − Gold| / |Gold|. Silver và Gold cùng một lần chạy lakehouse nên chênh lệch kỳ vọng ≈ 0;
+    `fact_reviews` khử trùng theo `review_id` có thể làm điểm review lệch rất nhỏ giữa các lần build (AGENTS.md §7.3).
+    """
+    rows = []
+    for label, eda_value, gold_sql in checks:
+        gold_value = float(scalar(gold_sql))
+        diff = abs(float(eda_value) - gold_value) / abs(gold_value) if gold_value else abs(float(eda_value))
+        rows.append({"Chỉ số": label, "EDA (Silver)": float(eda_value), "Gold": gold_value,
+                     "Sai lệch": diff, "Khớp": diff <= rel_tol})
+    out = pd.DataFrame(rows).set_index("Chỉ số")
+    bad = out[~out["Khớp"]]
+    assert bad.empty, f"Lệch Gold quá {rel_tol:.1%}:\n{bad}"
+    num = lambda v: f"{v:,.0f}" if abs(v) >= 1000 or float(v).is_integer() else f"{v:,.4f}"
+    return out.assign(**{"EDA (Silver)": out["EDA (Silver)"].map(num), "Gold": out["Gold"].map(num),
+                         "Sai lệch": out["Sai lệch"].map("{:.2e}".format)})
+
+
+def gold_period_where(where_sql: str) -> str:
+    """Đổi điều kiện kỳ trên `purchase_month` (EDA) sang bảng Gold (chỉ có `purchase_date`)."""
+    return where_sql.replace("purchase_month", "date_trunc('month', purchase_date)")

@@ -26,10 +26,10 @@ GOLD = _load_gold_config()   # vd. GOLD.ORDER_VALUE_BANDS, GOLD.REPURCHASE_WINDO
 # ---------- Quy tắc nghiệp vụ (từ Gold) ----------
 LOST_STATUSES = GOLD.INVALID_ORDER_STATUSES         # đơn mất; đơn hợp lệ = không mất và có ≥ 1 dòng sản phẩm
 REPORT_MONTH_MIN_SHARE = GOLD.REPORT_MONTH_MIN_SHARE  # tháng báo cáo = tháng mới nhất có số đơn hợp lệ ≥ 10% tháng cao nhất
-MIN_SELLER_ORDERS = GOLD.SELLER_MIN_ORDERS          # người bán đủ đơn để đánh giá chất lượng (customer_experience §7, seller §5)
+MIN_SELLER_ORDERS = GOLD.SELLER_MIN_ORDERS          # người bán đủ đơn để đánh giá chất lượng (05_seller §5–§6)
 STATE_POPULATION_2018 = dict(GOLD.state_population())   # dân số ước tính 2018 theo bang (người), seed của Gold
 # Ngành của 1 dòng sản phẩm: tên tiếng Anh, thiếu thì tên gốc, thiếu cả hai thì 'unknown' (cần alias p = dim_product, cat = dim_category).
-# Ngành chính của 1 đơn (customer_behaviour) chỉ dùng tên tiếng Anh, giống `main_category` của Gold.
+# Ngành chính của 1 đơn (04_customer) chỉ dùng tên tiếng Anh, giống `main_category` của Gold.
 CATEGORY_SQL = "coalesce(cat.product_category_name_english, p.product_category_name, 'unknown')"
 
 # ---------- Bảng màu ----------

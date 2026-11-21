@@ -98,9 +98,12 @@ refactor_project/
 │   ├── trino_queries.ipynb                 # ad-hoc Trino exploration
 │   └── README.md                           # stages, MinIO layout, ports (Vietnamese)
 └── olist-eda/
-    ├── eda/common/                         # shared EDA package (notebooks do `from common import *`): config (rules, colors, regions), period, db (TrinoSession, q, scalar; conn in db.con),
-    │                                       # tables (connect, order_base, item_ps, order_payment), rfm, sql, plotting, kpi
-    ├── eda/*.ipynb                         # 6 notebooks: executive_overview, product, customer_behaviour, customer_experience, geo, seller
+    ├── eda/README.md                       # EDA conventions: notebook↔page map, period rule + REPORT_START/END override, EDA-only thresholds
+    ├── eda/common/                         # shared EDA package (notebooks do `from common import *`): config (GOLD loader, rules, colors, regions),
+    │                                       # period (Period YoY+QoQ, Kpi, kpi_table), db (TrinoSession, q, scalar, reconcile vs Gold; conn in db.con),
+    │                                       # tables (connect, order_base, item_ps, order_payment), rfm, sql (quantile/band SQL + band_bins/edges/order), plotting
+    ├── eda/0N_*.ipynb                      # 5 notebooks, one per Power BI page: 01_executive_overview (p1), 02_geo (p7), 03_product (p2),
+    │                                       # 04_customer (Khách hàng), 05_seller (p6); each ends with a Gold reconciliation cell + visual-selection table
     └── powerbi/
         ├── Olist Market Analysis.pbip
         ├── Olist Market Analysis.SemanticModel/definition/
@@ -205,7 +208,7 @@ docker exec olist-spark-master spark-submit --master spark://spark-master:7077 -
 ### 3.5 Flow D — Consumption
 
 - **Power BI**: `GoldTable(view)` M function → `GET {ClickHouseUrl}?query=SELECT * FROM olist_gold.<view> FORMAT CSVWithNames&format_csv_null_representation=` with headers `X-ClickHouse-User/Key`; empty string → null. Import mode only (DAX uses TOPN/RANKX/ADDCOLUMNS). View names = model table names: `order_summary, item_sales, item_flow, geo_customer, geo_seller, customer_rfm, first_order_repurchase, v_dim_seller (→ model dim_seller), dim_date, dim_state, dim_category`.
-- **EDA**: `common.connect(tables)` (`olist-eda/eda/common/tables.py`) → Trino (`TRINO_HOST=localhost`, `TRINO_PORT=8085`, `TRINO_USER=eda`, `TRINO_CATALOG=iceberg`, `SILVER_SCHEMA=silver`, `EDA_SCHEMA=eda`), CTAS-copies `BASE_TABLES=[fact_orders, fact_order_items, fact_reviews, dim_customer]` + requested Silver tables into `iceberg.eda` (TIMESTAMP WITH TZ → TIMESTAMP(6) UTC), creates `state_ref`, `order_base`, derives `Period` (same 10% rule as Gold).
+- **EDA**: `common.connect(tables)` (`olist-eda/eda/common/tables.py`) → Trino (`TRINO_HOST=localhost`, `TRINO_PORT=8085`, `TRINO_USER=eda`, `TRINO_CATALOG=iceberg`, `SILVER_SCHEMA=silver`, `EDA_SCHEMA=eda`), CTAS-copies `BASE_TABLES=[fact_orders, fact_order_items, fact_reviews, dim_customer]` + requested Silver tables into `iceberg.eda` (TIMESTAMP WITH TZ → TIMESTAMP(6) UTC), creates `state_ref`, `order_base`, derives `Period` (same 10% rule as Gold; YoY + QoQ like DAX; override with env `REPORT_START`/`REPORT_END=YYYY-MM`, same year).
 
 ---
 
@@ -375,7 +378,7 @@ olist-lakehouse (PowerShell/cmd in `olist-lakehouse/`, Docker Desktop running, h
 Linux/macOS equivalent of a stage: `docker exec olist-spark-master /opt/spark/bin/spark-submit --master spark://spark-master:7077 --deploy-mode client /opt/spark/olist_pipeline.py --stage gold --layers-dir /opt/spark/layers --mode overwrite --source hosting --source-uri s3a://olist-lake/bronze`.
 UIs: Spark :8084, Trino :8085, Iceberg REST :8181, ClickHouse :8123, MinIO :9101.
 
-Tests: none automated. Verification = `verify_source.py`, Spark stage assertions, `docs/GOLD_DESIGN.md` §5.2 reconciliation checklist, and running the 6 notebooks end-to-end. `compute_marts()` is designed to be unit-testable with a local SparkSession (pass a dict of Silver DataFrames and an identity/caching `materialize`).
+Tests: none automated. Verification = `verify_source.py`, Spark stage assertions, `docs/GOLD_DESIGN.md` §5.2 reconciliation checklist, and running the 5 EDA notebooks end-to-end (their Gold reconciliation cells assert Silver ≙ Gold). `compute_marts()` is designed to be unit-testable with a local SparkSession (pass a dict of Silver DataFrames and an identity/caching `materialize`).
 Deploy: `hosting_server/deployment.md` (compose override `docker-compose.prod.yml`, Caddy, Tailscale) — those override files are not in the repo.
 
 ---
