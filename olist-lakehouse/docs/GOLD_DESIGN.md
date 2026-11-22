@@ -180,7 +180,7 @@ Phân vùng `months(purchase_date)`.
 
 ## 4. Lớp phục vụ ClickHouse (`olist_gold`)
 
-Bảng vật lý = 8 bảng ở §2 (`TRUNCATE` + `INSERT … FROM s3(parquet)` như `load_gold.sql` hiện tại).
+Bảng vật lý = 8 bảng ở §2. `load_gold.sql` nạp `INSERT … FROM s3(parquet)` vào bảng tạm `<t>__new`, rồi `EXCHANGE TABLES` sang bảng phục vụ khi cả 8 bảng nạp xong.
 View dưới đây đặt tên trùng bảng trong model Power BI:
 
 | View ClickHouse | Định nghĩa |
@@ -247,7 +247,7 @@ Khi đổi nguồn xong, xoá các bảng này khỏi model cùng measure phụ 
 
 - Đã có: `layers/gold/{config.py, seeds/state_population.csv, create_gold_tables.sql, build_marts.py}`,
   `layers/clickhouse/{init_gold.sql, load_gold.sql}`; stage `clickhouse` của `run_lakehouse.bat` chạy `init_gold.sql`
-  (CREATE OR REPLACE) trước rồi mới nạp lại dữ liệu.
+  (CREATE OR REPLACE bảng tạm `<t>__new`) trước rồi mới nạp lại dữ liệu và EXCHANGE sang bảng phục vụ.
 - 3 mart mẫu cũ bị `DROP` ở cả Iceberg (stage `ddl`) và ClickHouse.
 - Đã kiểm thử `compute_marts` trên Spark local (dựng Silver từ CSV raw, không lọc timeline), so với CSV Power BI:
   `item_sales`, `item_flow`, `dim_date`, `dim_category`, `customer_rfm`, `cust_2nd_gap` khớp 100%. Phần lệch còn lại

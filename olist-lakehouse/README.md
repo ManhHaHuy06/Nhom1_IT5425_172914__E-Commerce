@@ -148,7 +148,7 @@ Chỉnh sửa tại:
 
 - `layers/gold/create_gold_tables.sql` — DDL Iceberg Gold
 - `layers/gold/build_marts.py` — logic mart + export Parquet
-- `layers/clickhouse/init_gold.sql` — schema bảng ClickHouse (lần đầu / recreate)
+- `layers/clickhouse/init_gold.sql` — schema ClickHouse: bảng tạm `<t>__new`, bảng phục vụ (tạo nếu chưa có) và view
 - `layers/clickhouse/load_gold.sql` — nạp Parquet từ MinIO vào ClickHouse
 
 Sau đó, với infra đang chạy và Silver đã có dữ liệu:
@@ -159,7 +159,8 @@ Sau đó, với infra đang chạy và Silver đã có dữ liệu:
 
 Thứ tự bắt buộc: **DDL → Gold → ClickHouse**. Nếu chỉ chạy `clickhouse` mà chưa chạy `gold`, ClickHouse sẽ đọc lại Parquet cũ.
 
-Nếu đổi cột/kiểu trên ClickHouse, cần recreate bảng (ví dụ `DROP` rồi chạy lại `init_gold.sql`) trước khi `clickhouse`, vì `init_gold.sql` chỉ chạy tự động lúc compose init lần đầu.
+Đổi kiểu cột không cần làm gì thêm: `EXCHANGE TABLES` trong `load_gold.sql` đưa schema mới sang bảng phục vụ.
+Nếu view dùng một cột mới thêm, `init_gold.sql` sẽ lỗi vì bảng phục vụ còn schema cũ: chạy `DROP TABLE olist_gold.<t>` một lần rồi chạy lại `clickhouse`.
 
 Kiểm tra: Trino `iceberg.gold.<table>`, ClickHouse `olist_gold.<table>`.
 

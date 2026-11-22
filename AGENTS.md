@@ -82,8 +82,8 @@ refactor_project/
 │   │   ├── gold/config.py                  # all Gold thresholds, bands, RFM rules, region map, population seed loader
 │   │   ├── gold/seeds/state_population.csv # 27 states, population_2018
 │   │   ├── gold/build_marts.py             # compute_marts() (pure) + build_marts() (write + export Parquet)
-│   │   ├── clickhouse/init_gold.sql        # olist_gold DB: CREATE OR REPLACE tables + Power BI-facing views
-│   │   └── clickhouse/load_gold.sql        # TRUNCATE + INSERT SELECT * FROM s3(exports/gold/<t>/*.parquet)
+│   │   ├── clickhouse/init_gold.sql        # olist_gold DB: CREATE OR REPLACE <t>__new staging tables, serving tables IF NOT EXISTS, Power BI-facing views
+│   │   └── clickhouse/load_gold.sql        # INSERT <t>__new SELECT * FROM s3(exports/gold/<t>/*.parquet), then EXCHANGE TABLES into <t>
 │   ├── infrastructure/
 │   │   ├── docker-compose.yml              # catalog-postgres, minio, minio-init, iceberg-rest, spark-master/worker, trino, clickhouse(+init)
 │   │   ├── .env.example                    # ports, creds, SOURCE_S3_* (bat copies to .env if missing)
@@ -203,7 +203,7 @@ docker exec olist-spark-master spark-submit --master spark://spark-master:7077 -
 3. **silver-dimensions** `build_dimensions` (reads `read_bronze` = `blank_to_null(iceberg.bronze.<t>)`): see §4.2.
 4. **silver-facts** `build_facts`: dedups with `latest()`, applies orphan filters + timeline rules A1–A6, raises if `fact_orders` empty or any `purchase_date_key` missing in `dim_date`.
 5. **gold** `build_marts`: `compute_marts(spark, silver, materialize)` in dependency order `fact_order_summary → fact_item_sales → (report_period stats) → report_period → dim_date → dim_state → dim_category → dim_seller → dim_customer_profile`; `materialize` = `conform()` to DDL schema, `writeTo(t).overwrite(lit(True))`, re-read table (cuts lineage), raise if 0 rows. Then `export_table` writes each to `s3a://lakehouse/exports/gold/<t>` (Parquet, overwrite).
-6. **clickhouse**: reads `CLICKHOUSE_PASSWORD` from `infrastructure/.env` (fallback `admin123`), `docker exec -i olist-clickhouse clickhouse-client --multiquery < init_gold.sql` (CREATE OR REPLACE), then `load_gold.sql` (mounted at `/opt/olist/load_gold.sql`).
+6. **clickhouse**: reads `CLICKHOUSE_PASSWORD` from `infrastructure/.env` (fallback `admin123`), `docker exec -i olist-clickhouse clickhouse-client --multiquery < init_gold.sql` (recreates `<t>__new` staging tables), then `load_gold.sql` (mounted at `/opt/olist/load_gold.sql`): loads all 8 `<t>__new` tables, then `EXCHANGE TABLES` each into `<t>`. A failed load leaves the serving tables untouched.
 
 ### 3.5 Flow D — Consumption
 
@@ -404,7 +404,7 @@ Deploy: `hosting_server/deployment.md` (compose override `docker-compose.prod.ym
 5. `LAG_SECONDS=10` window end uses the **DB clock** (`NOW(3)`), because `updated_at` is DB-generated. Don't switch to Airflow worker time.
 6. **Column order is a cross-system contract**: `layers/gold/create_gold_tables.sql` ↔ export Parquet ↔ `layers/clickhouse/init_gold.sql` (positional `SELECT *` in `load_gold.sql`). Adding/reordering a Gold column requires editing both DDLs, `build_marts.py`, and (if exposed) the ClickHouse view + Power BI `tables/*.tmdl`.
 7. Gold/Silver/Bronze DDL is `CREATE TABLE IF NOT EXISTS` → changing an existing table's columns needs `DROP TABLE iceberg.<layer>.<t>` (or `ALTER`) before `ddl`; `conform()` will raise on missing columns. Bronze only auto-migrates `source_updated_at` (`ensure_metadata_columns`).
-8. ClickHouse tables are recreated every `clickhouse` stage (`CREATE OR REPLACE`); `clickhouse-init` in compose only runs at compose up. Running `clickhouse` without `gold` reloads stale exports.
+8. ClickHouse staging tables `<t>__new` are recreated every `clickhouse` stage (`CREATE OR REPLACE`) and swapped into the serving tables with `EXCHANGE TABLES` only after all 8 loads succeed; serving tables are created only if missing, so `clickhouse-init` at compose up no longer empties them. A view that references a newly added column fails until the serving table has the new schema: `DROP TABLE olist_gold.<t>` once, then rerun `clickhouse`. Running `clickhouse` without `gold` reloads stale exports.
 9. `events.parquet` stores `review_idx` = row index of `olist_order_reviews_dataset.csv`; `Replayer._review` re-reads the CSV and uses `.loc[review_idx]`. Never reorder/filter/edit the CSVs in `Data/` without regenerating `events.parquet` and rebuilding the OLTP DB.
 10. `build_events.py` and `replay.py` must agree on milestone columns and status rank; `replay.py` re-declares `STATUS_ORDER`, `KIND_ORDER`, `ORDER_DATES`, `py()`, `rows()` instead of importing `olist_data`/`db` (duplication — change both).
 11. Silver `fact_orders` must be built before items/payments/reviews (they read it back from the table); `silver-dimensions` must precede `silver-facts`; `ddl` must precede everything on a fresh catalog.

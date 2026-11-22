@@ -1,6 +1,6 @@
 -- ClickHouse serving schema cho tầng Gold (docs/GOLD_DESIGN.md §4).
--- Chạy lại mỗi lần stage `clickhouse` (CREATE OR REPLACE) để schema luôn khớp DDL Iceberg,
--- rồi load_gold.sql nạp lại dữ liệu từ Parquet export.
+-- Chạy lại mỗi lần stage `clickhouse`: CREATE OR REPLACE chỉ tạo lại bảng tạm <t>__new theo DDL Iceberg mới nhất,
+-- bảng phục vụ <t> giữ nguyên dữ liệu. load_gold.sql nạp vào <t>__new rồi EXCHANGE sang <t>.
 -- Thứ tự cột của bảng phải trùng layers/gold/create_gold_tables.sql (INSERT ... SELECT * FROM s3() map theo vị trí).
 
 CREATE DATABASE IF NOT EXISTS olist_gold;
@@ -11,7 +11,7 @@ DROP TABLE IF EXISTS olist_gold.delivery_delay_analysis;
 DROP TABLE IF EXISTS olist_gold.seller_scorecard;
 
 -- ============================================================================ bảng vật lý
-CREATE OR REPLACE TABLE olist_gold.report_period (
+CREATE OR REPLACE TABLE olist_gold.report_period__new (
     report_year                 Int32,
     report_month                Int32,
     cy_start                    Date,
@@ -29,7 +29,7 @@ CREATE OR REPLACE TABLE olist_gold.report_period (
 ) ENGINE = MergeTree
 ORDER BY tuple();
 
-CREATE OR REPLACE TABLE olist_gold.fact_order_summary (
+CREATE OR REPLACE TABLE olist_gold.fact_order_summary__new (
     order_key                   Int64,
     order_id                    String,
     customer_key                Int64,
@@ -76,7 +76,7 @@ CREATE OR REPLACE TABLE olist_gold.fact_order_summary (
 ) ENGINE = MergeTree
 ORDER BY (purchase_date, order_id);
 
-CREATE OR REPLACE TABLE olist_gold.fact_item_sales (
+CREATE OR REPLACE TABLE olist_gold.fact_item_sales__new (
     order_key                   Int64,
     order_id                    String,
     order_item_id               Int32,
@@ -104,7 +104,7 @@ CREATE OR REPLACE TABLE olist_gold.fact_item_sales (
 ) ENGINE = MergeTree
 ORDER BY (purchase_date, order_id, order_item_id);
 
-CREATE OR REPLACE TABLE olist_gold.dim_date (
+CREATE OR REPLACE TABLE olist_gold.dim_date__new (
     date                        Date,
     year                        Int32,
     month                       Int32,
@@ -115,7 +115,7 @@ CREATE OR REPLACE TABLE olist_gold.dim_date (
 ) ENGINE = MergeTree
 ORDER BY date;
 
-CREATE OR REPLACE TABLE olist_gold.dim_state (
+CREATE OR REPLACE TABLE olist_gold.dim_state__new (
     state                       String,
     region                      LowCardinality(String),
     region_order                Int32,
@@ -126,7 +126,7 @@ CREATE OR REPLACE TABLE olist_gold.dim_state (
 ) ENGINE = MergeTree
 ORDER BY state;
 
-CREATE OR REPLACE TABLE olist_gold.dim_category (
+CREATE OR REPLACE TABLE olist_gold.dim_category__new (
     category                    String,
     category_group              String,
     category_group_order        Int32,
@@ -136,7 +136,7 @@ CREATE OR REPLACE TABLE olist_gold.dim_category (
 ) ENGINE = MergeTree
 ORDER BY category;
 
-CREATE OR REPLACE TABLE olist_gold.dim_seller (
+CREATE OR REPLACE TABLE olist_gold.dim_seller__new (
     seller_key                  Int64,
     seller_id                   Nullable(String),
     seller_state                LowCardinality(Nullable(String)),
@@ -165,7 +165,7 @@ CREATE OR REPLACE TABLE olist_gold.dim_seller (
 ) ENGINE = MergeTree
 ORDER BY seller_key;
 
-CREATE OR REPLACE TABLE olist_gold.dim_customer_profile (
+CREATE OR REPLACE TABLE olist_gold.dim_customer_profile__new (
     customer_key                Int64,
     customer_unique_id          Nullable(String),
     state                       LowCardinality(Nullable(String)),
@@ -188,6 +188,17 @@ CREATE OR REPLACE TABLE olist_gold.dim_customer_profile (
     repurchase_observable       Nullable(Int32)
 ) ENGINE = MergeTree
 ORDER BY customer_key;
+
+-- Bảng phục vụ: lần đầu tạo rỗng theo schema <t>__new, các lần sau giữ nguyên (EXCHANGE trong load_gold.sql đưa schema mới sang).
+-- shortcut: view tham chiếu cột mới thêm vào DDL sẽ lỗi khi bảng phục vụ còn schema cũ; khi đó DROP TABLE olist_gold.<t> một lần rồi chạy lại stage clickhouse.
+CREATE TABLE IF NOT EXISTS olist_gold.report_period AS olist_gold.report_period__new;
+CREATE TABLE IF NOT EXISTS olist_gold.fact_order_summary AS olist_gold.fact_order_summary__new;
+CREATE TABLE IF NOT EXISTS olist_gold.fact_item_sales AS olist_gold.fact_item_sales__new;
+CREATE TABLE IF NOT EXISTS olist_gold.dim_date AS olist_gold.dim_date__new;
+CREATE TABLE IF NOT EXISTS olist_gold.dim_state AS olist_gold.dim_state__new;
+CREATE TABLE IF NOT EXISTS olist_gold.dim_category AS olist_gold.dim_category__new;
+CREATE TABLE IF NOT EXISTS olist_gold.dim_seller AS olist_gold.dim_seller__new;
+CREATE TABLE IF NOT EXISTS olist_gold.dim_customer_profile AS olist_gold.dim_customer_profile__new;
 
 -- ============================================================================ view cho Power BI
 -- Tên view = tên bảng trong model, cột = header CSV cũ trong olist-eda/powerbi/data/

@@ -108,7 +108,7 @@ echo === Load Gold into ClickHouse ===
 call :wait_container olist-clickhouse
 if errorlevel 1 exit /b 1
 rem clickhouse-client reads CLICKHOUSE_PASSWORD from the container environment (infrastructure/.env).
-rem Schema first (CREATE OR REPLACE, always matches the latest Gold DDL), then reload the data.
+rem Schema first (recreates staging tables *__new from the latest Gold DDL), then load them and EXCHANGE into the serving tables.
 docker exec -i olist-clickhouse clickhouse-client --multiquery < "%Root%\layers\clickhouse\init_gold.sql"
 if errorlevel 1 (
     echo ClickHouse init_gold failed
