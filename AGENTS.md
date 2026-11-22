@@ -1,7 +1,7 @@
 # AGENTS.md — Olist E-Commerce Data Platform
 
 Canonical reference for coding agents. Repository root contains three independent sub-projects joined only by
-object-storage paths, table names and column order. There is no root build, no git repo at root, no test suite.
+object-storage paths, table names and column order. There is no root build and no test suite.
 Human docs are mostly Vietnamese; code comments mix Vietnamese/English.
 
 ---
@@ -30,7 +30,6 @@ rebuild of Silver/Gold on every run (no MERGE/incremental downstream of Bronze).
 | BI | Power BI Desktop PBIP (TMDL semantic model + PBIR report), M `Web.Contents` → ClickHouse HTTP `:8123` |
 | EDA | Jupyter, `trino` Python client, pandas, matplotlib, seaborn |
 | Runner | Windows batch `olist-lakehouse/run_lakehouse.bat` (no Makefile / CI) |
-| Legacy/optional | `OLIST_SOURCE=crawler`: external sibling repos `olist-crawler-to-minio`, `olist-data-source-v2` (FastAPI :8000) — **not in this repo** |
 
 ---
 
@@ -60,8 +59,10 @@ refactor_project/
 │   │   ├── dags/ingest_oltp_to_bronze.py   # */15 min incremental extract, watermark Variables wm__<table>
 │   │   ├── dags/ingest_reference_snapshot.py # @daily full snapshot of reference tables
 │   │   └── include/                        # on PYTHONPATH (/opt/airflow/include)
+│   │       ├── bronze.py                   # Bronze key layout (stamp, incremental_prefix, snapshot_prefix, manifest_key) + land() chunked SQL→Parquet loop
 │   │       ├── oltp.py                     # engine() from Variable OLTP_URL
 │   │       └── s3_utils.py                 # boto3 client, arrow_schema(), put_parquet(), put_json()
+│   ├── .gitattributes                      # *.sh eol=lf (02_users.sh, minio-init.sh run in Linux containers)
 │   ├── infra/minio/Dockerfile              # builds minio + mc from source (@latest — non-reproducible)
 │   ├── infra/minio-init.sh                 # bucket + prefixes + read-only lake-reader user/policy
 │   ├── README.md                           # run commands + lakehouse contract
@@ -74,7 +75,7 @@ refactor_project/
 │   ├── common/spark_utils.py               # spark_session (per-bucket S3A), apply_ddl, latest(), norm_city/zip, write_table, read_bronze
 │   ├── layers/
 │   │   ├── bronze/create_bronze_tables.sql # iceberg.bronze.* DDL (all STRING + metadata)
-│   │   ├── bronze/load_bronze.py           # hosting (Parquet) / crawler (CSV) → iceberg.bronze.*
+│   │   ├── bronze/load_bronze.py           # hosting_server Parquet (s3a://olist-lake/bronze) → iceberg.bronze.*
 │   │   ├── silver/create_silver_tables.sql # iceberg.silver.* star schema DDL
 │   │   ├── silver/dimensions.py            # build_dimensions(): dim_geolocation, dim_category, dim_customer, dim_seller, dim_product, dim_date
 │   │   ├── silver/facts.py                 # build_facts(): fact_orders, fact_order_items, fact_payments, fact_reviews, fact_customer_order
@@ -87,12 +88,12 @@ refactor_project/
 │   ├── infrastructure/
 │   │   ├── docker-compose.yml              # catalog-postgres, minio, minio-init, iceberg-rest, spark-master/worker, trino, clickhouse(+init)
 │   │   ├── .env.example                    # ports, creds, SOURCE_S3_* (bat copies to .env if missing)
-│   │   ├── spark/Dockerfile, spark-defaults.conf  # Iceberg catalog "iceberg", S3A → lakehouse MinIO (hard-coded admin/admin123)
+│   │   ├── spark/Dockerfile, spark-defaults.conf  # Iceberg catalog "iceberg", S3A → lakehouse MinIO (creds from env AWS_ACCESS_KEY_ID/SECRET)
 │   │   ├── iceberg-rest/Dockerfile         # adds postgres JDBC + iceberg-aws-bundle 1.5.0
-│   │   ├── trino/{config,node}.properties, jvm.config, catalog/iceberg.properties  # hard-coded admin/admin123
+│   │   ├── trino/{config,node}.properties, jvm.config, catalog/iceberg.properties  # S3 creds ${ENV:AWS_ACCESS_KEY_ID/SECRET}
 │   │   ├── clickhouse/config.xml           # named S3 collection "minio" from env; timezone UTC
 │   │   ├── clickhouse/users.xml            # NOT mounted by compose (dead config)
-│   │   ├── minio/init-buckets.sh           # creates handoff, lakehouse; DELETES legacy buckets olist, warehouse
+│   │   ├── minio/init-buckets.sh           # creates lakehouse; DELETES legacy buckets olist, warehouse
 │   │   └── postgres/init.sql               # uuid-ossp extension
 │   ├── docs/GOLD_DESIGN.md                 # Gold mart spec, reconciliation notes, status (2026-11-14)
 │   ├── trino_queries.ipynb                 # ad-hoc Trino exploration
@@ -136,7 +137,7 @@ flowchart LR
 ```
 
 Two separate MinIO instances: **source lake** (`hosting_server`, bucket `olist-lake`, host port 9000) and
-**lakehouse** (bucket `lakehouse` + `handoff`, host port `EXTERNAL_MINIO_API_PORT`=9100, in-network `minio:9000`).
+**lakehouse** (bucket `lakehouse`, host port `EXTERNAL_MINIO_API_PORT`=9100, in-network `minio:9000`).
 Spark reaches the source lake through the Docker host (`host.docker.internal:9000`, `extra_hosts: host-gateway`).
 
 ### 3.1 Initialization sequence
@@ -181,7 +182,7 @@ order_status = IF(FIELD(cur) < FIELD(target), target, cur)` (forward-only); `_re
 get_window ──► extract_load.expand(table ∈ TABLES) ──► write_manifest ──► commit_watermark (outlet Dataset s3://olist-lake/bronze/)
 ```
 1. `get_window`: `wm_to = SELECT NOW(3) - INTERVAL 10 SECOND` (DB clock, `LAG_SECONDS`); `wm_from = Variable wm__<t>` default `1970-01-01 00:00:00`. Same `wm_to` for all 5 tables.
-2. `extract_load(table)`: `SELECT * FROM <t> WHERE updated_at > :a AND updated_at <= :b ORDER BY updated_at`, streamed `chunksize=100_000`; appends `_ingested_at`, `_source_table`, `_batch_id=_stamp(wm_from)`, `_op='upsert'`; writes `bronze/<t>/ingest_date=<wm_to YYYYMMDD>/batch_id=<stamp(wm_from)>/part-NNNNN.parquet` with fixed `arrow_schema` (snappy, µs timestamps).
+2. `extract_load(table)`: `SELECT * FROM <t> WHERE updated_at > :a AND updated_at <= :b ORDER BY updated_at`, streamed `chunksize=100_000`; via `bronze.land()` appends `_ingested_at`, `_source_table`, `_batch_id=stamp(wm_from)`, `_op='upsert'`; writes `bronze/<t>/ingest_date=<wm_to YYYYMMDD>/batch_id=<stamp(wm_from)>/part-NNNNN.parquet` with fixed `arrow_schema` (snappy, µs timestamps).
 3. `write_manifest`: `bronze/_manifests/batch_id=<stamp(wm_to)>/manifest.json` (`{batch_id, tables[{table,rows,parts,from,to}], total_rows}`). Note: manifest key uses `wm_to`, data keys use `wm_from`.
 4. `commit_watermark`: sets every `wm__<t>` = `wm_to` **only after** all tables + manifest succeeded → failed runs re-read the same window and overwrite the same keys.
 Settings: `catchup=False`, `max_active_runs=1`, `retries=3`, `retry_delay=1m`.
@@ -191,19 +192,19 @@ Settings: `catchup=False`, `max_active_runs=1`, `retries=3`, `retry_delay=1m`.
 
 ### 3.4 Flow C — Lakehouse batch (`run_lakehouse.bat` → `olist_pipeline.py`)
 
-Stage order is fixed regardless of CLI order: `datasource → infra → crawl → ddl → bronze → silver-dimensions → silver-facts → gold → clickhouse`.
-No args = all (`datasource`/`crawl` only when `OLIST_SOURCE=crawler`). Each Spark stage:
+Stage order is fixed regardless of CLI order: `infra → ddl → bronze → silver-dimensions → silver-facts → gold → clickhouse`.
+No args = all. Each Spark stage:
 ```
 docker exec olist-spark-master spark-submit --master spark://spark-master:7077 --deploy-mode client \
   /opt/spark/olist_pipeline.py --stage <s> --layers-dir /opt/spark/layers --mode <OLIST_BRONZE_MODE|overwrite> \
-  --source <hosting|crawler> --source-uri <uri> [--batch-id] [--start-date] [--end-date]
+  --source-uri <OLIST_SOURCE_URI|s3a://olist-lake/bronze> [--batch-id] [--start-date] [--end-date]
 ```
 1. **ddl** `apply_ddl`: runs bronze → silver → gold DDL files via `split_sql` (strips `--` comments naively, splits on `;`). All `CREATE TABLE IF NOT EXISTS` (gold also DROPs 3 legacy marts).
-2. **bronze** `load_bronze_from_hosting`: per `HOSTING_SOURCES` entry: `spark.read.parquet(<uri>/<dataset>/ingest_date=*/batch_id=*/*.parquet)` (incremental) or latest `snapshot_date` only (snapshot); optional `ingest_date` filter from `--start-date/--end-date` (Airflow landing date, NOT business date); every column → STRING (`as_bronze_string`: timestamps `yyyy-MM-dd HH:mm:ss`); `updated_at` → `source_updated_at` (`yyyy-MM-dd HH:mm:ss.SSS`); adds `source_file`, `loaded_at`, `batch_id`; `writeTo(...).overwritePartitions()` (unpartitioned ⇒ full table replace) or `.append()`. **All landed versions of every row are kept.**
+2. **bronze** `load_bronze`: per `SOURCES` entry: `spark.read.parquet(<uri>/<dataset>/ingest_date=*/batch_id=*/*.parquet)` (incremental) or latest `snapshot_date` only (snapshot); optional `ingest_date` filter from `--start-date/--end-date` (Airflow landing date, NOT business date); every column → STRING (`as_bronze_string`: timestamps `yyyy-MM-dd HH:mm:ss`); `updated_at` → `source_updated_at` (`yyyy-MM-dd HH:mm:ss.SSS`); adds `source_file`, `loaded_at`, `batch_id`; `writeTo(...).overwritePartitions()` (unpartitioned ⇒ full table replace) or `.append()`. **All landed versions of every row are kept.**
 3. **silver-dimensions** `build_dimensions` (reads `read_bronze` = `blank_to_null(iceberg.bronze.<t>)`): see §4.2.
 4. **silver-facts** `build_facts`: dedups with `latest()`, applies orphan filters + timeline rules A1–A6, raises if `fact_orders` empty or any `purchase_date_key` missing in `dim_date`.
 5. **gold** `build_marts`: `compute_marts(spark, silver, materialize)` in dependency order `fact_order_summary → fact_item_sales → (report_period stats) → report_period → dim_date → dim_state → dim_category → dim_seller → dim_customer_profile`; `materialize` = `conform()` to DDL schema, `writeTo(t).overwrite(lit(True))`, re-read table (cuts lineage), raise if 0 rows. Then `export_table` writes each to `s3a://lakehouse/exports/gold/<t>` (Parquet, overwrite).
-6. **clickhouse**: reads `CLICKHOUSE_PASSWORD` from `infrastructure/.env` (fallback `admin123`), `docker exec -i olist-clickhouse clickhouse-client --multiquery < init_gold.sql` (recreates `<t>__new` staging tables), then `load_gold.sql` (mounted at `/opt/olist/load_gold.sql`): loads all 8 `<t>__new` tables, then `EXCHANGE TABLES` each into `<t>`. A failed load leaves the serving tables untouched.
+6. **clickhouse**: `clickhouse-client` authenticates with `CLICKHOUSE_PASSWORD` from the container environment (set by compose from `infrastructure/.env`); `docker exec -i olist-clickhouse clickhouse-client --multiquery < init_gold.sql` (recreates `<t>__new` staging tables), then `load_gold.sql` (mounted at `/opt/olist/load_gold.sql`): loads all 8 `<t>__new` tables, then `EXCHANGE TABLES` each into `<t>`. A failed load leaves the serving tables untouched.
 
 ### 3.5 Flow D — Consumption
 
@@ -280,7 +281,7 @@ Gold labels/bands are Vietnamese strings consumed verbatim by Power BI (sort via
 
 ### 4.4 Lakehouse MinIO layout
 
-`handoff/bronze/...` (crawler CSV, legacy) · `lakehouse/{bronze,silver,gold}/<table>/` (Iceberg data+metadata) · `lakehouse/exports/gold/<table>/*.parquet` (ClickHouse load source).
+`lakehouse/{bronze,silver,gold}/<table>/` (Iceberg data+metadata) · `lakehouse/exports/gold/<table>/*.parquet` (ClickHouse load source).
 
 ### 4.5 ClickHouse `olist_gold`
 
@@ -303,8 +304,8 @@ No HTTP API is implemented in this repo (FastAPI/CDC were planned, not built). I
 | Airflow DAG `ingest_oltp_to_bronze` | schedule `*/15 * * * *`; outlet Dataset `s3://olist-lake/bronze/` (no consumer DAG exists) |
 | Airflow DAG `ingest_reference_snapshot` | schedule `@daily`, keyed by logical date `ds` |
 | Airflow Variables | `OLTP_URL`, `MINIO_ENDPOINT`, `MINIO_ACCESS_KEY`, `MINIO_SECRET_KEY`, `MINIO_BUCKET` (env-injected); `wm__customers|orders|order_items|order_payments|order_reviews` (state) |
-| `olist_pipeline.py` | `--stage {ddl,bronze,silver-dimensions,silver-facts,gold}` (required), `--layers-dir` (required), `--mode {overwrite,append}` (required), `--source {hosting,crawler}`, `--source-uri`, `--start-date`, `--end-date`, `--batch-id` (default `UTC%Y%m%dT%H%M%S-<8hex>`) |
-| `run_lakehouse.bat [stage ...]` | stages: `datasource|data-source infra crawl ddl bronze silver-dimensions|silver-dims silver-facts silver gold clickhouse all help`; env `OLIST_SOURCE`, `OLIST_SOURCE_URI`, `OLIST_BRONZE_MODE`, `OLIST_BATCH_ID`, `OLIST_START_DATE`, `OLIST_END_DATE` |
+| `olist_pipeline.py` | `--stage {ddl,bronze,silver-dimensions,silver-facts,gold}` (required), `--layers-dir` (required), `--mode {overwrite,append}` (default `overwrite`), `--source-uri` (default `s3a://olist-lake/bronze`), `--start-date`, `--end-date`, `--batch-id` (default `UTC%Y%m%dT%H%M%S-<8hex>`) |
+| `run_lakehouse.bat [stage ...]` | stages: `infra ddl bronze silver-dimensions|silver-dims silver-facts silver gold clickhouse all help`; env `OLIST_SOURCE_URI`, `OLIST_BRONZE_MODE`, `OLIST_BATCH_ID`, `OLIST_START_DATE`, `OLIST_END_DATE` |
 | Bronze Parquet contract (hosting → lakehouse) | fixed schema per table across batches; incremental tables carry `updated_at`; key layout §4.2; reader user needs `ListBucket` |
 | Gold → ClickHouse contract | Iceberg DDL column order == export Parquet order == ClickHouse table column order (`INSERT ... SELECT *` is positional) |
 | ClickHouse → Power BI contract | view names + column names in §4.5; numeric `customer_key` |
@@ -337,7 +338,7 @@ Error handling conventions: no global middleware. Scripts fail fast with excepti
 | Var | Default | Purpose |
 |---|---|---|
 | `POSTGRES_USER/PASSWORD`, `EXTERNAL_POSTGRES_PORT` | iceberg/…/5433 | Iceberg JDBC catalog DB |
-| `MINIO_ROOT_USER/PASSWORD` | admin/admin123 | lakehouse MinIO; **also hard-coded** in `spark-defaults.conf`, `trino/catalog/iceberg.properties`, `layers/clickhouse/load_gold.sql` |
+| `MINIO_ROOT_USER/PASSWORD` | admin/admin123 | lakehouse MinIO; single source: compose passes them as `AWS_ACCESS_KEY_ID/SECRET_ACCESS_KEY` to Iceberg REST, Spark, Trino, and as `MINIO_ROOT_*` to ClickHouse (`config.xml` `from_env`) |
 | `EXTERNAL_MINIO_API_PORT/CONSOLE_PORT` | 9100/9101 | host ports (9000 is taken by hosting_server MinIO) |
 | `EXTERNAL_ICEBERG_REST_PORT` | 8181 | |
 | `EXTERNAL_SPARK_UI_PORT`, `SPARK_WORKER_CORES`, `SPARK_WORKER_MEMORY` | 8084, 4, 6g | |
@@ -375,7 +376,7 @@ olist-lakehouse (PowerShell/cmd in `olist-lakehouse/`, Docker Desktop running, h
 .\run_lakehouse.bat ddl gold clickhouse          # after Gold logic/DDL change
 .\run_lakehouse.bat clickhouse                   # reload ClickHouse from existing exports
 ```
-Linux/macOS equivalent of a stage: `docker exec olist-spark-master /opt/spark/bin/spark-submit --master spark://spark-master:7077 --deploy-mode client /opt/spark/olist_pipeline.py --stage gold --layers-dir /opt/spark/layers --mode overwrite --source hosting --source-uri s3a://olist-lake/bronze`.
+Linux/macOS equivalent of a stage: `docker exec olist-spark-master /opt/spark/bin/spark-submit --master spark://spark-master:7077 --deploy-mode client /opt/spark/olist_pipeline.py --stage gold --layers-dir /opt/spark/layers --mode overwrite --source-uri s3a://olist-lake/bronze`.
 UIs: Spark :8084, Trino :8085, Iceberg REST :8181, ClickHouse :8123, MinIO :9101.
 
 Tests: none automated. Verification = `verify_source.py`, Spark stage assertions, `docs/GOLD_DESIGN.md` §5.2 reconciliation checklist, and running the 5 EDA notebooks end-to-end (their Gold reconciliation cells assert Silver ≙ Gold). `compute_marts()` is designed to be unit-testable with a local SparkSession (pass a dict of Silver DataFrames and an identity/caching `materialize`).
@@ -394,12 +395,12 @@ Deploy: `hosting_server/deployment.md` (compose override `docker-compose.prod.ym
 - All Gold thresholds/bands/labels live in `layers/gold/config.py`; mirror any business-rule change in `olist-eda/eda/common/` (`config.py`, `rfm.py`: `LOST_STATUSES`, `REPORT_MONTH_MIN_SHARE`, `MIN_SELLER_ORDERS`, RFM rules, `CATEGORY_SQL`) — they are duplicated by design.
 - Logging = `print` (Spark driver stdout / Airflow task logs). No logger config.
 - Timezone UTC end-to-end: MySQL `--default-time-zone=+00:00`, `spark.sql.session.timeZone=UTC`, ClickHouse `<timezone>UTC`, Trino session `timezone="UTC"`.
-- Shell scripts mounted into Linux containers must stay LF (`olist-lakehouse/.gitattributes: *.sh text eol=lf`); editing `.sh` on Windows with CRLF breaks `minio-init`.
+- Shell scripts mounted into Linux containers must stay LF (`*.sh text eol=lf` in both `olist-lakehouse/.gitattributes` and `hosting_server/.gitattributes`); with CRLF (`core.autocrlf=true` on Windows) `02_users.sh` stops `oltp-mysql` (`/bin/bash^M: bad interpreter`) and `minio-init` fails (`set: illegal option -`). `run_lakehouse.bat` itself must stay CRLF (`*.bat text eol=crlf`).
 
 ### 7.2 Invariants — do not break
 1. **Parquet schema stability**: every batch of a Bronze table must use `s3_utils.arrow_schema(...)`. Without it an all-NULL column (e.g. `order_delivered_customer_date` of new orders) is written as Arrow `null` type and Spark cannot read the table's batches together. Money columns stay float64 (`coerce_float`).
 2. **Timestamps must be µs** (`coerce_timestamps="us"`); Spark cannot read ns Parquet.
-3. **Bronze `batch_id` = `_stamp(wm_from)`**, not `data_interval_end`. Using interval-based keys caused overlapping scheduled/manual runs to overwrite each other's data after the watermark advanced (real incident, `implementation_log.md` §6).
+3. **Bronze `batch_id` = `stamp(wm_from)`** (`include/bronze.py`), not `data_interval_end`. Using interval-based keys caused overlapping scheduled/manual runs to overwrite each other's data after the watermark advanced (real incident, `implementation_log.md` §6).
 4. **Watermark commit must stay the last task** (`commit_watermark` depends on `write_manifest` depends on all mapped `extract_load`). Never set `wm__*` inside `extract_load`.
 5. `LAG_SECONDS=10` window end uses the **DB clock** (`NOW(3)`), because `updated_at` is DB-generated. Don't switch to Airflow worker time.
 6. **Column order is a cross-system contract**: `layers/gold/create_gold_tables.sql` ↔ export Parquet ↔ `layers/clickhouse/init_gold.sql` (positional `SELECT *` in `load_gold.sql`). Adding/reordering a Gold column requires editing both DDLs, `build_marts.py`, and (if exposed) the ClickHouse view + Power BI `tables/*.tmdl`.
@@ -420,11 +421,11 @@ Deploy: `hosting_server/deployment.md` (compose override `docker-compose.prod.ym
 - `dim_customer` picks city/state from the max `customer_id` per person (deterministic but arbitrary).
 - `dim_geolocation.zip_code_prefix` is INT (leading zeros dropped) and joins use `zip_as_int`; keep both sides INT.
 - `common.spark_utils.split_sql` truncates any line at the first `--`, including inside string literals — never put `--` in DDL string values/comments-in-strings.
-- Hard-coded lakehouse creds `admin/admin123` in `spark-defaults.conf`, `trino/catalog/iceberg.properties`, `load_gold.sql`, `run_lakehouse.bat` fallback, and Power BI `ClickHousePassword`. Changing `.env` alone breaks Spark/Trino/ClickHouse loads.
+- Power BI parameter `ClickHousePassword` (`expressions.tmdl`) is hard-coded `admin123`; changing `CLICKHOUSE_PASSWORD` in `infrastructure/.env` requires updating it. Lakehouse MinIO/ClickHouse creds elsewhere come only from `.env`.
 - `infrastructure/clickhouse/users.xml` is not mounted; the ClickHouse image's default user uses `CLICKHOUSE_PASSWORD`.
 - `infrastructure/minio/init-buckets.sh` force-removes buckets named `olist` and `warehouse` on every start.
 - `hosting_server/infra/minio/Dockerfile` uses `go install ...@latest` → rebuilds pull whatever MinIO master is current; `iceberg-rest-fixture:latest` is also unpinned.
-- `run_lakehouse.bat` is Windows-only; `datasource`/`crawl` stages point to sibling repos `../olist-crawler-to-minio`, `../olist-data-source-v2` that do not exist here (datasource skips, crawl fails).
+- `run_lakehouse.bat` is Windows-only. The old crawler source (`olist-crawler-to-minio` / `olist-data-source-v2`, CSV in a `handoff` bucket) has been removed: no `datasource`/`crawl` stages, no `--source` flag, `handoff` bucket no longer created; `hosting_server` Parquet is the only Bronze source.
 - `run.py` crash-resume edge case: `sim_state.virtual_ts` is saved as the last ts of a committed chunk and resume uses `searchsorted(side="right")`; events sharing that exact ts but falling in the next uncommitted chunk would be skipped after a crash mid-chunk-boundary.
 - `run.py live` ignores `--speed` changes made via `sim_state.speed` (speed comes only from CLI).
 - Dataset outlet `s3://olist-lake/bronze/` has no consumer; lakehouse is triggered manually.
