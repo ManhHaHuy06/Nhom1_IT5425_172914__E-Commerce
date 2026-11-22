@@ -1,2 +1,4 @@
 # Script chạy trong container Linux phải giữ LF
 *.sh text eol=lf
+# cmd.exe có thể không tìm thấy nhãn :label trong file .bat xuống dòng LF
+*.bat text eol=crlf
