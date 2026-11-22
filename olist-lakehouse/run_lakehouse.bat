@@ -157,7 +157,7 @@ echo   clickhouse          Load Gold Parquet into ClickHouse
 echo   all                 Same as no args
 echo.
 echo Environment: OLIST_SOURCE_URI, OLIST_BRONZE_MODE ^(overwrite^|append^), OLIST_BATCH_ID,
-echo              OLIST_START_DATE / OLIST_END_DATE ^(YYYY-MM-DD, filters Bronze ingest_date^)
+echo              OLIST_START_DATE / OLIST_END_DATE ^(YYYY-MM-DD, filters Bronze ingest_date, needs OLIST_BRONZE_MODE=append^)
 echo.
 echo Examples:
 echo   run_lakehouse.bat

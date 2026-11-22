@@ -36,6 +36,10 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--batch-id", help="Bronze batch_id (default: UTC timestamp + random suffix)")
     parser.add_argument("--mode", choices=["overwrite", "append"], default="overwrite", help="Bronze write mode")
     args = parser.parse_args()
+    # Bronze tables are unpartitioned: overwrite + date filter would keep only that ingest_date range.
+    if args.stage == "bronze" and args.mode == "overwrite" and (args.start_date or args.end_date):
+        parser.error("--start-date/--end-date require --mode append (OLIST_BRONZE_MODE=append); "
+                     "overwrite replaces the whole Bronze table")
     args.batch_id = args.batch_id or (
         datetime.now(timezone.utc).strftime("%Y%m%dT%H%M%S") + "-" + uuid.uuid4().hex[:8])
     return args

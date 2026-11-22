@@ -411,7 +411,7 @@ Deploy: `hosting_server/deployment.md` (compose override `docker-compose.prod.ym
 12. `report_period` / `Period` are derived from data (latest month with ≥10% of peak valid orders) — never hard-code years/months in Gold, EDA or DAX.
 
 ### 7.3 Known gotchas & technical debt
-- **Bronze "overwrite" replaces the whole table** (unpartitioned + `overwritePartitions`). With `--start-date/--end-date` in overwrite mode, Bronze keeps only that ingest-date range → Silver loses everything else. Use `OLIST_BRONZE_MODE=append` for partial loads (duplicates are tolerated by `latest()`).
+- **Bronze "overwrite" replaces the whole table** (unpartitioned + `overwritePartitions`). `olist_pipeline.parse_args` therefore rejects `--stage bronze` with `--start-date/--end-date` unless `--mode append`. Use `OLIST_BRONZE_MODE=append` for partial loads (duplicates are tolerated by `latest()`).
 - Date filters for `hosting` source refer to `ingest_date` (Airflow landing day of `wm_to`), not order purchase dates.
 - Retried incremental windows overwrite `part-*` with identical names; if a retry produces fewer parts, stale extra parts remain (duplicate row versions — harmless only because Silver dedups).
 - `ingest_reference_snapshot` keys by logical date `ds`; Bronze reads only the max `snapshot_date`. Reference tables have no `updated_at`, so `source_updated_at` is NULL and `latest()` falls back to `loaded_at`.

@@ -113,7 +113,8 @@ Chỉ liệt kê các stage cần chạy. Stage **không** liệt kê sẽ **kh�
 Alias thêm: `silver-dims`.
 
 Biến môi trường tuỳ chọn: `OLIST_SOURCE_URI` (mặc định `s3a://olist-lake/bronze`), `OLIST_BRONZE_MODE` (`overwrite` | `append`),
-`OLIST_BATCH_ID`, `OLIST_START_DATE` / `OLIST_END_DATE` (lọc `ingest_date` của Bronze).
+`OLIST_BATCH_ID`, `OLIST_START_DATE` / `OLIST_END_DATE` (lọc `ingest_date` của Bronze, bắt buộc kèm `OLIST_BRONZE_MODE=append`
+vì `overwrite` thay cả bảng Bronze).
 
 ### Ví dụ thường dùng
 
