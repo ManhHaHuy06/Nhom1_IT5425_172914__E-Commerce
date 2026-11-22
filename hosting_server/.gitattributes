@@ -1,0 +1,3 @@
+# Shell scripts run inside Linux containers: CRLF (git core.autocrlf=true on Windows) breaks them with
+# "/bin/bash^M: bad interpreter", which stops oltp-mysql (02_users.sh) and minio-init from starting.
+*.sh text eol=lf
