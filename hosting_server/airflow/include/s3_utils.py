@@ -62,3 +62,27 @@ def put_parquet(df, key, schema=None):
 def put_json(obj, key):
     client().put_object(Bucket=bucket(), Key=key, Body=json.dumps(obj, default=str, indent=2).encode(),
                         ContentType="application/json")
+
+
+def list_keys(prefix):
+    """Every object key under ``prefix`` (paginated). Pass a prefix ending in '/' to stay inside one folder."""
+    keys = []
+    for page in client().get_paginator("list_objects_v2").paginate(Bucket=bucket(), Prefix=prefix):
+        keys.extend(obj["Key"] for obj in page.get("Contents", []))
+    return keys
+
+
+def delete_keys(keys):
+    """Delete objects in batches of 1000 (S3 DeleteObjects limit); raise if MinIO reports any failure."""
+    keys = list(keys)
+    for i in range(0, len(keys), 1000):
+        batch = [{"Key": k} for k in keys[i:i + 1000]]
+        errors = client().delete_objects(Bucket=bucket(), Delete={"Objects": batch, "Quiet": True}).get("Errors")
+        if errors:
+            raise RuntimeError(f"could not delete {len(errors)} objects, first: {errors[0]}")
+
+
+def read_parquet(key, columns=None):
+    """Read one Parquet object (only ``columns`` when given) into an Arrow table."""
+    body = client().get_object(Bucket=bucket(), Key=key)["Body"].read()
+    return pq.read_table(io.BytesIO(body), columns=columns)

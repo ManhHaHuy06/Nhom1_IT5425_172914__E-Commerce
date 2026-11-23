@@ -14,20 +14,16 @@ from airflow.decorators import dag, task
 from airflow.models import Variable
 from sqlalchemy import text
 
-from bronze import incremental_prefix, land, manifest_key, stamp
+from bronze import TRANSACTION_TABLES as TABLES
+from bronze import incremental_prefix, land, manifest_key, stamp, watermark_var
 from oltp import engine
 from s3_utils import put_json
 
-TABLES = ["customers", "orders", "order_items", "order_payments", "order_reviews"]
 BRONZE_READY = Dataset("s3://olist-lake/bronze/")
 CHUNK = 100_000
 LAG_SECONDS = 10
 EPOCH = "1970-01-01 00:00:00"
 TS_FORMAT = "%Y-%m-%d %H:%M:%S.%f"
-
-
-def watermark_var(table: str) -> str:
-    return f"wm__{table}"
 
 
 @dag(
