@@ -215,6 +215,7 @@ docker compose --profile sim run --rm simulator python run.py bootstrap --until 
 docker compose up -d simulator-live
 docker compose exec airflow-scheduler airflow dags unpause ingest_oltp_to_bronze
 docker compose exec airflow-scheduler airflow dags unpause ingest_reference_snapshot
+docker compose exec airflow-scheduler airflow dags unpause reconcile_bronze   # kiểm tra Bronze đủ dữ liệu, mỗi giờ
 ```
 
 ### Kiểm tra sau deploy

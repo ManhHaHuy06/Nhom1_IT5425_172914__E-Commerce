@@ -18,7 +18,7 @@ docker compose --profile sim run --rm simulator python run.py status
 docker compose --profile sim run --rm simulator python run.py pause | resume
 ```
 Airflow UI http://localhost:8080 (user/password: `AIRFLOW_ADMIN_*` in `.env`) – unpause
-`ingest_oltp_to_bronze` (every 15 min) and `ingest_reference_snapshot` (daily).
+`ingest_oltp_to_bronze` (every 15 min), `ingest_reference_snapshot` (daily) and `reconcile_bronze` (hourly check).
 MinIO console http://localhost:9001 · OLTP MySQL `localhost:3307`.
 
 ## Verify
@@ -27,6 +27,11 @@ MinIO console http://localhost:9001 · OLTP MySQL `localhost:3307`.
 docker compose --profile sim run --rm simulator python run.py bootstrap --until 2018-12-31
 docker compose --profile sim run --rm simulator python verify_source.py
 ```
+Bronze completeness (DAG `reconcile_bronze`, hourly; run now with
+`docker compose exec airflow-scheduler airflow dags test reconcile_bronze`): every OLTP row version with
+`updated_at <= wm__<table>` must be in `bronze/<table>/`. Rows can be skipped when a transaction commits more than
+`LAG_SECONDS` after its writes (`updated_at` is the statement time). On failure the task message gives the
+`airflow variables set wm__<table> '<ts>'` command that moves the watermark back so the next ingest run re-lands them.
 
 ## Downstream: olist-lakehouse
 `../olist-lakehouse` reads this Bronze (`s3a://olist-lake/bronze`) with Spark, through host port 9000, as the
@@ -47,8 +52,9 @@ then run `olist-lakehouse/run_lakehouse.bat`. Contract between the two:
 | `source/replay.py` | applies an event slice to the OLTP DB (idempotent) |
 | `source/run.py` | simulator CLI: bootstrap / live / pause / resume / status |
 | `source/seed.py`, `source/verify_source.py` | seed reference tables; reconcile OLTP vs CSV (exit code 1 on failure) |
-| `airflow/include/bronze.py` | Bronze key layout + `land()` (stream a query to fixed-schema Parquet parts), used by both DAGs |
-| `airflow/include/oltp.py`, `s3_utils.py` | cached OLTP engine / S3 client, Arrow schema from OLTP columns |
+| `airflow/include/bronze.py` | Bronze key layout, watermark tables/Variables + `land()` (stream a query to fixed-schema Parquet parts, then delete parts left by an earlier attempt) |
+| `airflow/include/reconcile.py` | OLTP vs Bronze version check used by `reconcile_bronze` |
+| `airflow/include/oltp.py`, `s3_utils.py` | cached OLTP engine / S3 client (put/list/delete/read), Arrow schema from OLTP columns |
 
 ## Notes
 - Official MinIO images/binaries are no longer published, so `infra/minio/Dockerfile` builds MinIO + mc from source.

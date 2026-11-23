@@ -58,10 +58,12 @@ refactor_project/
 │   │   ├── Dockerfile                      # adds pymysql cryptography pyarrow boto3 sqlalchemy pandas (constraints-2.10.5)
 │   │   ├── dags/ingest_oltp_to_bronze.py   # */15 min incremental extract, watermark Variables wm__<table>
 │   │   ├── dags/ingest_reference_snapshot.py # @daily full snapshot of reference tables
+│   │   ├── dags/reconcile_bronze.py        # @hourly check: OLTP versions <= wm__<table> all present in Bronze
 │   │   └── include/                        # on PYTHONPATH (/opt/airflow/include)
-│   │       ├── bronze.py                   # Bronze key layout (stamp, incremental_prefix, snapshot_prefix, manifest_key) + land() chunked SQL→Parquet loop
+│   │       ├── bronze.py                   # Bronze key layout (stamp, incremental_prefix, snapshot_prefix, manifest_key), TRANSACTION_TABLES, watermark_var() + land() chunked SQL→Parquet loop
+│   │       ├── reconcile.py                # KEYS (PK per table), check_table(): OLTP (key, updated_at) vs Bronze
 │   │       ├── oltp.py                     # engine() from Variable OLTP_URL
-│   │       └── s3_utils.py                 # boto3 client, arrow_schema(), put_parquet(), put_json()
+│   │       └── s3_utils.py                 # boto3 client, arrow_schema(), put_parquet(), put_json(), list_keys(), delete_keys(), read_parquet()
 │   ├── .gitattributes                      # *.sh eol=lf (02_users.sh, minio-init.sh run in Linux containers)
 │   ├── infra/minio/Dockerfile              # builds minio + mc from source (@latest — non-reproducible)
 │   ├── infra/minio-init.sh                 # bucket + prefixes + read-only lake-reader user/policy
@@ -182,13 +184,15 @@ order_status = IF(FIELD(cur) < FIELD(target), target, cur)` (forward-only); `_re
 get_window ──► extract_load.expand(table ∈ TABLES) ──► write_manifest ──► commit_watermark (outlet Dataset s3://olist-lake/bronze/)
 ```
 1. `get_window`: `wm_to = SELECT NOW(3) - INTERVAL 10 SECOND` (DB clock, `LAG_SECONDS`); `wm_from = Variable wm__<t>` default `1970-01-01 00:00:00`. Same `wm_to` for all 5 tables.
-2. `extract_load(table)`: `SELECT * FROM <t> WHERE updated_at > :a AND updated_at <= :b ORDER BY updated_at`, streamed `chunksize=100_000`; via `bronze.land()` appends `_ingested_at`, `_source_table`, `_batch_id=stamp(wm_from)`, `_op='upsert'`; writes `bronze/<t>/ingest_date=<wm_to YYYYMMDD>/batch_id=<stamp(wm_from)>/part-NNNNN.parquet` with fixed `arrow_schema` (snappy, µs timestamps).
-3. `write_manifest`: `bronze/_manifests/batch_id=<stamp(wm_to)>/manifest.json` (`{batch_id, tables[{table,rows,parts,from,to}], total_rows}`). Note: manifest key uses `wm_to`, data keys use `wm_from`.
+2. `extract_load(table)`: `SELECT * FROM <t> WHERE updated_at > :a AND updated_at <= :b ORDER BY updated_at`, streamed `chunksize=100_000`; via `bronze.land()` appends `_ingested_at`, `_source_table`, `_batch_id=stamp(wm_from)`, `_op='upsert'`; writes `bronze/<t>/ingest_date=<wm_to YYYYMMDD>/batch_id=<stamp(wm_from)>/part-NNNNN.parquet` with fixed `arrow_schema` (snappy, µs timestamps). After writing, `land()` deletes any other object in that prefix (parts left by an earlier attempt that produced more chunks).
+3. `write_manifest`: `bronze/_manifests/batch_id=<stamp(wm_to)>/manifest.json` (`{batch_id, tables[{table,rows,parts,stale_parts_removed,from,to}], total_rows}`). Note: manifest key uses `wm_to`, data keys use `wm_from`.
 4. `commit_watermark`: sets every `wm__<t>` = `wm_to` **only after** all tables + manifest succeeded → failed runs re-read the same window and overwrite the same keys.
 Settings: `catchup=False`, `max_active_runs=1`, `retries=3`, `retry_delay=1m`.
 
 `ingest_reference_snapshot` (@daily): for `products, sellers, geolocation, product_category_name_translation` full `SELECT *`
 (chunk 200k) → `bronze/ref_{products,sellers,geolocation,category_translation}/snapshot_date=<ds>/part-NNNNN.parquet`, metadata `_ingested_at, _source_table, _snapshot_date`.
+
+`reconcile_bronze` (@hourly, `max_active_runs=1`, `retries=1`): `check.expand(table ∈ TRANSACTION_TABLES)`. Per table: reads committed `wm__<t>` (skips if unset), `SELECT <PK>, updated_at FROM <t> WHERE updated_at <= wm` from OLTP, reads PK + `updated_at` of every Parquet object under `bronze/<t>/`, compares `(PK, updated_at)` at ms precision. Any OLTP version missing in Bronze → `AirflowFailException` (no retry) with count, sample keys and the repair command `airflow variables set wm__<t> '<oldest missing updated_at − 1 ms>'` (next ingest run re-lands from there; duplicate versions are deduped by Silver). Separate DAG because it reads all batches of a table (one small empty Parquet per table is written every 15-min run even without changes).
 
 ### 3.4 Flow C — Lakehouse batch (`run_lakehouse.bat` → `olist_pipeline.py`)
 
@@ -303,6 +307,7 @@ No HTTP API is implemented in this repo (FastAPI/CDC were planned, not built). I
 | `python seed.py`, `build_events.py`, `verify_source.py` | idempotent seed; regenerate events; prints PASS/FAIL lines + `ALL PASS` |
 | Airflow DAG `ingest_oltp_to_bronze` | schedule `*/15 * * * *`; outlet Dataset `s3://olist-lake/bronze/` (no consumer DAG exists) |
 | Airflow DAG `ingest_reference_snapshot` | schedule `@daily`, keyed by logical date `ds` |
+| Airflow DAG `reconcile_bronze` | schedule `@hourly`; fails if an OLTP row version `<= wm__<t>` is absent from Bronze; ad hoc: `airflow dags test reconcile_bronze` |
 | Airflow Variables | `OLTP_URL`, `MINIO_ENDPOINT`, `MINIO_ACCESS_KEY`, `MINIO_SECRET_KEY`, `MINIO_BUCKET` (env-injected); `wm__customers|orders|order_items|order_payments|order_reviews` (state) |
 | `olist_pipeline.py` | `--stage {ddl,bronze,silver-dimensions,silver-facts,gold}` (required), `--layers-dir` (required), `--mode {overwrite,append}` (default `overwrite`), `--source-uri` (default `s3a://olist-lake/bronze`), `--start-date`, `--end-date`, `--batch-id` (default `UTC%Y%m%dT%H%M%S-<8hex>`) |
 | `run_lakehouse.bat [stage ...]` | stages: `infra ddl bronze silver-dimensions|silver-dims silver-facts silver gold clickhouse all help`; env `OLIST_SOURCE_URI`, `OLIST_BRONZE_MODE`, `OLIST_BATCH_ID`, `OLIST_START_DATE`, `OLIST_END_DATE` |
@@ -414,7 +419,8 @@ Deploy: `hosting_server/deployment.md` (compose override `docker-compose.prod.ym
 ### 7.3 Known gotchas & technical debt
 - **Bronze "overwrite" replaces the whole table** (unpartitioned + `overwritePartitions`). `olist_pipeline.parse_args` therefore rejects `--stage bronze` with `--start-date/--end-date` unless `--mode append`. Use `OLIST_BRONZE_MODE=append` for partial loads (duplicates are tolerated by `latest()`).
 - Date filters for `hosting` source refer to `ingest_date` (Airflow landing day of `wm_to`), not order purchase dates.
-- Retried incremental windows overwrite `part-*` with identical names; if a retry produces fewer parts, stale extra parts remain (duplicate row versions — harmless only because Silver dedups).
+- Retries of the same window/snapshot rewrite the same prefix and `land()` removes leftover parts. A failed run re-done by a *new* DAG run keeps `wm_from` but gets a new `wm_to`, so if the day changed its batch lands under a different `ingest_date=` and the partial files of the failed run stay (duplicate row versions, harmless because Silver dedups).
+- Watermark gap: `updated_at` is the statement time, not the commit time. A transaction committing more than `LAG_SECONDS` (10 s) after its writes leaves rows behind an already-read window; they are never extracted. Simulator chunks commit in ~0.7 s (full bootstrap 493,937 events in ~70 s), so this is unlikely, and `reconcile_bronze` detects it.
 - `ingest_reference_snapshot` keys by logical date `ds`; Bronze reads only the max `snapshot_date`. Reference tables have no `updated_at`, so `source_updated_at` is NULL and `latest()` falls back to `loaded_at`.
 - `fact_reviews` dedups on `review_id` alone while OLTP uniqueness is `(review_id, order_id)`: 789 review_ids map to multiple orders; which order keeps the review depends on version order (~70 orders differ run-to-run). Changing the key changes Gold metrics — coordinate with `docs/GOLD_DESIGN.md`.
 - Silver drops ~1,400 orders with inverted timelines (A1–A6) → Silver ≈ 98,059 orders vs 99,441 in OLTP; Gold `fact_item_sales` ≈ 110,500 rows. These are expected reference numbers for a full replay.
