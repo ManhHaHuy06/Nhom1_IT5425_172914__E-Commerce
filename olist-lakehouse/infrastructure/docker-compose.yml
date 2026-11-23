@@ -136,7 +136,7 @@ services:
       AWS_ACCESS_KEY_ID: ${MINIO_ROOT_USER}
       AWS_SECRET_ACCESS_KEY: ${MINIO_ROOT_PASSWORD}
       AWS_REGION: us-east-1
-      PYTHONPATH: /opt/spark
+      PYTHONPATH: /opt/spark:/opt/olist-ml
       SOURCE_S3_ENDPOINT: ${SOURCE_S3_ENDPOINT:-http://host.docker.internal:9000}
       SOURCE_S3_BUCKET: ${SOURCE_S3_BUCKET:-olist-lake}
       SOURCE_S3_ACCESS_KEY: ${SOURCE_S3_ACCESS_KEY:-}
@@ -149,6 +149,10 @@ services:
       - ../olist_pipeline.py:/opt/spark/olist_pipeline.py:ro
       - ../common:/opt/spark/common:ro
       - ../layers:/opt/spark/layers:ro
+      # ML (stage predict + huấn luyện trong container): package olist-ml, thư mục artifacts (ghi được), CSV gốc để train
+      - ../../olist-ml/olist_ml:/opt/olist-ml/olist_ml:ro
+      - ../../olist-ml/artifacts:/opt/olist-ml/artifacts
+      - ../../hosting_server/Data:/data:ro
     depends_on:
       minio-init:
         condition: service_completed_successfully

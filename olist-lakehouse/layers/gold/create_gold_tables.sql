@@ -188,3 +188,36 @@ CREATE TABLE IF NOT EXISTS iceberg.gold.dim_customer_profile (
     repurchase_observable       INT
 ) USING iceberg
 TBLPROPERTIES ('write.format.default' = 'parquet');
+
+-- ============================================================================ DỰ ĐOÁN ML (stage `predict`, xem docs/ML_PREDICTIONS.md)
+-- Không nằm trong build_marts: do layers/predict/build_predictions.py ghi (Silver + trọng số trên MinIO). Thứ tự cột là hợp đồng
+-- với olist-ml/olist_ml/predict_core.py (ORDER_PRED_COLUMNS) và layers/clickhouse/init_gold.sql.
+-- 1 dòng / đơn. late_risk dùng để XẾP HẠNG (không phải xác suất). Cờ theo thứ hạng trong cửa sổ 3 ngày trước, chỉ tính trên đơn bán.
+CREATE TABLE IF NOT EXISTS iceberg.gold.order_predictions (
+    order_id            STRING,
+    order_key           BIGINT,
+    purchase_date       DATE,
+    late_risk           DOUBLE,
+    expected_days       DOUBLE,
+    safe_promise_days   DOUBLE,
+    is_flagged          INT,
+    is_escalated        INT,
+    model_version       STRING,
+    scored_at           TIMESTAMP
+) USING iceberg
+PARTITIONED BY (months(purchase_date))
+TBLPROPERTIES ('write.format.default' = 'parquet');
+
+-- Dự báo số đơn/ngày cho 28 ngày tới, tính từ ngày cuối cùng ĐẦY ĐỦ dữ liệu (origin_date). level = 'ALL' (giai đoạn 1).
+CREATE TABLE IF NOT EXISTS iceberg.gold.forecast_daily_orders (
+    level           STRING,
+    origin_date     DATE,
+    target_date     DATE,
+    horizon_day     INT,
+    forecast        DOUBLE,
+    lo80            DOUBLE,
+    hi80            DOUBLE,
+    model_version   STRING,
+    scored_at       TIMESTAMP
+) USING iceberg
+TBLPROPERTIES ('write.format.default' = 'parquet');

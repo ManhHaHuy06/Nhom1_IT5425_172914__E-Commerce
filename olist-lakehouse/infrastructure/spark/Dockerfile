@@ -9,7 +9,11 @@ ARG ICEBERG_VERSION
 USER root
 
 # Chuẩn bị môi trường cài đặt
-RUN apt-get update && apt-get install -y curl wget && rm -rf /var/lib/apt/lists/*
+RUN apt-get update && apt-get install -y curl wget python3-pip && rm -rf /var/lib/apt/lists/*
+
+# Thư viện cho stage `predict` (suy luận scikit-learn trên driver). KHÔNG ghim phiên bản: trọng số được train TRONG container này
+# (olist-ml/train_model.bat) nên file pickle luôn được đọc bằng đúng phiên bản đã ghi; stage predict kiểm tra lại model_card.json.
+RUN pip3 install --no-cache-dir pandas numpy scikit-learn joblib
 
 ENV SPARK_HOME=/opt/spark
 ENV SPARK_JARS_DIR=${SPARK_HOME}/jars

@@ -189,6 +189,34 @@ CREATE OR REPLACE TABLE olist_gold.dim_customer_profile__new (
 ) ENGINE = MergeTree
 ORDER BY customer_key;
 
+-- Dự đoán ML (stage predict). Cùng thứ tự cột với layers/gold/create_gold_tables.sql.
+CREATE OR REPLACE TABLE olist_gold.order_predictions__new (
+    order_id            String,
+    order_key           Nullable(Int64),
+    purchase_date       Date,
+    late_risk           Float64,
+    expected_days       Float64,
+    safe_promise_days   Float64,
+    is_flagged          Int32,
+    is_escalated        Int32,
+    model_version       String,
+    scored_at           DateTime64(6)
+) ENGINE = MergeTree
+ORDER BY (purchase_date, order_id);
+
+CREATE OR REPLACE TABLE olist_gold.forecast_daily_orders__new (
+    level           String,
+    origin_date     Date,
+    target_date     Date,
+    horizon_day     Int32,
+    forecast        Float64,
+    lo80            Float64,
+    hi80            Float64,
+    model_version   String,
+    scored_at       DateTime64(6)
+) ENGINE = MergeTree
+ORDER BY (level, target_date);
+
 -- Bảng phục vụ: lần đầu tạo rỗng theo schema <t>__new, các lần sau giữ nguyên (EXCHANGE trong load_gold.sql đưa schema mới sang).
 -- shortcut: view tham chiếu cột mới thêm vào DDL sẽ lỗi khi bảng phục vụ còn schema cũ; khi đó DROP TABLE olist_gold.<t> một lần rồi chạy lại stage clickhouse.
 CREATE TABLE IF NOT EXISTS olist_gold.report_period AS olist_gold.report_period__new;
@@ -199,6 +227,8 @@ CREATE TABLE IF NOT EXISTS olist_gold.dim_state AS olist_gold.dim_state__new;
 CREATE TABLE IF NOT EXISTS olist_gold.dim_category AS olist_gold.dim_category__new;
 CREATE TABLE IF NOT EXISTS olist_gold.dim_seller AS olist_gold.dim_seller__new;
 CREATE TABLE IF NOT EXISTS olist_gold.dim_customer_profile AS olist_gold.dim_customer_profile__new;
+CREATE TABLE IF NOT EXISTS olist_gold.order_predictions AS olist_gold.order_predictions__new;
+CREATE TABLE IF NOT EXISTS olist_gold.forecast_daily_orders AS olist_gold.forecast_daily_orders__new;
 
 -- ============================================================================ view cho Power BI
 -- Tên view = tên bảng trong model, cột = header CSV cũ trong olist-eda/powerbi/data/

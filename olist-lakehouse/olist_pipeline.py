@@ -15,6 +15,12 @@ from layers.gold.build_marts import build_marts
 from layers.silver.dimensions import build_dimensions
 from layers.silver.facts import build_facts
 
+def _predict(spark):
+    # Import hoãn: stage này cần pandas + scikit-learn (infrastructure/spark/Dockerfile) và package olist-ml (mount /opt/olist-ml).
+    from layers.predict.build_predictions import build_predictions
+    build_predictions(spark)
+
+
 STAGES = {
     "ddl": lambda spark, a: apply_ddl(spark, a.layers_dir),
     "bronze": lambda spark, a: load_bronze(spark, batch_id=a.batch_id, mode=a.mode, source_uri=a.source_uri,
@@ -22,6 +28,7 @@ STAGES = {
     "silver-dimensions": lambda spark, a: build_dimensions(spark),
     "silver-facts": lambda spark, a: build_facts(spark),
     "gold": lambda spark, a: build_marts(spark),
+    "predict": lambda spark, a: _predict(spark),
 }
 
 

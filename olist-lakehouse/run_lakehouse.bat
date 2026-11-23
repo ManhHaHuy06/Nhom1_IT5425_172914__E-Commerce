@@ -5,7 +5,7 @@ rem Olist lakehouse runner.  Usage: run_lakehouse.bat [stage ...]   (see :help)
 rem Only the listed stages run, always in pipeline order. No stage = all.
 rem Bronze source: Parquet landed by hosting_server Airflow in s3a://olist-lake/bronze (SOURCE_S3_* in infrastructure/.env).
 
-set "PIPELINE=infra ddl bronze silver-dimensions silver-facts gold clickhouse"
+set "PIPELINE=infra ddl bronze silver-dimensions silver-facts gold predict clickhouse"
 rem Script folder: read %~dp0 before SHIFT (SHIFT also moves %0, after which %~dp0 is the current directory)
 set "Root=%~dp0"
 if "%Root:~-1%"=="\" set "Root=%Root:~0,-1%"
@@ -153,6 +153,7 @@ echo   silver-dimensions   Spark Silver dimensions   ^(alias: silver-dims^)
 echo   silver-facts        Spark Silver facts
 echo   silver              silver-dimensions + silver-facts
 echo   gold                Spark Gold marts + Parquet export
+echo   predict             Spark ML predictions into Gold ^(needs weights in MinIO, see docs/ML_PREDICTIONS.md^)
 echo   clickhouse          Load Gold Parquet into ClickHouse
 echo   all                 Same as no args
 echo.
