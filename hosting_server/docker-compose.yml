@@ -15,6 +15,9 @@ x-airflow-common: &airflow-common
     AIRFLOW_VAR_MINIO_ACCESS_KEY: ${MINIO_ACCESS_KEY}
     AIRFLOW_VAR_MINIO_SECRET_KEY: ${MINIO_SECRET_KEY}
     AIRFLOW_VAR_MINIO_BUCKET: ${MINIO_BUCKET}
+    AIRFLOW_VAR_LAKEHOUSE_SPARK_CONTAINER: ${LAKEHOUSE_SPARK_CONTAINER:-olist-spark-master}
+    AIRFLOW_VAR_LAKEHOUSE_CLICKHOUSE_CONTAINER: ${LAKEHOUSE_CLICKHOUSE_CONTAINER:-olist-clickhouse}
+    AIRFLOW_VAR_LAKEHOUSE_SOURCE_URI: ${LAKEHOUSE_SOURCE_URI:-s3a://olist-lake/landing}
   volumes:
     - ./airflow/dags:/opt/airflow/dags
     - ./airflow/include:/opt/airflow/include
@@ -125,8 +128,9 @@ services:
       - -c
       - |
         airflow db migrate &&
-        airflow users create --username "${AIRFLOW_ADMIN_USER}" --password "${AIRFLOW_ADMIN_PASSWORD}" \
-          --firstname Admin --lastname User --role Admin --email admin@example.com || true
+        (airflow users create --username "${AIRFLOW_ADMIN_USER}" --password "${AIRFLOW_ADMIN_PASSWORD}" \
+          --firstname Admin --lastname User --role Admin --email admin@example.com || true) &&
+        airflow pools set spark_pool 1 "Limit concurrent Spark jobs on single worker"
     restart: "no"
 
   airflow-webserver:
@@ -143,6 +147,14 @@ services:
     image: olist-airflow:local
     <<: *airflow-common
     command: scheduler
+    group_add:
+      - "${DOCKER_GID:-0}"
+    volumes:
+      - ./airflow/dags:/opt/airflow/dags
+      - ./airflow/include:/opt/airflow/include
+      - airflow_logs:/opt/airflow/logs
+      # shortcut: direct docker.sock on scheduler for local/single-VM dev; route through restricted docker-socket-proxy (containers/exec only) in multi-tenant prod
+      - /var/run/docker.sock:/var/run/docker.sock
     depends_on:
       airflow-init:
         condition: service_completed_successfully
