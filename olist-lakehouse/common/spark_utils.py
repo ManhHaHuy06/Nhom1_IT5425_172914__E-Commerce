@@ -6,6 +6,7 @@ import os
 
 from pyspark.sql import DataFrame, SparkSession
 from pyspark.sql import functions as F
+from pyspark.sql.types import StructType
 from pyspark.sql.window import Window
 
 
@@ -55,7 +56,8 @@ def apply_ddl(spark: SparkSession, layers_dir: str) -> None:
     for relative in (
         "bronze/create_bronze_tables.sql",
         "silver/create_silver_tables.sql",
-        "gold/create_gold_tables.sql",
+        "gold/market/create_gold_tables.sql",
+        "gold/seller/create_gold_tables.sql",
     ):
         path = os.path.join(layers_dir, relative)
         print(f"Applying {path}")
@@ -63,6 +65,14 @@ def apply_ddl(spark: SparkSession, layers_dir: str) -> None:
             for statement in split_sql(handle.read()):
                 spark.sql(statement)
     print("DDL complete")
+
+
+def conform(df: DataFrame, schema: StructType) -> DataFrame:
+    """Select and cast columns to match target DDL schema in exact positional order."""
+    missing = [f.name for f in schema if f.name not in df.columns]
+    if missing:
+        raise ValueError(f"DataFrame missing columns required by DDL: {missing}")
+    return df.select(*[F.col(f.name).cast(f.dataType).alias(f.name) for f in schema])
 
 
 def blank_to_null(df: DataFrame) -> DataFrame:

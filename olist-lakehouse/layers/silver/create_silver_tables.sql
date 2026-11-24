@@ -1,12 +1,25 @@
--- SILVER LAYER DDL - mirrors Nhom1_IT5425_172914__E-Commerce/schema.sql (olist_dw)
--- Iceberg equivalents: VARCHAR/TEXT -> STRING, DATETIME -> TIMESTAMP, TINYINT -> INT.
--- No FK / PK enforcement in Iceberg (documented in schema.sql only).
--- Surrogate keys: xxhash64() in Spark.
+-- SILVER LAYER DDL (3NF Entity Model) + QUARANTINE DDL
+-- Pure entity model using natural keys (no Kimball dim_/fact_, no xxhash64 surrogate keys, no aggregations).
+-- Rejected rows from Silver DQ checks (null PK, timeline A1-A6, orphan FKs) go to iceberg.quarantine.silver_rejected_records.
 
 CREATE NAMESPACE IF NOT EXISTS iceberg.silver;
+CREATE NAMESPACE IF NOT EXISTS iceberg.quarantine;
 
-CREATE TABLE IF NOT EXISTS iceberg.silver.dim_geolocation (
-    geolocation_key     BIGINT,
+-- Remove legacy Kimball tables from previous Silver schema.
+DROP TABLE IF EXISTS iceberg.silver.dim_geolocation;
+DROP TABLE IF EXISTS iceberg.silver.dim_category;
+DROP TABLE IF EXISTS iceberg.silver.dim_customer;
+DROP TABLE IF EXISTS iceberg.silver.dim_seller;
+DROP TABLE IF EXISTS iceberg.silver.dim_product;
+DROP TABLE IF EXISTS iceberg.silver.dim_date;
+DROP TABLE IF EXISTS iceberg.silver.fact_orders;
+DROP TABLE IF EXISTS iceberg.silver.fact_order_items;
+DROP TABLE IF EXISTS iceberg.silver.fact_payments;
+DROP TABLE IF EXISTS iceberg.silver.fact_reviews;
+DROP TABLE IF EXISTS iceberg.silver.fact_customer_order;
+
+-- Master entities
+CREATE TABLE IF NOT EXISTS iceberg.silver.geolocation (
     zip_code_prefix     INT,
     city                STRING,
     state               STRING,
@@ -16,35 +29,30 @@ CREATE TABLE IF NOT EXISTS iceberg.silver.dim_geolocation (
 ) USING iceberg
 TBLPROPERTIES ('write.format.default' = 'parquet');
 
-CREATE TABLE IF NOT EXISTS iceberg.silver.dim_category (
-    category_key                    BIGINT,
+CREATE TABLE IF NOT EXISTS iceberg.silver.categories (
     product_category_name           STRING,
     product_category_name_english   STRING
 ) USING iceberg
 TBLPROPERTIES ('write.format.default' = 'parquet');
 
-CREATE TABLE IF NOT EXISTS iceberg.silver.dim_customer (
-    customer_key        BIGINT,
+CREATE TABLE IF NOT EXISTS iceberg.silver.customers (
     customer_unique_id  STRING,
+    zip_code_prefix     INT,
     city                STRING,
-    state               STRING,
-    geolocation_key     BIGINT
+    state               STRING
 ) USING iceberg
 TBLPROPERTIES ('write.format.default' = 'parquet');
 
-CREATE TABLE IF NOT EXISTS iceberg.silver.dim_seller (
-    seller_key          BIGINT,
+CREATE TABLE IF NOT EXISTS iceberg.silver.sellers (
     seller_id           STRING,
+    zip_code_prefix     INT,
     city                STRING,
-    state               STRING,
-    geolocation_key     BIGINT
+    state               STRING
 ) USING iceberg
 TBLPROPERTIES ('write.format.default' = 'parquet');
 
-CREATE TABLE IF NOT EXISTS iceberg.silver.dim_product (
-    product_key                  BIGINT,
+CREATE TABLE IF NOT EXISTS iceberg.silver.products (
     product_id                   STRING,
-    category_key                 BIGINT,
     product_category_name        STRING,
     product_name_length          INT,
     product_description_length   INT,
@@ -56,25 +64,11 @@ CREATE TABLE IF NOT EXISTS iceberg.silver.dim_product (
 ) USING iceberg
 TBLPROPERTIES ('write.format.default' = 'parquet');
 
-CREATE TABLE IF NOT EXISTS iceberg.silver.dim_date (
-    date_key        INT,
-    date            DATE,
-    year            INT,
-    quarter         INT,
-    month           INT,
-    month_name      STRING,
-    week_of_year    INT,
-    day             INT,
-    day_of_week     INT,
-    is_weekend      BOOLEAN
-) USING iceberg
-TBLPROPERTIES ('write.format.default' = 'parquet');
-
-CREATE TABLE IF NOT EXISTS iceberg.silver.fact_orders (
-    order_key                         BIGINT,
+-- Transactional entities
+CREATE TABLE IF NOT EXISTS iceberg.silver.orders (
     order_id                          STRING,
-    customer_key                      BIGINT,
-    purchase_date_key                 INT,
+    customer_id                       STRING,
+    customer_unique_id                STRING,
     order_status                      STRING,
     order_purchase_timestamp          TIMESTAMP,
     order_approved_at                 TIMESTAMP,
@@ -89,14 +83,11 @@ CREATE TABLE IF NOT EXISTS iceberg.silver.fact_orders (
 ) USING iceberg
 TBLPROPERTIES ('write.format.default' = 'parquet');
 
-CREATE TABLE IF NOT EXISTS iceberg.silver.fact_order_items (
-    item_key                BIGINT,
-    order_key               BIGINT,
+CREATE TABLE IF NOT EXISTS iceberg.silver.order_items (
     order_id                STRING,
     order_item_id           INT,
-    product_key             BIGINT,
-    seller_key              BIGINT,
-    date_key                INT,
+    product_id              STRING,
+    seller_id               STRING,
     shipping_limit_date     TIMESTAMP,
     price                   DOUBLE,
     freight_value           DOUBLE,
@@ -104,9 +95,7 @@ CREATE TABLE IF NOT EXISTS iceberg.silver.fact_order_items (
 ) USING iceberg
 TBLPROPERTIES ('write.format.default' = 'parquet');
 
-CREATE TABLE IF NOT EXISTS iceberg.silver.fact_payments (
-    payment_key             BIGINT,
-    order_key               BIGINT,
+CREATE TABLE IF NOT EXISTS iceberg.silver.order_payments (
     order_id                STRING,
     payment_sequential      INT,
     payment_type            STRING,
@@ -115,11 +104,9 @@ CREATE TABLE IF NOT EXISTS iceberg.silver.fact_payments (
 ) USING iceberg
 TBLPROPERTIES ('write.format.default' = 'parquet');
 
-CREATE TABLE IF NOT EXISTS iceberg.silver.fact_reviews (
-    review_key                  BIGINT,
-    order_key                   BIGINT,
-    order_id                    STRING,
+CREATE TABLE IF NOT EXISTS iceberg.silver.order_reviews (
     review_id                   STRING,
+    order_id                    STRING,
     review_score                INT,
     review_comment_title        STRING,
     review_comment_message      STRING,
@@ -130,16 +117,18 @@ CREATE TABLE IF NOT EXISTS iceberg.silver.fact_reviews (
 ) USING iceberg
 TBLPROPERTIES ('write.format.default' = 'parquet');
 
-CREATE TABLE IF NOT EXISTS iceberg.silver.fact_customer_order (
-    customer_order_key          BIGINT,
-    customer_key                BIGINT,
-    order_count                 BIGINT,
-    delivered_order_count       BIGINT,
-    canceled_order_count        BIGINT,
-    total_spent                 DOUBLE,
-    average_order_value         DOUBLE,
-    first_order_timestamp       TIMESTAMP,
-    last_order_timestamp        TIMESTAMP,
-    average_delivery_days       DOUBLE
+-- Data quality quarantine
+CREATE TABLE IF NOT EXISTS iceberg.quarantine.silver_rejected_records (
+    quarantined_at      TIMESTAMP,
+    batch_id            STRING,
+    source_table        STRING,
+    target_table        STRING,
+    record_key          STRING,
+    rule_code           STRING,
+    reason              STRING,
+    source_updated_at   STRING,
+    source_file         STRING,
+    raw_payload         STRING
 ) USING iceberg
+PARTITIONED BY (target_table)
 TBLPROPERTIES ('write.format.default' = 'parquet');

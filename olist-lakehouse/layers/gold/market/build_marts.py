@@ -1,11 +1,7 @@
-"""Build Gold marts for the Power BI dashboard from Silver, then export Parquet for ClickHouse.
+"""Build Gold Market Kimball marts from Silver 3NF entities, then export Parquet for ClickHouse (olist_gold).
 
-Thiết kế: docs/GOLD_DESIGN.md. Logic khớp olist-eda/powerbi/build_data*.py và build_repurchase.py
-(phiên bản CSV cũ) để dashboard đổi nguồn mà không đổi ý nghĩa số liệu.
-
-Cấu trúc:
-- `compute_marts()` chỉ biến đổi DataFrame (không đọc/ghi bảng) → test được bằng Spark local.
-- `build_marts()` đọc Silver, ghi từng bảng Gold (ghi đè toàn bộ), rồi export Parquet.
+Thiết kế: docs/GOLD_DESIGN.md. Đọc các bảng thực thể 3NF ở iceberg.silver.* bằng natural key và sinh khóa
+surrogate xxhash64 tại tầng Gold để giữ tương thích hoàn toàn với ClickHouse olist_gold và Power BI PBIP.
 """
 
 from __future__ import annotations
@@ -16,18 +12,18 @@ from typing import Callable
 
 from pyspark.sql import Column, DataFrame, SparkSession
 from pyspark.sql import functions as F
-from pyspark.sql.types import StructType
 from pyspark.sql.window import Window
 
-from layers.gold import config as C
+from common.spark_utils import conform
+from layers.gold.market import config as C
 
 SILVER = "iceberg.silver"
 GOLD = "iceberg.gold"
 EXPORT_ROOT = "s3a://lakehouse/exports/gold"
 
 SILVER_TABLES = (
-    "fact_orders", "fact_order_items", "fact_payments", "fact_reviews",
-    "dim_customer", "dim_seller", "dim_product", "dim_category",
+    "orders", "order_items", "order_payments", "order_reviews",
+    "customers", "sellers", "products", "categories",
 )
 # Thứ tự build = thứ tự phụ thuộc.
 GOLD_TABLES = (
@@ -39,16 +35,8 @@ Materialize = Callable[[str, DataFrame], DataFrame]
 
 
 # =============================================================================== helpers
-def conform(df: DataFrame, schema: StructType) -> DataFrame:
-    """Chọn và ép kiểu cột theo đúng schema bảng đích (DDL là nguồn sự thật)."""
-    missing = [f.name for f in schema if f.name not in df.columns]
-    if missing:
-        raise ValueError(f"DataFrame thiếu cột so với DDL: {missing}")
-    return df.select(*[F.col(f.name).cast(f.dataType).alias(f.name) for f in schema])
-
-
 def band(value: Column, bands: list, inclusive: bool = False) -> tuple[Column, Column]:
-    """(nhãn, thứ tự) theo danh sách (cận trên, nhãn); cận trên None = phần còn lại. Giá trị null → null."""
+    """(nhãn, thứ tự) theo danh sách (cận trên, nhãn); cận trên None = phần còn lại. Giá trị null -> null."""
     label = order = None
     for i, (cut, name) in enumerate(bands, 1):
         if cut is None:
@@ -79,48 +67,47 @@ def median(df: DataFrame, column: str) -> float | None:
 
 # =============================================================================== fact_order_summary
 def item_categories(products: DataFrame, categories: DataFrame, english_only: bool = False) -> DataFrame:
-    cat = categories.select("category_key", "product_category_name_english")
+    cat = categories.select("product_category_name", "product_category_name_english")
     fallback = [] if english_only else ["product_category_name"]
-    return products.join(cat, "category_key", "left").select(
-        "product_key", "product_id",
+    return products.join(cat, "product_category_name", "left").select(
+        "product_id",
         F.coalesce("product_category_name_english", *fallback, F.lit("unknown")).alias("category"),
     )
 
 
 def build_order_summary(spark: SparkSession, s: dict[str, DataFrame]) -> DataFrame:
-    # main_category: chỉ tên tiếng Anh, thiếu bản dịch = 'unknown' (khác `category` của item_sales,
-    # giữ đúng như customer_behaviour.ipynb / order_summary.csv cũ)
-    items = (s["fact_order_items"].join(item_categories(s["dim_product"], s["dim_category"], english_only=True),
-                                        "product_key", "left")
+    # main_category: chỉ tên tiếng Anh, thiếu bản dịch = 'unknown'
+    items = (s["order_items"].join(item_categories(s["products"], s["categories"], english_only=True),
+                                   "product_id", "left")
              .withColumn("category", F.coalesce("category", F.lit("unknown"))))
-    by_price = Window.partitionBy("order_key").orderBy(F.col("price").desc(), F.col("order_item_id"))
+    by_price = Window.partitionBy("order_id").orderBy(F.col("price").desc(), F.col("order_item_id"))
     item_order = (
         items.withColumn("_rn", F.row_number().over(by_price))
-        .groupBy("order_key")
+        .groupBy("order_id")
         .agg(
             F.count(F.lit(1)).alias("n_items"),
-            F.countDistinct("product_key").alias("n_products"),
-            F.countDistinct("seller_key").alias("n_sellers"),
+            F.countDistinct("product_id").alias("n_products"),
+            F.countDistinct("seller_id").alias("n_sellers"),
             F.round(F.sum("price"), 2).alias("product_value"),
             F.round(F.sum("freight_value"), 2).alias("freight_value"),
             F.max(F.when(F.col("_rn") == 1, F.col("category"))).alias("main_category"),
         )
     )
 
-    by_value = Window.partitionBy("order_key").orderBy(F.col("payment_value").desc(), F.col("payment_sequential"))
+    by_value = Window.partitionBy("order_id").orderBy(F.col("payment_value").desc(), F.col("payment_sequential"))
     pay_order = (
-        s["fact_payments"].withColumn("_rn", F.row_number().over(by_value))
-        .groupBy("order_key")
+        s["order_payments"].withColumn("_rn", F.row_number().over(by_value))
+        .groupBy("order_id")
         .agg(
             F.max("payment_installments").alias("installments"),
             F.max(F.when(F.col("_rn") == 1, F.col("payment_type"))).alias("payment_type"),
         )
     )
 
-    # Review → grain đơn: điểm TB; không hài lòng nếu có ≥1 review 1–2★; hài lòng nếu mọi review 4–5★
+    # Review -> grain đơn: điểm TB; không hài lòng nếu có >= 1 review 1-2*; hài lòng nếu mọi review 4-5*
     rev_order = (
-        s["fact_reviews"].filter(F.col("review_score").between(1, 5))
-        .groupBy("order_key")
+        s["order_reviews"].filter(F.col("review_score").between(1, 5))
+        .groupBy("order_id")
         .agg(
             F.avg("review_score").alias("review_score"),
             F.max(flag(F.col("review_score") <= 2)).alias("is_negative"),
@@ -128,8 +115,8 @@ def build_order_summary(spark: SparkSession, s: dict[str, DataFrame]) -> DataFra
         )
     )
 
-    customers = s["dim_customer"].select(
-        "customer_key", "state",
+    customers = s["customers"].select(
+        "customer_unique_id", "state",
         F.when(F.col("state").isNotNull() & F.col("city").isNotNull(),
                F.concat_ws("|", "state", "city")).alias("customer_city_key"),
     )
@@ -138,9 +125,13 @@ def build_order_summary(spark: SparkSession, s: dict[str, DataFrame]) -> DataFra
     delivered = F.to_date("order_delivered_customer_date")
     estimated = F.to_date("order_estimated_delivery_date")
     os_ = (
-        s["fact_orders"]
+        s["orders"]
         .select(
-            "order_key", "order_id", "customer_key", "order_status",
+            F.xxhash64("order_id").alias("order_key"),
+            "order_id",
+            "customer_unique_id",
+            F.xxhash64("customer_unique_id").alias("customer_key"),
+            "order_status",
             purchase_date.alias("purchase_date"),
             F.hour("order_purchase_timestamp").alias("purchase_hour"),
             flag(F.col("order_status") == "delivered").alias("is_delivered"),
@@ -149,11 +140,11 @@ def build_order_summary(spark: SparkSession, s: dict[str, DataFrame]) -> DataFra
             F.datediff(estimated, purchase_date).alias("estimated_delivery_days"),
             F.datediff(delivered, estimated).alias("delivery_delay_days"),
         )
-        .join(customers, "customer_key", "left")
+        .join(customers, "customer_unique_id", "left")
         .join(region_map(spark), "state", "left")
-        .join(item_order, "order_key", "left")
-        .join(pay_order, "order_key", "left")
-        .join(rev_order, "order_key", "left")
+        .join(item_order, "order_id", "left")
+        .join(pay_order, "order_id", "left")
+        .join(rev_order, "order_id", "left")
         .withColumn("payment_type", F.coalesce("payment_type", F.lit("unknown")))
         .withColumn("order_gmv", F.round(F.col("product_value") + F.col("freight_value"), 2))
         .withColumn("is_valid", flag(~F.col("order_status").isin(*C.INVALID_ORDER_STATUSES)
@@ -196,8 +187,10 @@ def build_order_summary(spark: SparkSession, s: dict[str, DataFrame]) -> DataFra
 def build_item_sales(spark: SparkSession, s: dict[str, DataFrame], orders: DataFrame) -> DataFrame:
     valid = orders.filter(F.col("is_valid") == 1).select(
         "order_key", "order_id", "customer_key", "purchase_date", F.col("state").alias("customer_state"))
-    sellers = s["dim_seller"].select(
-        "seller_key", "seller_id", F.col("state").alias("seller_state"),
+    sellers = s["sellers"].select(
+        F.xxhash64("seller_id").alias("seller_key"),
+        "seller_id",
+        F.col("state").alias("seller_state"),
         F.when(F.col("state").isNotNull() & F.col("city").isNotNull(),
                F.concat_ws("|", "state", "city")).alias("seller_city_key"))
     seller_regions = region_map(spark).select(
@@ -205,14 +198,15 @@ def build_item_sales(spark: SparkSession, s: dict[str, DataFrame], orders: DataF
         F.col("region_order").alias("seller_region_order"))
 
     items = (
-        s["fact_order_items"].select("order_key", "order_item_id", "product_key", "seller_key", "price", "freight_value")
-        .join(valid, "order_key", "inner")
-        .join(item_categories(s["dim_product"], s["dim_category"]), "product_key", "left")
-        .join(sellers, "seller_key", "left")
+        s["order_items"].select("order_id", "order_item_id", "product_id", "seller_id", "price", "freight_value")
+        .join(valid, "order_id", "inner")
+        .join(item_categories(s["products"], s["categories"]), "product_id", "left")
+        .join(sellers, "seller_id", "left")
         .join(seller_regions, "seller_state", "left")
+        .withColumn("product_key", F.xxhash64("product_id"))
         .withColumn("category", F.coalesce("category", F.lit("unknown")))
         .withColumn("item_gmv", F.round(F.col("price") + F.col("freight_value"), 2))
-        .withColumn("units", F.count(F.lit(1)).over(Window.partitionBy("product_key")))
+        .withColumn("units", F.count(F.lit(1)).over(Window.partitionBy("product_id")))
         .withColumn("is_local_seller", flag(F.col("seller_state") == F.col("customer_state")))
     )
     top = [r["category"] for r in items.groupBy("category").agg(F.sum("item_gmv").alias("g"))
@@ -228,9 +222,7 @@ def build_item_sales(spark: SparkSession, s: dict[str, DataFrame], orders: DataF
 
 # =============================================================================== report_period
 def build_report_period(orders: DataFrame, items: DataFrame) -> tuple[dict, DataFrame, DataFrame]:
-    """Kỳ báo cáo + thống kê ngành / bang dùng chung cho dim_category, dim_state.
-
-    Trả về (period, category_stats, state_stats)."""
+    """Kỳ báo cáo + thống kê ngành / bang dùng chung cho dim_category, dim_state."""
     valid = orders.filter(F.col("is_valid") == 1)
     monthly = (valid.groupBy((F.year("purchase_date") * 100 + F.month("purchase_date")).alias("k"))
                .count().collect())
@@ -305,7 +297,7 @@ def report_period_frame(spark: SparkSession, period: dict) -> DataFrame:
 
 # =============================================================================== dims
 def build_dim_date(orders: DataFrame) -> DataFrame:
-    iso_dow = (F.dayofweek("date") + 5) % 7 + 1  # Spark: 1 = CN → ISO: 1 = T2 … 7 = CN
+    iso_dow = (F.dayofweek("date") + 5) % 7 + 1  # Spark: 1 = CN -> ISO: 1 = T2 .. 7 = CN
     weekday = F.element_at(F.array(*[F.lit(d) for d in ["T2", "T3", "T4", "T5", "T6", "T7", "CN"]]), iso_dow)
     return (
         orders.agg(F.min("purchase_date").alias("d0"), F.max("purchase_date").alias("d1"))
@@ -390,8 +382,6 @@ def build_dim_seller(s: dict[str, DataFrame], orders: DataFrame, items: DataFram
     return (
         base.join(quality, "seller_key", "left").join(active, "seller_key", "left")
         .withColumn("gmv", F.round("gmv_exact", 2))
-        # xếp hạng trên số đã làm tròn: 2 người bán bằng GMV tới từng xu là đồng hạng (sai số cộng số thực
-        # theo thứ tự khác nhau không được làm đổi thứ hạng)
         .withColumn("gmv_rank", F.rank().over(Window.orderBy(F.col("gmv").desc())))
         .withColumn("seller_tier", tier).withColumn("seller_tier_order", tier_order)
         .withColumn("first_year", F.year("first_month"))
@@ -458,8 +448,12 @@ def build_customer_profile(s: dict[str, DataFrame], orders: DataFrame) -> DataFr
     gap_label, gap_order = band(F.col("days_to_2nd"), C.GAP_BANDS, inclusive=True)
     gap = gap.withColumn("gap_bucket", gap_label).withColumn("gap_order", gap_order)
 
-    # ---- Mua lại trong 90 ngày theo điểm đơn đầu (MỌI đơn, như customer_experience.ipynb)
-    ts = s["fact_orders"].select("order_key", "customer_key", F.col("order_purchase_timestamp").alias("ts"))
+    # ---- Mua lại trong 90 ngày theo điểm đơn đầu (MỌI đơn)
+    ts = s["orders"].select(
+        F.xxhash64("order_id").alias("order_key"),
+        F.xxhash64("customer_unique_id").alias("customer_key"),
+        F.col("order_purchase_timestamp").alias("ts"),
+    )
     ts = ts.join(orders.select("order_key", "score_int"), "order_key", "left")
     max_ts = ts.agg(F.max("ts").alias("t")).first()["t"]
     w = Window.partitionBy("customer_key").orderBy("ts", "order_key")
@@ -478,7 +472,10 @@ def build_customer_profile(s: dict[str, DataFrame], orders: DataFrame) -> DataFr
         )
     )
 
-    customers = s["dim_customer"].select("customer_key", "customer_unique_id", "state")
+    customers = s["customers"].select(
+        F.xxhash64("customer_unique_id").alias("customer_key"),
+        "customer_unique_id", "state",
+    )
     return (
         orders.select("customer_key").distinct()
         .join(customers, "customer_key", "left")
@@ -491,8 +488,7 @@ def build_customer_profile(s: dict[str, DataFrame], orders: DataFrame) -> DataFr
 
 # =============================================================================== orchestration
 def compute_marts(spark: SparkSession, silver: dict[str, DataFrame], materialize: Materialize) -> dict[str, DataFrame]:
-    """Tính mọi bảng Gold theo thứ tự phụ thuộc. `materialize(name, df)` ghi/cache rồi trả lại DataFrame để
-    bước sau đọc từ kết quả đã ghi (cắt lineage)."""
+    """Tính mọi bảng Gold theo thứ tự phụ thuộc. `materialize(name, df)` ghi/cache rồi trả lại DataFrame."""
     out: dict[str, DataFrame] = {}
     out["fact_order_summary"] = orders = materialize("fact_order_summary", build_order_summary(spark, silver))
     out["fact_item_sales"] = items = materialize("fact_item_sales", build_item_sales(spark, silver, orders))
@@ -519,7 +515,6 @@ def build_marts(spark: SparkSession) -> None:
     def materialize(name: str, df: DataFrame) -> DataFrame:
         table = f"{GOLD}.{name}"
         conformed = conform(df, spark.table(table).schema)
-        # Ghi đè toàn bộ: cột "ảnh chụp theo kỳ" có thể đổi trên mọi dòng ở mỗi lần build.
         conformed.writeTo(table).overwrite(F.lit(True))
         count = spark.table(table).count()
         print(f"{table}: {count} rows")

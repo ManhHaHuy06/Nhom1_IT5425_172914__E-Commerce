@@ -3,9 +3,9 @@ setlocal EnableDelayedExpansion
 
 rem Olist lakehouse runner.  Usage: run_lakehouse.bat [stage ...]   (see :help)
 rem Only the listed stages run, always in pipeline order. No stage = all.
-rem Bronze source: Parquet landed by hosting_server Airflow in s3a://olist-lake/bronze (SOURCE_S3_* in infrastructure/.env).
+rem Bronze source: Parquet landed by hosting_server Airflow in s3a://olist-lake/landing (SOURCE_S3_* in infrastructure/.env).
 
-set "PIPELINE=infra ddl bronze silver-dimensions silver-facts gold clickhouse"
+set "PIPELINE=infra ddl bronze silver-entities silver-transactions gold-market gold-seller clickhouse-market clickhouse-seller"
 rem Script folder: read %~dp0 before SHIFT (SHIFT also moves %0, after which %~dp0 is the current directory)
 set "Root=%~dp0"
 if "%Root:~-1%"=="\" set "Root=%Root:~0,-1%"
@@ -24,11 +24,20 @@ if /i "!Arg!"=="all" (
     goto next_arg
 )
 if /i "!Arg!"=="silver" (
-    set "Run_silver-dimensions=1"
-    set "Run_silver-facts=1"
+    set "Run_silver-entities=1"
+    set "Run_silver-transactions=1"
     goto next_arg
 )
-if /i "!Arg!"=="silver-dims" set "Arg=silver-dimensions"
+if /i "!Arg!"=="gold" (
+    set "Run_gold-market=1"
+    set "Run_gold-seller=1"
+    goto next_arg
+)
+if /i "!Arg!"=="clickhouse" (
+    set "Run_clickhouse-market=1"
+    set "Run_clickhouse-seller=1"
+    goto next_arg
+)
 set "Known=0"
 for %%S in (%PIPELINE%) do if /i "!Arg!"=="%%S" (
     set "Run_%%S=1"
@@ -36,7 +45,7 @@ for %%S in (%PIPELINE%) do if /i "!Arg!"=="%%S" (
 )
 if "!Known!"=="0" (
     echo Unknown stage: %~1
-    echo Valid: %PIPELINE% silver all  ^(alias: silver-dims^)
+    echo Valid: %PIPELINE% silver gold clickhouse all
     exit /b 1
 )
 :next_arg
@@ -44,18 +53,20 @@ shift
 goto parse_args
 
 :run
-if "%OLIST_SOURCE_URI%"=="" (set "SourceUri=s3a://olist-lake/bronze") else (set "SourceUri=%OLIST_SOURCE_URI%")
-if "%OLIST_BRONZE_MODE%"=="" (set "Mode=overwrite") else (set "Mode=%OLIST_BRONZE_MODE%")
+if "%OLIST_SOURCE_URI%"=="" (set "SourceUri=s3a://olist-lake/landing") else (set "SourceUri=%OLIST_SOURCE_URI%")
+if "%OLIST_BRONZE_MODE%"=="" (set "Mode=append") else (set "Mode=%OLIST_BRONZE_MODE%")
 
-echo Bronze source: %SourceUri%
+echo Landing source: %SourceUri%
 echo Selected stages ^(pipeline order^):
 for %%S in (%PIPELINE%) do if defined Run_%%S echo   - %%S
 
 for %%S in (%PIPELINE%) do if defined Run_%%S (
     if "%%S"=="infra" (
         call :infra
-    ) else if "%%S"=="clickhouse" (
-        call :clickhouse
+    ) else if "%%S"=="clickhouse-market" (
+        call :clickhouse market
+    ) else if "%%S"=="clickhouse-seller" (
+        call :clickhouse seller
     ) else (
         call :spark %%S
     )
@@ -104,22 +115,21 @@ if errorlevel 1 (
 exit /b 0
 
 :clickhouse
-echo === Load Gold into ClickHouse ===
+echo === Load Gold (%~1) into ClickHouse ===
 call :wait_container olist-clickhouse
 if errorlevel 1 exit /b 1
 rem clickhouse-client reads CLICKHOUSE_PASSWORD from the container environment (infrastructure/.env).
-rem Schema first (recreates staging tables *__new from the latest Gold DDL), then load them and EXCHANGE into the serving tables.
-docker exec -i olist-clickhouse clickhouse-client --multiquery < "%Root%\layers\clickhouse\init_gold.sql"
+docker exec -i olist-clickhouse clickhouse-client --multiquery < "%Root%\layers\clickhouse\%~1\init_%~1.sql"
 if errorlevel 1 (
-    echo ClickHouse init_gold failed
+    echo ClickHouse init_%~1 failed
     exit /b 1
 )
-docker exec olist-clickhouse bash -c "clickhouse-client --multiquery < /opt/olist/load_gold.sql"
+docker exec -i olist-clickhouse clickhouse-client --multiquery < "%Root%\layers\clickhouse\%~1\load_%~1.sql"
 if errorlevel 1 (
-    echo ClickHouse load_gold failed
+    echo ClickHouse load_%~1 failed
     exit /b 1
 )
-echo ClickHouse olist_gold.* reloaded
+echo ClickHouse %~1 branch reloaded
 exit /b 0
 
 rem ---------------------------------------------------------------- helpers
@@ -146,22 +156,26 @@ echo No args  = run full pipeline
 echo Stages   = only listed stages run ^(order is always pipeline order^)
 echo.
 echo Stages:
-echo   infra               Start lakehouse Docker infra
-echo   ddl                 Spark Iceberg DDL
-echo   bronze              Spark Bronze load from hosting_server Parquet ^(start hosting_server first^)
-echo   silver-dimensions   Spark Silver dimensions   ^(alias: silver-dims^)
-echo   silver-facts        Spark Silver facts
-echo   silver              silver-dimensions + silver-facts
-echo   gold                Spark Gold marts + Parquet export
-echo   clickhouse          Load Gold Parquet into ClickHouse
-echo   all                 Same as no args
+echo   infra                Start lakehouse Docker infra
+echo   ddl                  Spark Iceberg DDL (bronze, silver 3NF, quarantine, gold, gold_seller)
+echo   bronze               Spark Bronze append-only load from hosting_server Landing Parquet
+echo   silver-entities      Spark Silver 3NF master entities + quarantine
+echo   silver-transactions  Spark Silver 3NF transactional entities + quarantine
+echo   silver               silver-entities + silver-transactions
+echo   gold-market          Spark Gold Market Kimball marts + Parquet export (iceberg.gold)
+echo   gold-seller          Spark Gold Seller marts + Parquet export (iceberg.gold_seller)
+echo   gold                 gold-market + gold-seller
+echo   clickhouse-market    Load Gold Market into ClickHouse (olist_gold)
+echo   clickhouse-seller    Load Gold Seller into ClickHouse (olist_gold_seller)
+echo   clickhouse           clickhouse-market + clickhouse-seller
+echo   all                  Same as no args
 echo.
-echo Environment: OLIST_SOURCE_URI, OLIST_BRONZE_MODE ^(overwrite^|append^), OLIST_BATCH_ID,
+echo Environment: OLIST_SOURCE_URI, OLIST_BRONZE_MODE ^(append^|overwrite^), OLIST_BATCH_ID,
 echo              OLIST_START_DATE / OLIST_END_DATE ^(YYYY-MM-DD, filters Bronze ingest_date, needs OLIST_BRONZE_MODE=append^)
 echo.
 echo Examples:
 echo   run_lakehouse.bat
 echo   run_lakehouse.bat ddl gold clickhouse
 echo   run_lakehouse.bat bronze silver gold
-echo   run_lakehouse.bat clickhouse
+echo   run_lakehouse.bat clickhouse-seller
 exit /b 0

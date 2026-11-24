@@ -1,18 +1,17 @@
-"""Build optimized Olist Gold marts from Iceberg Silver using PySpark.
+"""Build 27 Seller-oriented Gold marts from Silver 3NF entities, conform to DDL, and export Parquet for ClickHouse."""
 
-Reads iceberg.silver.* tables, writes iceberg.gold.* through
-common.spark_utils.write_table, then exports Parquet to MinIO.
-"""
 from __future__ import annotations
 
 from typing import Dict
+
 from pyspark.sql import DataFrame, SparkSession
 from pyspark.sql import functions as F
 from pyspark.sql.window import Window
-from common.spark_utils import write_table
 
-GOLD_NAMESPACE = "iceberg.gold"
-EXPORT_ROOT = "s3a://lakehouse/exports/gold"
+from common.spark_utils import conform, write_table
+
+GOLD_NAMESPACE = "iceberg.gold_seller"
+EXPORT_ROOT = "s3a://lakehouse/exports/gold_seller"
 
 GOLD_TABLES = (
     "sales_detail", "orders", "payments_by_order", "reviews",
@@ -34,10 +33,12 @@ def silver(spark: SparkSession, name: str) -> DataFrame:
     return spark.table(f"iceberg.silver.{name}")
 
 
-def write_gold(df: DataFrame, name: str) -> None:
+def write_gold(spark: SparkSession, df: DataFrame, name: str) -> None:
     target = f"{GOLD_NAMESPACE}.{name}"
-    write_table(df, target)
-    print(f"[GOLD] Written {target}")
+    write_table(conform(df, spark.table(target).schema), target)
+    if spark.table(target).isEmpty():
+        raise RuntimeError(f"{target} is empty; refusing to export empty parquet directory")
+    print(f"[GOLD_SELLER] Written {target}")
 
 
 def export_table(spark: SparkSession, name: str) -> None:
@@ -48,58 +49,82 @@ def export_table(spark: SparkSession, name: str) -> None:
 
 
 def build_base(spark: SparkSession) -> Dict[str, DataFrame]:
-    o = silver(spark, "fact_orders")
-    i = silver(spark, "fact_order_items")
-    s = silver(spark, "dim_seller").select(
-        "seller_key", "seller_id",
-        F.col("city").alias("seller_city"), F.col("state").alias("seller_state")
-    ).dropDuplicates(["seller_key"])
-    p = silver(spark, "dim_product").select(
-        "product_key", "product_id", "category_key", "product_category_name"
-    ).dropDuplicates(["product_key"])
-    c = silver(spark, "dim_category").select(
-        "category_key", "product_category_name_english"
-    ).dropDuplicates(["category_key"])
-    cu = silver(spark, "dim_customer").select(
-        "customer_key", "customer_unique_id",
+    o = silver(spark, "orders")
+    i = silver(spark, "order_items")
+    s = silver(spark, "sellers").select(
+        "seller_id",
+        F.col("city").alias("seller_city"),
+        F.col("state").alias("seller_state"),
+    ).dropDuplicates(["seller_id"])
+    p = silver(spark, "products").select(
+        "product_id",
+        "product_category_name",
+        F.xxhash64("product_category_name").alias("category_key"),
+    ).dropDuplicates(["product_id"])
+    c = silver(spark, "categories").select(
+        "product_category_name",
+        "product_category_name_english",
+    ).dropDuplicates(["product_category_name"])
+    cu = silver(spark, "customers").select(
+        "customer_unique_id",
+        "zip_code_prefix",
         F.col("city").alias("customer_city"),
         F.col("state").alias("customer_state"),
-        F.col("geolocation_key").alias("customer_geolocation_key"),
-    ).dropDuplicates(["customer_key"])
-    g = silver(spark, "dim_geolocation").select(
-        "geolocation_key", "latitude", "longitude"
-    ).dropDuplicates(["geolocation_key"])
+    ).dropDuplicates(["customer_unique_id"])
+    g = silver(spark, "geolocation").select(
+        "zip_code_prefix", "latitude", "longitude",
+    ).dropDuplicates(["zip_code_prefix"])
 
-    orders = o.select(
-        "order_key", "order_id", "customer_key", "purchase_date_key",
-        "order_status", "order_purchase_timestamp", "order_approved_at",
-        "order_delivered_carrier_date", "order_delivered_customer_date",
-        "order_estimated_delivery_date", "delivery_days",
-        "estimated_delivery_days", "delivery_delay_days",
-        "is_delivered", "is_canceled",
-    ).dropDuplicates(["order_key", "order_id"])
     orders = (
-        orders
-        .withColumn("purchase_date", F.to_date("order_purchase_timestamp"))
-        .withColumn("month", F.trunc("order_purchase_timestamp", "month").cast("date"))
-        .withColumn("purchase_hour", F.hour("order_purchase_timestamp"))
-        .withColumn("weekday_num", ((F.dayofweek("order_purchase_timestamp") + 5) % 7).cast("int"))
-        .withColumn("order_status", F.coalesce("order_status", F.lit("unknown")))
+        o.dropDuplicates(["order_id"])
+        .select(
+            F.xxhash64("order_id").alias("order_key"),
+            "order_id",
+            "customer_unique_id",
+            F.xxhash64("customer_unique_id").alias("customer_key"),
+            F.date_format("order_purchase_timestamp", "yyyyMMdd").cast("int").alias("purchase_date_key"),
+            F.coalesce("order_status", F.lit("unknown")).alias("order_status"),
+            "order_purchase_timestamp",
+            "order_approved_at",
+            "order_delivered_carrier_date",
+            "order_delivered_customer_date",
+            "order_estimated_delivery_date",
+            "delivery_days",
+            "estimated_delivery_days",
+            "delivery_delay_days",
+            "is_delivered",
+            "is_canceled",
+            F.to_date("order_purchase_timestamp").alias("purchase_date"),
+            F.trunc("order_purchase_timestamp", "month").cast("date").alias("month"),
+            F.hour("order_purchase_timestamp").alias("purchase_hour"),
+            ((F.dayofweek("order_purchase_timestamp") + 5) % 7).cast("int").alias("weekday_num"),
+        )
+    )
+
+    items = i.select(
+        F.xxhash64("order_id", "order_item_id").alias("item_key"),
+        "order_id",
+        "order_item_id",
+        "product_id",
+        F.xxhash64("product_id").alias("product_key"),
+        "seller_id",
+        F.xxhash64("seller_id").alias("seller_key"),
+        "shipping_limit_date",
+        "price",
+        "freight_value",
+        "item_total",
     )
 
     detail = (
-        i.select(
-            "item_key", "order_key", "order_id", "order_item_id",
-            "product_key", "seller_key", "date_key", "shipping_limit_date",
-            "price", "freight_value", "item_total",
-        )
-        .join(orders, ["order_key", "order_id"], "inner")
-        .join(s, "seller_key", "left")
-        .join(p, "product_key", "left")
-        .join(c, "category_key", "left")
-        .join(cu, "customer_key", "left")
-        .join(g, F.col("customer_geolocation_key") == F.col("geolocation_key"), "left")
-        .drop("geolocation_key", "customer_geolocation_key")
+        items
+        .join(orders, "order_id", "inner")
+        .withColumn("date_key", F.col("purchase_date_key"))
+        .join(s, "seller_id", "left")
+        .join(p, "product_id", "left")
+        .join(c, "product_category_name", "left")
+        .join(cu, "customer_unique_id", "left")
+        .join(g, "zip_code_prefix", "left")
+        .drop("zip_code_prefix")
         .withColumn(
             "product_category_name_english",
             F.coalesce("product_category_name_english", "product_category_name", F.lit("unknown")),
@@ -131,11 +156,11 @@ def build_base(spark: SparkSession) -> Dict[str, DataFrame]:
         F.sum("revenue").cast("double").alias("revenue"),
         F.countDistinct("item_key").cast("long").alias("item_count"),
     )
-    return {"orders": orders, "detail": detail, "seller_order": seller_order}
+    return {"orders": orders.drop("customer_unique_id"), "detail": detail, "seller_order": seller_order}
 
 
 def build_payments(spark: SparkSession) -> DataFrame:
-    return silver(spark, "fact_payments").groupBy("order_id").agg(
+    return silver(spark, "order_payments").groupBy("order_id").agg(
         F.sum("payment_value").cast("double").alias("payment_value"),
         F.count("*").cast("long").alias("payment_transaction_count"),
         F.countDistinct("payment_type").cast("long").alias("payment_type_count"),
@@ -143,26 +168,29 @@ def build_payments(spark: SparkSession) -> DataFrame:
 
 
 def build_reviews(spark: SparkSession) -> DataFrame:
+    rev = silver(spark, "order_reviews").select(
+        F.xxhash64("review_id").alias("review_key"),
+        F.xxhash64("order_id").alias("order_key"),
+        "order_id", "review_id", "review_score",
+        "review_comment_title", "review_comment_message",
+        "review_creation_date", "review_answer_timestamp",
+        "is_positive", "is_negative",
+    )
     w = Window.partitionBy("order_id").orderBy(
         F.col("review_creation_date").desc_nulls_last(),
         F.col("review_key").desc_nulls_last(),
     )
-    return (
-        silver(spark, "fact_reviews")
-        .withColumn("_rn", F.row_number().over(w))
-        .filter(F.col("_rn") == 1).drop("_rn")
-        .select(
-            "review_key", "order_key", "order_id", "review_id", "review_score",
-            "review_comment_title", "review_comment_message",
-            "review_creation_date", "review_answer_timestamp", "is_positive", "is_negative",
-        )
-    )
+    return rev.withColumn("_rn", F.row_number().over(w)).filter(F.col("_rn") == 1).drop("_rn")
 
 
-def build_marts(spark: SparkSession) -> Dict[str, DataFrame]:
+def build_marts(spark: SparkSession) -> tuple[Dict[str, DataFrame], list[DataFrame]]:
     base = build_base(spark)
-    d, o, so = base["detail"], base["orders"], base["seller_order"]
-    pay, rev = build_payments(spark), build_reviews(spark)
+    d = base["detail"].cache()
+    o = base["orders"]
+    so = base["seller_order"].cache()
+    pay = build_payments(spark).cache()
+    rev = build_reviews(spark).cache()
+    cached_frames = [d, so, pay, rev]
 
     detail = d.join(
         rev.select(
@@ -244,7 +272,7 @@ def build_marts(spark: SparkSession) -> Dict[str, DataFrame]:
             "late_rate",
             F.when(F.col("delivered_orders") > 0,
                    F.col("late_orders").cast("double") / F.col("delivered_orders"))
-             .otherwise(F.lit(0.0))
+            .otherwise(F.lit(0.0))
         )
 
     delivery_daily = delivery_mart(["seller_id", "purchase_date"])
@@ -260,9 +288,7 @@ def build_marts(spark: SparkSession) -> Dict[str, DataFrame]:
         F.countDistinct("order_id").cast("long").alias("order_count")
     )
 
-    review_order = so.join(
-        rev.select("order_id", "review_score"), "order_id", "inner"
-    )
+    review_order = so.join(rev.select("order_id", "review_score"), "order_id", "inner")
     review_score_daily = review_order.groupBy("seller_id", "purchase_date", "review_score").agg(
         F.countDistinct("order_id").cast("long").alias("reviewed_orders")
     )
@@ -334,28 +360,20 @@ def build_marts(spark: SparkSession) -> Dict[str, DataFrame]:
         "customer_lifetime": customer_lifetime,
         "customer_activity_monthly": customer_monthly,
         "customer_activity_daily": customer_daily,
-    }
+    }, cached_frames
 
 
 def build_gold(spark: SparkSession) -> None:
     print(f"[START] Gold namespace={GOLD_NAMESPACE}; export={EXPORT_ROOT}")
-    marts = build_marts(spark)
-
-    # Write Iceberg Gold tables; DDL must be applied before this step.
-    for name in GOLD_TABLES:
-        if name not in marts:
-            raise RuntimeError(f"Missing Gold DataFrame: {name}")
-        print(f"[WRITE] {name}")
-        write_gold(marts[name], name)
-
-    # Export committed Iceberg tables to MinIO for ClickHouse.
+    marts, cached_frames = build_marts(spark)
+    try:
+        for name in GOLD_TABLES:
+            if name not in marts:
+                raise RuntimeError(f"Missing Gold Seller DataFrame: {name}")
+            write_gold(spark, marts[name], name)
+    finally:
+        for frame in cached_frames:
+            frame.unpersist()
     for name in GOLD_TABLES:
         export_table(spark, name)
-
-    print(f"[DONE] {len(GOLD_TABLES)} Gold marts written and exported.")
-
-
-# Giữ cách tích hợp giống job Gold cũ của dự án:
-# entrypoint/orchestrator hiện tại tạo SparkSession rồi gọi:
-#     from build_gold_marts import build_gold
-#     build_gold(spark)
+    print(f"[DONE] {len(GOLD_TABLES)} Gold Seller marts written and exported.")

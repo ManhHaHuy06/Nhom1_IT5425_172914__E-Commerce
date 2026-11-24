@@ -14,7 +14,7 @@
 #   Iceberg REST  : http://localhost:8181
 #   ClickHouse    : http://localhost:8123
 #
-# Pipeline batch: Airflow cua hosting_server ghi s3://olist-lake/bronze, roi run_lakehouse.bat
+# Pipeline batch: Airflow cua hosting_server ghi s3://olist-lake/landing, roi DAG etl_lakehouse_medallion hoac run_lakehouse.bat
 
 
 services:
@@ -237,7 +237,7 @@ services:
     volumes:
       - clickhouse-data:/var/lib/clickhouse
       - ./clickhouse/config.xml:/etc/clickhouse-server/config.d/custom.xml:ro
-      - ../layers/clickhouse/load_gold.sql:/opt/olist/load_gold.sql:ro
+      - ../layers/clickhouse:/opt/olist/clickhouse:ro
     depends_on:
       minio-init:
         condition: service_completed_successfully
@@ -259,12 +259,14 @@ services:
     environment:
       CLICKHOUSE_PASSWORD: ${CLICKHOUSE_PASSWORD}
     volumes:
-      - ../layers/clickhouse/init_gold.sql:/init_gold.sql:ro
+      - ../layers/clickhouse:/opt/olist/clickhouse:ro
     entrypoint: ["/bin/bash", "-c"]
     command:
       - |
-        clickhouse-client --host clickhouse --password "$$CLICKHOUSE_PASSWORD" --multiquery < /init_gold.sql
-        echo "ClickHouse gold schema ready"
+        set -e
+        clickhouse-client --host clickhouse --password "$$CLICKHOUSE_PASSWORD" --multiquery < /opt/olist/clickhouse/market/init_market.sql
+        clickhouse-client --host clickhouse --password "$$CLICKHOUSE_PASSWORD" --multiquery < /opt/olist/clickhouse/seller/init_seller.sql
+        echo "ClickHouse gold schemas ready (olist_gold + olist_gold_seller)"
     networks:
       - olist-network
 
