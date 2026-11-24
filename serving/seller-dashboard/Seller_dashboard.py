@@ -339,7 +339,12 @@ if isinstance(date_range, (tuple, list)) and len(date_range) == 2:
 else:
     start, end = min_date, max_date
 
-shop_options = sorted(sellers["seller_id"].dropna().astype(str).unique().tolist())
+# Shop có nhiều dòng đã giao nhất lên đầu, để mặc định mở shop có dữ liệu.
+shop_rows = d["seller_id"].astype(str).value_counts()
+shop_options = sorted(
+    sellers["seller_id"].dropna().astype(str).unique().tolist(),
+    key=lambda shop: (-shop_rows.get(shop, 0), shop)
+)
 if not shop_options:
     st.error("Không tìm thấy shop trong dim_seller.")
     st.stop()
