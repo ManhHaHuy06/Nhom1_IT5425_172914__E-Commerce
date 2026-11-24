@@ -1,0 +1,19 @@
+# Secrets & environment
+.env
+.env.*
+*.env
+!.env.example
+
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+.pytest_cache/
+
+# Jupyter & OS
+.ipynb_checkpoints/
+.DS_Store
+
+# Power BI local cache
+**/.pbi/localSettings.json
+**/.pbi/cache.abf

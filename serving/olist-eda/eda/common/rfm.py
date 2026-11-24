@@ -30,12 +30,12 @@ def _score_sql(col: str, cuts, lower_is_better: bool = False) -> str:
 
 
 def create_customer_rfm() -> Rfm:
-    """`customer_rfm`: 1 dòng / khách (`customer_key` = 1 `customer_unique_id`) với recency_days, frequency, monetary,
+    """`customer_rfm`: 1 dòng / khách (`customer_unique_id`) với recency_days, frequency, monetary,
     điểm R/F/M 1–5, `rfm_code` và `segment` (quy tắc ở RFM_SEGMENT_RULES)."""
     snapshot = scalar("SELECT max(purchase_date) + INTERVAL '1' DAY FROM order_base WHERE is_valid = 1")
     db.con.execute(f"""
     CREATE OR REPLACE TABLE customer_rfm_base AS
-    SELECT customer_key,
+    SELECT customer_unique_id,
            date_diff('day', max(purchase_date), DATE '{snapshot}') AS recency_days,
            count(*) AS frequency, sum(gmv) AS monetary
     FROM order_base WHERE is_valid = 1 GROUP BY 1

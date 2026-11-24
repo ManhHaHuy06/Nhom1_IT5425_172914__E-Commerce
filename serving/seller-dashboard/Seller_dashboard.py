@@ -151,7 +151,7 @@ CLICKHOUSE_PORT = int(os.getenv(
 ))
 CLICKHOUSE_USER = os.getenv("CLICKHOUSE_USER", "default")
 CLICKHOUSE_PASSWORD = os.getenv("CLICKHOUSE_PASSWORD", "")
-CLICKHOUSE_DATABASE = os.getenv("CLICKHOUSE_DATABASE", "olist_gold")
+CLICKHOUSE_DATABASE = os.getenv("CLICKHOUSE_DATABASE", "olist_gold_seller")
 
 # Danh sách bảng Gold mới, tên khớp với init_gold.sql và iceberg.gold.
 GOLD_TABLE_NAMES = [

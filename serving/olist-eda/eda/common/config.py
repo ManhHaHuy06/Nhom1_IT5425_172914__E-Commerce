@@ -9,7 +9,7 @@ import os
 from pathlib import Path
 
 _GOLD_CONFIG = Path(os.getenv("OLIST_GOLD_CONFIG") or
-                    Path(__file__).resolve().parents[3] / "olist-lakehouse" / "layers" / "gold" / "config.py")
+                    Path(__file__).resolve().parents[4] / "olist-lakehouse" / "layers" / "gold" / "market" / "config.py")
 
 
 def _load_gold_config():

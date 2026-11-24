@@ -1,0 +1,6 @@
+clickhouse-connect>=0.7
+numpy>=1.26
+pandas>=2.2
+plotly>=5.20
+python-dotenv>=1.0
+streamlit>=1.52.0

@@ -11,7 +11,7 @@ và chỉ rõ biểu đồ nào đứng sau visual nào trên trang, biểu đ�
 - Python có `trino`, `pandas`, `numpy`, `matplotlib`, `seaborn` (môi trường conda `vizdata` đang dùng). Kernel chạy với thư mục làm việc là `eda/`
   để `from common import *` hoạt động.
 - Cấu hình qua biến môi trường (đều có mặc định): `TRINO_HOST`, `TRINO_PORT`, `TRINO_USER`, `TRINO_CATALOG`, `SILVER_SCHEMA`, `EDA_SCHEMA`,
-  `OLIST_GOLD_CONFIG` (đường dẫn `olist-lakehouse/layers/gold/config.py` nếu lakehouse không nằm cạnh `olist-eda`).
+  `OLIST_GOLD_CONFIG` (đường dẫn `olist-lakehouse/layers/gold/market/config.py` nếu lakehouse không nằm cạnh `serving/`).
 
 **Chạy tuần tự từng notebook.** Bảng trung gian là bảng Iceberg trong schema `iceberg.eda` (REST catalog không có view) và các notebook dùng chung
 tên bảng (`order_base`, `item_ps`…). Muốn chạy song song thì đặt `EDA_SCHEMA` khác nhau cho từng notebook.
@@ -58,7 +58,7 @@ Kỳ ghi đè phải nằm gọn trong một năm. Không đặt biến thì k�
 
 ## 4. Quy tắc dùng chung với Gold và ngưỡng chỉ có ở EDA
 
-Ngưỡng, band, phân khúc **đọc thẳng từ Gold** qua `common.GOLD` (`olist-lakehouse/layers/gold/config.py`), nên EDA và Power BI cùng một quy tắc:
+Ngưỡng, band, phân khúc **đọc thẳng từ Gold** qua `common.GOLD` (`olist-lakehouse/layers/gold/market/config.py`), nên EDA và Power BI cùng một quy tắc:
 đơn hợp lệ (`INVALID_ORDER_STATUSES`), tháng báo cáo, dân số bang, `STATE_MATRIX_MIN_PY_ORDERS`, `MIN_CATEGORY_SHARE`, `TOP_FLOW_CATEGORY_N`,
 `SELLER_TIERS`, `SELLER_REVIEW_BANDS`, `SELLER_MIN_ORDERS`, `PRICE_BANDS`, `ORDER_VALUE_BANDS`, `DELAY_BANDS`, `GAP_BANDS`, `REPURCHASE_WINDOW_DAYS`, RFM.
 Đổi quy tắc nghiệp vụ thì sửa ở Gold; EDA tự theo.
@@ -79,7 +79,7 @@ Nếu một ngưỡng EDA tỏ ra hữu ích cho CEO, đề xuất đưa lên Go
 
 | Module | Nội dung |
 |---|---|
-| `config.py` | `GOLD` (nạp `olist-lakehouse/layers/gold/config.py`), quy tắc nghiệp vụ suy từ đó, bảng màu, 5 vùng |
+| `config.py` | `GOLD` (nạp `olist-lakehouse/layers/gold/market/config.py`), quy tắc nghiệp vụ suy từ đó, bảng màu, 5 vùng |
 | `db.py` | `TrinoSession`, `q`, `scalar`, `create_table_from_df` (kết nối ở `db.con`), `reconcile`, `gold_period_where` |
 | `tables.py` | `connect` (chép Silver → `EDA_SCHEMA`, tạo `state_ref`, `order_base`, suy ra `Period`), `create_item_ps`, `create_order_payment` |
 | `period.py` | `Period` (YoY, QoQ, ghi đè kỳ), `Kpi`, `kpi_table` |
