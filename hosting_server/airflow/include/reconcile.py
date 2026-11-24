@@ -1,7 +1,7 @@
-"""Bronze completeness check for the watermark tables (used by DAG reconcile_bronze).
+"""Landing zone completeness check for the watermark tables (used by DAG reconcile_landing).
 
 Invariant: every current OLTP row whose ``updated_at`` is at or below the committed watermark ``wm__<table>`` has
-exactly that version (primary key + ``updated_at``) somewhere in ``bronze/<table>/``.
+exactly that version (primary key + ``updated_at``) somewhere in ``landing/<table>/``.
 
 Why it can break: ``updated_at`` is set when the statement runs, not when the transaction commits. A transaction that
 commits more than ``LAG_SECONDS`` after its writes makes rows visible behind a window the extract already read, and
@@ -11,7 +11,7 @@ version is above the watermark and will be read by a future window).
 import pandas as pd
 from sqlalchemy import text
 
-from bronze import BUCKET_PREFIX
+from landing import BUCKET_PREFIX
 from oltp import engine
 from s3_utils import list_keys, read_parquet
 
@@ -38,7 +38,7 @@ def oltp_versions(table: str, watermark: str) -> pd.DataFrame:
     return _normalize(df)
 
 
-def bronze_versions(table: str) -> tuple[pd.DataFrame, int]:
+def landing_versions(table: str) -> tuple[pd.DataFrame, int]:
     """(distinct landed versions of ``table``, number of Parquet objects read)."""
     cols = KEYS[table] + ["updated_at"]
     keys = [k for k in list_keys(f"{BUCKET_PREFIX}/{table}/") if k.endswith(".parquet")]
@@ -48,11 +48,11 @@ def bronze_versions(table: str) -> tuple[pd.DataFrame, int]:
 
 
 def check_table(table: str, watermark: str) -> dict:
-    """Compare OLTP and Bronze; ``missing`` holds OLTP versions (<= watermark) that are absent from Bronze."""
+    """Compare OLTP and Landing; ``missing`` holds OLTP versions (<= watermark) that are absent from Landing."""
     oltp = oltp_versions(table, watermark)
-    bronze, objects = bronze_versions(table)
+    landed, objects = landing_versions(table)
     on = KEYS[table] + ["updated_at"]
-    merged = oltp.merge(bronze, on=on, how="left", indicator=True)
+    merged = oltp.merge(landed, on=on, how="left", indicator=True)
     missing = merged.loc[merged["_merge"] == "left_only", on].sort_values("updated_at")
-    return {"table": table, "watermark": watermark, "oltp_rows": len(oltp), "bronze_versions": len(bronze),
-            "bronze_objects": objects, "missing": missing}
+    return {"table": table, "watermark": watermark, "oltp_rows": len(oltp), "landing_versions": len(landed),
+            "landing_objects": objects, "missing": missing}

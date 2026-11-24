@@ -1,8 +1,8 @@
 -- BRONZE LAYER DDL - Olist Data Lakehouse
 
--- Bronze la lop dau tien (khong co vung raw rieng): append-only, khong sua doi.
--- Nguon: Parquet cua hosting_server (s3a://olist-lake/bronze), Spark nap vao iceberg.bronze.* kem metadata:
--- source_updated_at (OLTP updated_at, NULL voi bang snapshot),
+-- Bronze la lop Iceberg tho dau tien: append-only, giu du lich su phien ban va moi snapshot_date.
+-- Nguon: Landing Zone Parquet cua hosting_server (s3a://olist-lake/landing), Spark nap vao iceberg.bronze.* kem metadata:
+-- source_updated_at (OLTP updated_at hoac snapshot_date voi bang tham chieu),
 -- loaded_at, source_file, batch_id. Moi phien ban cua 1 dong deu duoc giu; Silver chon ban moi nhat.
 --
 -- Chay bang Spark SQL:

@@ -2,11 +2,11 @@
 set -e
 mc alias set lake http://minio:9000 "$MINIO_ACCESS_KEY" "$MINIO_SECRET_KEY"
 mc mb --ignore-existing "lake/$MINIO_BUCKET"
-for p in bronze silver gold _quarantine; do
+for p in landing; do
   echo -n "" | mc pipe "lake/$MINIO_BUCKET/$p/.keep"
 done
 
-# Read-only user for downstream readers (olist-lakehouse Spark reads bronze/ with it: SOURCE_S3_* in its .env)
+# Read-only user for downstream readers (olist-lakehouse Spark reads landing/ with it: SOURCE_S3_* in its .env)
 # Built-in "readonly" has no s3:ListBucket (Spark must list prefixes), so use a policy scoped to this bucket.
 if [ -n "$LAKE_READER_ACCESS_KEY" ] && [ -n "$LAKE_READER_SECRET_KEY" ]; then
   cat > /tmp/lake-reader.json <<JSON

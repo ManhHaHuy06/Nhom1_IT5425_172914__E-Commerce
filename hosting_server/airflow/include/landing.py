@@ -1,8 +1,8 @@
-"""Bronze layout contract (read by olist-lakehouse layers/bronze/load_bronze.py) and the shared landing loop.
+"""Landing zone layout contract (read by olist-lakehouse layers/bronze/load_bronze.py) and shared landing loop.
 
-    bronze/<table>/ingest_date=YYYYMMDD/batch_id=<wm_from stamp>/part-NNNNN.parquet   incremental (every row version)
-    bronze/ref_<table>/snapshot_date=YYYY-MM-DD/part-NNNNN.parquet                    daily full snapshot
-    bronze/_manifests/batch_id=<wm_to stamp>/manifest.json                            one per incremental run
+    landing/<table>/ingest_date=YYYYMMDD/batch_id=<wm_from stamp>/part-NNNNN.parquet   incremental (every row version)
+    landing/ref_<table>/snapshot_date=YYYY-MM-DD/part-NNNNN.parquet                    daily full snapshot
+    landing/_manifests/batch_id=<wm_to stamp>/manifest.json                            one per incremental run
 
 Every row gets ``_ingested_at`` (UTC) plus the string metadata columns passed to ``land``.
 """
@@ -15,8 +15,8 @@ from sqlalchemy import text
 from oltp import engine
 from s3_utils import arrow_schema, delete_keys, list_keys, put_parquet
 
-BUCKET_PREFIX = "bronze"
-# Incremental (watermark) tables, shared by ingest_oltp_to_bronze and reconcile_bronze
+BUCKET_PREFIX = "landing"
+# Incremental (watermark) tables, shared by ingest_oltp_to_landing and reconcile_landing
 TRANSACTION_TABLES = ["customers", "orders", "order_items", "order_payments", "order_reviews"]
 
 

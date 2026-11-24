@@ -1,12 +1,12 @@
-"""Daily full snapshot of reference tables -> MinIO Bronze (bronze/ref_<table>/snapshot_date=YYYY-MM-DD/)."""
+"""Daily full snapshot of reference tables -> MinIO Landing Zone (landing/ref_<table>/snapshot_date=YYYY-MM-DD/)."""
 from datetime import timedelta
 
 import pendulum
 from airflow.decorators import dag, task
 
-from bronze import land, snapshot_prefix
+from landing import land, snapshot_prefix
 
-# OLTP table -> Bronze dataset name
+# OLTP table -> Landing dataset name
 REF = {
     "products": "ref_products",
     "sellers": "ref_sellers",
@@ -23,7 +23,7 @@ CHUNK = 200_000
     catchup=False,
     max_active_runs=1,
     default_args={"retries": 3, "retry_delay": timedelta(minutes=2)},
-    tags=["ingestion", "bronze", "reference"],
+    tags=["ingestion", "landing", "reference"],
 )
 def ingest_reference_snapshot():
     @task

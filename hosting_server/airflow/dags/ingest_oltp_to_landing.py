@@ -1,4 +1,4 @@
-"""Incremental ingestion OLTP -> MinIO Bronze (every 15 min).
+"""Incremental ingestion OLTP -> MinIO Landing Zone (every 15 min).
 
 Window (wm_from, wm_to], wm_to = DB NOW() - 10s (so uncommitted rows are not skipped).
 The watermark is committed only after every table and the manifest were written, so a failed run is
@@ -14,12 +14,12 @@ from airflow.decorators import dag, task
 from airflow.models import Variable
 from sqlalchemy import text
 
-from bronze import TRANSACTION_TABLES as TABLES
-from bronze import incremental_prefix, land, manifest_key, stamp, watermark_var
+from landing import TRANSACTION_TABLES as TABLES
+from landing import incremental_prefix, land, manifest_key, stamp, watermark_var
 from oltp import engine
 from s3_utils import put_json
 
-BRONZE_READY = Dataset("s3://olist-lake/bronze/")
+LANDING_READY = Dataset("s3://olist-lake/landing/")
 CHUNK = 100_000
 LAG_SECONDS = 10
 EPOCH = "1970-01-01 00:00:00"
@@ -27,15 +27,15 @@ TS_FORMAT = "%Y-%m-%d %H:%M:%S.%f"
 
 
 @dag(
-    dag_id="ingest_oltp_to_bronze",
+    dag_id="ingest_oltp_to_landing",
     schedule="*/15 * * * *",
     start_date=pendulum.datetime(2026, 1, 1, tz="UTC"),
     catchup=False,
     max_active_runs=1,
     default_args={"retries": 3, "retry_delay": timedelta(minutes=1)},
-    tags=["ingestion", "bronze"],
+    tags=["ingestion", "landing"],
 )
-def ingest_oltp_to_bronze():
+def ingest_oltp_to_landing():
     @task
     def get_window():
         with engine().connect() as c:
@@ -65,7 +65,7 @@ def ingest_oltp_to_bronze():
         put_json(manifest, manifest_key(batch_id))
         return manifest["total_rows"]
 
-    @task(outlets=[BRONZE_READY])
+    @task(outlets=[LANDING_READY])
     def commit_watermark(window: dict, total_rows: int):
         for t, w in window.items():
             Variable.set(watermark_var(t), w["to"])
@@ -76,4 +76,4 @@ def ingest_oltp_to_bronze():
     commit_watermark(window, write_manifest(results, window))
 
 
-ingest_oltp_to_bronze()
+ingest_oltp_to_landing()

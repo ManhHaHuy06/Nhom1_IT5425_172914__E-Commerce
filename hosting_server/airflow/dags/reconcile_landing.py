@@ -1,6 +1,6 @@
-"""Hourly Bronze completeness check: OLTP rows at or below the committed watermark must all be in Bronze.
+"""Hourly Landing zone completeness check: OLTP rows at or below the committed watermark must all be in Landing.
 
-Separate from ingest_oltp_to_bronze because it reads the key columns of every landed batch of a table (cost grows
+Separate from ingest_oltp_to_landing because it reads the key columns of every landed batch of a table (cost grows
 with the number of batches); running it every 15 min would slow ingestion. A failure is final (no retry) and the
 message says how to re-land the missing rows: move the table's watermark back, the next ingest run reads them again
 (versions landed twice are harmless, Silver keeps the latest one per key).
@@ -12,22 +12,22 @@ from airflow.decorators import dag, task
 from airflow.exceptions import AirflowFailException
 from airflow.models import Variable
 
-from bronze import TRANSACTION_TABLES, watermark_var
+from landing import TRANSACTION_TABLES, watermark_var
 from reconcile import KEYS, check_table
 
 SAMPLE = 5
 
 
 @dag(
-    dag_id="reconcile_bronze",
+    dag_id="reconcile_landing",
     schedule="@hourly",
     start_date=pendulum.datetime(2026, 1, 1, tz="UTC"),
     catchup=False,
     max_active_runs=1,
     default_args={"retries": 1, "retry_delay": timedelta(minutes=2)},
-    tags=["ingestion", "bronze", "quality"],
+    tags=["ingestion", "landing", "quality"],
 )
-def reconcile_bronze():
+def reconcile_landing():
     @task
     def check(table: str):
         watermark = Variable.get(watermark_var(table), default_var=None)
@@ -37,20 +37,20 @@ def reconcile_bronze():
         result = check_table(table, watermark)
         missing = result.pop("missing")
         print(f"{table}: watermark={watermark} oltp_rows={result['oltp_rows']} "
-              f"bronze_versions={result['bronze_versions']} bronze_objects={result['bronze_objects']} "
+              f"landing_versions={result['landing_versions']} landing_objects={result['landing_objects']} "
               f"missing={len(missing)}")
         if len(missing):
             first = missing["updated_at"].min().to_pydatetime()
             rewind = (first - timedelta(milliseconds=1)).strftime("%Y-%m-%d %H:%M:%S.%f")
             sample = missing.head(SAMPLE)[KEYS[table] + ["updated_at"]].to_dict("records")
             raise AirflowFailException(
-                f"{table}: {len(missing)} OLTP row versions with updated_at <= {watermark} are not in Bronze "
+                f"{table}: {len(missing)} OLTP row versions with updated_at <= {watermark} are not in Landing "
                 f"(oldest updated_at {first}). Sample: {sample}. To re-land them run "
-                f"`airflow variables set {watermark_var(table)} '{rewind}'`, then trigger ingest_oltp_to_bronze "
+                f"`airflow variables set {watermark_var(table)} '{rewind}'`, then trigger ingest_oltp_to_landing "
                 f"and this DAG again.")
         return {**result, "missing": 0, "checked_at": datetime.utcnow().isoformat()}
 
     check.expand(table=TRANSACTION_TABLES)
 
 
-reconcile_bronze()
+reconcile_landing()
