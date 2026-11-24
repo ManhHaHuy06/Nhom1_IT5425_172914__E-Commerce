@@ -19,7 +19,7 @@ VALID_TARGETS = frozenset({
     "silver.order_payments",
     "silver.order_reviews",
 })
-METADATA_COLS = {"source_updated_at", "source_file", "loaded_at", "batch_id"}
+METADATA_COLS = {"source_updated_at", "source_file", "loaded_at", "batch_id", "source_file_mtime"}
 
 
 def build_rejects(

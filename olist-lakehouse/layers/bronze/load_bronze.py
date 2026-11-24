@@ -7,7 +7,7 @@ Source layout (``s3a://olist-lake/landing``, written by hosting_server/airflow, 
                  every committed version of a row (one per OLTP update), with ``updated_at``
     snapshot:    ref_{dataset}/snapshot_date=YYYY-MM-DD/part-*.parquet (daily full copy; all snapshots kept)
 
-Bronze is append-only by default (idempotent on ``source_file``) and keeps every landed row version as STRING
+Bronze is append-only by default (idempotent on ``source_file`` + ``source_file_mtime``) and keeps every landed row version as STRING
 in the original CSV text form. OLTP ``updated_at`` (or ``snapshot_date`` for reference tables) is stored in
 ``source_updated_at`` so Silver can deterministically pick the latest version.
 """
@@ -39,7 +39,7 @@ MISSING_HINT = {
     "snapshot": "Run Airflow DAG ingest_reference_snapshot at least once.",
 }
 
-METADATA = ("loaded_at", "source_file", "batch_id", "source_updated_at")
+METADATA = ("loaded_at", "source_file", "batch_id", "source_updated_at", "source_file_mtime")
 # Same text form as the original CSVs, so Silver's to_timestamp()/cast() behave identically.
 BUSINESS_TS_FORMAT = "yyyy-MM-dd HH:mm:ss"
 # Fixed width with milliseconds: sorts correctly as a string (OLTP updated_at is TIMESTAMP(3)).
@@ -49,8 +49,11 @@ VERSION_TS_FORMAT = "yyyy-MM-dd HH:mm:ss.SSS"
 def ensure_metadata_columns(spark: SparkSession, table: str) -> None:
     """Add columns introduced after a table was first created (CREATE TABLE IF NOT EXISTS skips them)."""
     full_name = f"iceberg.bronze.{table}"
-    if "source_updated_at" not in spark.table(full_name).columns:
+    columns = spark.table(full_name).columns
+    if "source_updated_at" not in columns:
         spark.sql(f"ALTER TABLE {full_name} ADD COLUMNS (source_updated_at STRING)")
+    if "source_file_mtime" not in columns:
+        spark.sql(f"ALTER TABLE {full_name} ADD COLUMNS (source_file_mtime TIMESTAMP)")
 
 
 def data_columns(spark: SparkSession, table: str) -> list[str]:
@@ -82,15 +85,27 @@ def filter_ingest_dates(frame: DataFrame, start_date: str | None, end_date: str 
     return frame
 
 
-def filter_unloaded_files(spark: SparkSession, table: str, frame: DataFrame) -> DataFrame:
-    """Drop landing files already present in Bronze so append mode stays idempotent across reruns."""
-    loaded = spark.table(f"iceberg.bronze.{table}").select("source_file").distinct()
-    return frame.join(loaded, "source_file", "left_anti")
+def filter_unloaded_files(spark: SparkSession, table: str, frame: DataFrame, kind: str) -> DataFrame:
+    """Drop landing files already in Bronze; a rewritten incremental file (newer mtime) is loaded again.
+
+    An ingest retry keeps batch_id=stamp(wm_from) and rewrites the same part files with a wider window, so the
+    path alone would hide the new rows. Rows loaded before source_file_mtime existed (NULL) count as loaded.
+    Snapshot files match on path only: a rewritten snapshot would duplicate geolocation rows, which have no key.
+    """
+    loaded = (spark.table(f"iceberg.bronze.{table}")
+              .select("source_file", "source_file_mtime").distinct().alias("loaded"))
+    same_file = F.col("landed.source_file") == F.col("loaded.source_file")
+    if kind == "incremental":
+        same_file &= (F.col("loaded.source_file_mtime").isNull()
+                      | (F.col("loaded.source_file_mtime") == F.col("landed.source_file_mtime")))
+    return frame.alias("landed").join(loaded, same_file, "left_anti")
 
 
 def read_landed(spark: SparkSession, path: str, kind: str, table: str) -> DataFrame:
     try:
-        return spark.read.parquet(path).withColumn("source_file", F.input_file_name())
+        return (spark.read.parquet(path)
+                .withColumn("source_file", F.input_file_name())
+                .withColumn("source_file_mtime", F.col("_metadata.file_modification_time")))
     except Exception as exc:  # noqa: BLE001 - surface a missing prefix clearly
         raise FileNotFoundError(f"No hosting_server objects for {table} at {path}. {MISSING_HINT[kind]}") from exc
 
@@ -107,7 +122,8 @@ def to_bronze_frame(landed: DataFrame, columns: list[str], kind: str) -> DataFra
         version = F.when(snap != "", F.concat(snap, F.lit(" 00:00:00.000")))
     else:
         version = F.lit(None).cast("string")
-    return blank_to_null(landed.select(*selected, version.alias("source_updated_at"), "source_file"))
+    return blank_to_null(landed.select(*selected, version.alias("source_updated_at"), "source_file",
+                                       "source_file_mtime"))
 
 
 def write_bronze(frame: DataFrame, table: str, batch_id: str, mode: str) -> None:
@@ -141,7 +157,7 @@ def load_bronze(
         if kind == "incremental":
             landed = filter_ingest_dates(landed, start_date, end_date)
         if mode == "append":
-            landed = filter_unloaded_files(spark, table, landed)
+            landed = filter_unloaded_files(spark, table, landed, kind)
             if landed.isEmpty():
                 if spark.table(f"iceberg.bronze.{table}").isEmpty():
                     window = (f" (ingest_date range [{start_date or '...'}, {end_date or '...'}])"

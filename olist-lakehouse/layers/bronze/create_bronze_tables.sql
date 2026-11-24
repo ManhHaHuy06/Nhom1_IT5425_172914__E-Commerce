@@ -3,7 +3,7 @@
 -- Bronze la lop Iceberg tho dau tien: append-only, giu du lich su phien ban va moi snapshot_date.
 -- Nguon: Landing Zone Parquet cua hosting_server (s3a://olist-lake/landing), Spark nap vao iceberg.bronze.* kem metadata:
 -- source_updated_at (OLTP updated_at hoac snapshot_date voi bang tham chieu),
--- loaded_at, source_file, batch_id. Moi phien ban cua 1 dong deu duoc giu; Silver chon ban moi nhat.
+-- loaded_at, source_file, batch_id, source_file_mtime (thoi diem sua file landing). Moi phien ban cua 1 dong deu duoc giu; Silver chon ban moi nhat.
 --
 -- Chay bang Spark SQL:
 --   spark.sql(open("layers/bronze/create_bronze_tables.sql").read())
@@ -22,7 +22,8 @@ CREATE TABLE IF NOT EXISTS iceberg.bronze.olist_orders (
     source_updated_at    STRING,
     loaded_at            TIMESTAMP,
     source_file          STRING,
-    batch_id             STRING
+    batch_id             STRING,
+    source_file_mtime    TIMESTAMP
 ) USING iceberg
 TBLPROPERTIES (
     'write.format.default' = 'parquet',
@@ -40,7 +41,8 @@ CREATE TABLE IF NOT EXISTS iceberg.bronze.olist_order_items (
     source_updated_at    STRING,
     loaded_at            TIMESTAMP,
     source_file          STRING,
-    batch_id             STRING
+    batch_id             STRING,
+    source_file_mtime    TIMESTAMP
 ) USING iceberg
 TBLPROPERTIES ('write.format.default' = 'parquet');
 
@@ -53,7 +55,8 @@ CREATE TABLE IF NOT EXISTS iceberg.bronze.olist_order_payments (
     source_updated_at    STRING,
     loaded_at            TIMESTAMP,
     source_file          STRING,
-    batch_id             STRING
+    batch_id             STRING,
+    source_file_mtime    TIMESTAMP
 ) USING iceberg
 TBLPROPERTIES ('write.format.default' = 'parquet');
 
@@ -68,7 +71,8 @@ CREATE TABLE IF NOT EXISTS iceberg.bronze.olist_order_reviews (
     source_updated_at    STRING,
     loaded_at                   TIMESTAMP,
     source_file                 STRING,
-    batch_id                    STRING
+    batch_id                    STRING,
+    source_file_mtime    TIMESTAMP
 ) USING iceberg
 TBLPROPERTIES ('write.format.default' = 'parquet');
 
@@ -82,7 +86,8 @@ CREATE TABLE IF NOT EXISTS iceberg.bronze.olist_customers (
     source_updated_at    STRING,
     loaded_at            TIMESTAMP,
     source_file          STRING,
-    batch_id             STRING
+    batch_id             STRING,
+    source_file_mtime    TIMESTAMP
 ) USING iceberg
 TBLPROPERTIES ('write.format.default' = 'parquet');
 
@@ -99,7 +104,8 @@ CREATE TABLE IF NOT EXISTS iceberg.bronze.olist_products (
     source_updated_at    STRING,
     loaded_at                     TIMESTAMP,
     source_file                   STRING,
-    batch_id                      STRING
+    batch_id                      STRING,
+    source_file_mtime    TIMESTAMP
 ) USING iceberg
 TBLPROPERTIES ('write.format.default' = 'parquet');
 
@@ -111,7 +117,8 @@ CREATE TABLE IF NOT EXISTS iceberg.bronze.olist_sellers (
     source_updated_at    STRING,
     loaded_at                TIMESTAMP,
     source_file              STRING,
-    batch_id                 STRING
+    batch_id                 STRING,
+    source_file_mtime    TIMESTAMP
 ) USING iceberg
 TBLPROPERTIES ('write.format.default' = 'parquet');
 
@@ -125,7 +132,8 @@ CREATE TABLE IF NOT EXISTS iceberg.bronze.olist_geolocation (
     source_updated_at    STRING,
     loaded_at                    TIMESTAMP,
     source_file                  STRING,
-    batch_id                     STRING
+    batch_id                     STRING,
+    source_file_mtime    TIMESTAMP
 ) USING iceberg
 TBLPROPERTIES ('write.format.default' = 'parquet');
 
@@ -135,6 +143,7 @@ CREATE TABLE IF NOT EXISTS iceberg.bronze.product_category_name_translation (
     source_updated_at    STRING,
     loaded_at                     TIMESTAMP,
     source_file                   STRING,
-    batch_id                      STRING
+    batch_id                      STRING,
+    source_file_mtime    TIMESTAMP
 ) USING iceberg
 TBLPROPERTIES ('write.format.default' = 'parquet');
